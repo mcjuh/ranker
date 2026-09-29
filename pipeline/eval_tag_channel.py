@@ -2,7 +2,8 @@
 Evaluation of the tag-ID BM25 recall channel (retrieval_tagbm25.TagBM25).
 
     python pipeline/eval_tag_channel.py roles          # Part A: role-level, on the taxonomy alone
-    python pipeline/eval_tag_channel.py sat            # Part B: provider-level, on tagged data_sat
+    python pipeline/eval_tag_channel.py tagger         # tagger error, measured on role descriptions (gold tags exist)
+    python pipeline/eval_tag_channel.py sat            # Part B: provider-level, on tagged data_sat (needs tag_corpus.py)
 
 Every random draw comes from a numpy Generator seeded from (--seed, a purpose string), so a rerun
 reproduces the numbers exactly, and within a condition every method scores the same queries.
@@ -23,6 +24,8 @@ one class are not independent).
 Selection metric for tuning: mean of role@1, role@5, role@10 on dev, default condition.
 """
 import argparse
+import csv
+import hashlib
 import json
 import time
 import zlib
@@ -432,19 +435,339 @@ def run_funnel(world: RoleWorld, args, view, evaluate, score, idx: TagBM25, best
     return {"track_scorer_accuracy_top1": track_acc, "rows": rows, "breakeven_track_accuracy": breakeven}
 
 
+# ---------------------------------------------------------------------------
+# Part B: provider-level, on tagged data_sat
+# ---------------------------------------------------------------------------
+
+SAT_M_GRID = (5, 10, 20, 30)         # tags kept per text (the tagger stores 30)
+SAT_MARGINAL_KS = (10, 20, 50)
+
+
+class Ranked:
+    """A ranking as two arrays (best first): provider ids and scores. Compact enough to hold every gig's
+    full ranking of all 2,165 providers for several channels."""
+    def __init__(self, ids, scores):
+        self.ids, self.scores = np.asarray(ids), np.asarray(scores)
+
+    def pairs(self):
+        return list(zip(self.ids.tolist(), self.scores.tolist()))
+
+    def top(self, k: int) -> set:
+        return set(self.ids[:k].tolist())
+
+
+def cached_embeddings(name: str, texts: list[str], cache_dir: Path | None = None) -> np.ndarray:
+    """Vectors from the embed_cached files under pipeline/cache/ (keyed by sha1 of the text). Never
+    encodes: a missing text means tag_corpus.py has not finished, and that is an error, not a reason
+    to spend hours re-embedding."""
+    cache = cache_dir or BASE / "cache"
+    vecs = np.load(cache / f"{name}.npy")
+    by_key = dict(zip(json.loads((cache / f"{name}.keys.json").read_text()), vecs))
+    hashes = [hashlib.sha1(t.encode("utf-8")).hexdigest() for t in texts]
+    missing = sum(h not in by_key for h in hashes)
+    if missing:
+        raise SystemExit(f"{missing} of {len(texts)} texts are not in the '{name}' cache; run pipeline/tag_corpus.py first")
+    return np.stack([by_key[h] for h in hashes])
+
+
+def existing_channels(hirers, providers, doc_raw, q_raw) -> dict[str, dict[str, Ranked]]:
+    """The two existing channels and their RRF, recomputed exactly as features.py / build_judging_pools_sat.py do."""
+    from corpus import hirer_text
+    from retrieval_bm25 import BM25Retriever
+    from retrieval_dense import rank_from_raw
+    from retrieval_rrf import rrf_fuse
+
+    pids = [p["provider_id"] for p in providers]
+    bm25 = BM25Retriever(providers, refined=True)
+    out = {"bm25": {}, "dense": {}, "rrf2": {}}
+    for i, h in enumerate(hirers):
+        hid = str(h["hire_id"])
+        sparse = bm25.rank(hirer_text(h), query_title=h["hire_title"])
+        dense = rank_from_raw(doc_raw, q_raw[i], pids)
+        for name, scored in (("bm25", sparse), ("dense", dense), ("rrf2", rrf_fuse(sparse, dense, k=60))):
+            out[name][hid] = Ranked([p for p, _ in scored], [s for _, s in scored])
+    return out
+
+
+def gig_metrics(rankings: dict[str, Ranked], gigs, gt, judged=None) -> dict[str, np.ndarray]:
+    """Per-gig R@10/50/100, NDCG@10, MRR via evaluate.py (relevant = grade >= 2). With `judged`, unjudged
+    providers are dropped from each list first ("condensed list"), so a channel that surfaces providers
+    nobody graded is not penalised for them."""
+    from evaluate import ndcg_at_k, recall_at_k, reciprocal_rank
+    out = {m: [] for m in ("R@10", "R@50", "R@100", "NDCG@10", "MRR")}
+    for hid in gigs:
+        ids = rankings[hid].ids.tolist()
+        if judged is not None:
+            ids = [p for p in ids if str(p) in judged[hid]]
+        row = gt.get(hid, {})
+        for k in (10, 50, 100):
+            out[f"R@{k}"].append(recall_at_k(ids, row, k))
+        out["NDCG@10"].append(ndcg_at_k(ids, row, 10))
+        out["MRR"].append(reciprocal_rank(ids, row))
+    return {m: np.array(v, dtype=float) for m, v in out.items()}
+
+
+def unique_positives(target: Ranked, others: list[Ranked], positives: set, k: int) -> set:
+    """Relevant providers that `target` has in its top k and none of `others` has in theirs."""
+    seen = set().union(*(o.top(k) for o in others)) if others else set()
+    return (target.top(k) - seen) & positives
+
+
+def run_sat(args):
+    from corpus import hirer_text, provider_text
+    from evaluate import RELEVANCE_THRESHOLD
+    from retrieval_rrf import rrf_fuse_n
+
+    t_start = time.time()
+    data_dir = BASE / args.data_dir
+    load = lambda name: json.loads((data_dir / name).read_text(encoding="utf-8"))
+    hirers, providers = load("hirers.json"), load("providers.json")
+    judged, gt = load("llm_judgments_merged.json"), load("ground_truth_llm.json")
+    raw_p, raw_h = load("tags_providers.json")["tags"], load("tags_hirers.json")["tags"]
+    pids = [p["provider_id"] for p in providers]
+    hids = [str(h["hire_id"]) for h in hirers]
+    positives = {h: {int(p) for p, s in gt.get(h, {}).items() if s >= RELEVANCE_THRESHOLD} for h in hids}
+    gigs = [h for h in hids if positives[h]]
+    perm = rng_for(args.seed, "sat/split").permutation(len(gigs))
+    dev, test = [gigs[i] for i in sorted(perm[: len(gigs) // 2])], [gigs[i] for i in sorted(perm[len(gigs) // 2:])]
+    print(f"{len(hids)} gigs, {len(pids)} providers; {len(gigs)} gigs have a grade>=2 provider "
+          f"({sum(len(positives[h]) for h in gigs)} positives); dev {len(dev)} / test {len(test)} gigs", flush=True)
+    result = {"seed": args.seed, "n_gigs": len(hids), "n_gigs_with_positive": len(gigs),
+              "n_positives": sum(len(positives[h]) for h in gigs), "n_dev": len(dev), "n_test": len(test)}
+
+    # ---- existing channels, recomputed, and checked against the committed pool ------------------------
+    ex = existing_channels(hirers, providers,
+                           cached_embeddings("sat_docs_mxbai_by_text", [provider_text(p) for p in providers]),
+                           cached_embeddings("sat_queries_mxbai_by_text", [hirer_text(h) for h in hirers]))
+    committed: dict[str, set] = {}
+    with (BASE / "features_data_sat" / "candidates_top50.csv").open(newline="") as f:
+        for row in csv.DictReader(f):
+            committed.setdefault(row["hire_id"], set()).add(int(row["provider_id"]))
+    overlap = np.array([len(ex["rrf2"][h].top(50) & committed[h]) / 50 for h in hids])
+    print(f"recomputed RRF top-50 vs committed candidates_top50.csv: mean overlap {overlap.mean():.4f}, "
+          f"identical for {(overlap == 1).mean():.1%} of gigs, worst {overlap.min():.2f}", flush=True)
+    result["reproduction"] = {"mean_overlap": float(overlap.mean()), "identical_gigs": float((overlap == 1).mean()),
+                              "worst": float(overlap.min())}
+
+    # ---- tag channel: tuned on dev gigs -----------------------------------------------------------------
+    def tag_lists(raw, m):
+        return {int(i): [t for t, _ in tags[:m]] for i, tags in raw.items()}
+
+    pid_arr = np.array(pids)
+
+    def tag_rankings(m_p, m_h, b, which, hirer_tags=None):
+        prov, hq = tag_lists(raw_p, m_p), hirer_tags or tag_lists(raw_h, m_h)
+        idx = TagBM25(pids, [prov[p] for p in pids], k1=K1, b=b)
+        S = idx.score_matrix([hq[int(h)] for h in which])
+        out = {}
+        for h, row in zip(which, S):
+            order = np.argsort(-row, kind="stable")
+            order = order[row[order] > 0]
+            out[h] = Ranked(pid_arr[order], row[order])
+        return out
+
+    def r_at(rankings, gigs_, k):
+        from evaluate import recall_at_k
+        return float(np.mean([recall_at_k(rankings[h].ids[:k].tolist(), gt[h], k) for h in gigs_]))
+
+    grid = {}
+    for m_p in SAT_M_GRID:
+        for m_h in SAT_M_GRID:
+            for b in B_GRID:
+                grid[(m_p, m_h, b)] = r_at(tag_rankings(m_p, m_h, b, dev), dev, 50)
+    best = max(grid, key=lambda c: (round(grid[c], 9), -c[0], -c[1], -abs(c[2] - 0.75)))
+    m_p, m_h, b = best
+    print(f"\ndev tuning of the tag channel (objective: channel-alone R@50 on dev): best m_provider={m_p}, "
+          f"m_gig={m_h}, b={b} -> {grid[best]:.4f}")
+    print("  top 5 configs: " + "; ".join(f"{c}: {v:.4f}" for c, v in sorted(grid.items(), key=lambda kv: -kv[1])[:5]))
+    result["dev_grid_R@50"] = {f"m_p={c[0]},m_h={c[1]},b={c[2]}": v for c, v in grid.items()}
+    result["selected"] = {"m_provider": m_p, "m_gig": m_h, "b": b, "k1": K1, "dev_R@50": grid[best]}
+
+    tag = tag_rankings(m_p, m_h, b, hids)
+    ex["tag"] = tag
+
+    # ---- channel alone, test gigs ---------------------------------------------------------------------
+    boot = rng_for(args.seed, "sat/boot").integers(0, len(test), size=(args.n_boot, len(test)))
+    metric_names = ("R@10", "R@50", "R@100", "NDCG@10", "MRR")
+    alone = {}
+    print(f"\n=== TEST ({len(test)} gigs with a grade>=2 provider), channels alone; 95% CI over gigs ===")
+    print(f"{'channel':22}" + "".join(f"{m:>22}" for m in metric_names))
+    per_gig = {}
+    for name in ("bm25", "dense", "rrf2", "tag"):
+        per_gig[name] = gig_metrics(ex[name], test, gt)
+        alone[name] = {m: ci(per_gig[name][m], boot) for m in metric_names}
+        print(f"{name:22}" + "".join(f"{fmt(alone[name][m]):>22}" for m in metric_names))
+    result["test_channels_alone"] = alone
+
+    # control: the same channel with every gig's tags swapped for another gig's
+    shuffled = rng_for(args.seed, "sat/permute").permutation(len(hids))
+    tags_h = tag_lists(raw_h, m_h)
+    swapped = {int(hids[i]): tags_h[int(hids[j])] for i, j in enumerate(shuffled)}
+    control = tag_rankings(m_p, m_h, b, test, hirer_tags=swapped)
+    ctl = gig_metrics(control, test, gt)
+    result["control_permuted_gig_tags"] = {m: ci(ctl[m], boot) for m in metric_names}
+    print(f"control, gig tags shuffled across gigs: R@50 {fmt(result['control_permuted_gig_tags']['R@50'])} "
+          f"(a random ranking gives about {50 / len(pids):.3f})")
+
+    # ---- what the tag channel adds ---------------------------------------------------------------------
+    print("\n=== marginal recall on TEST: relevant providers in a channel's top-K that neither of the other two "
+          "channels has in theirs ===")
+    print("(labels were pooled from the two existing channels, so this is biased against the tag channel; "
+          "see the unjudged counts below)")
+    marginal = {}
+    for k in SAT_MARGINAL_KS:
+        marginal[k] = {}
+        for target, others in (("tag", ("bm25", "dense")), ("bm25", ("dense", "tag")), ("dense", ("bm25", "tag"))):
+            found = [unique_positives(ex[target][h], [ex[o][h] for o in others], positives[h], k) for h in test]
+            marginal[k][target] = {
+                "gigs_with_unique_hit": float(np.mean([len(f) > 0 for f in found])),
+                "share_of_positives": float(sum(len(f) for f in found) / sum(len(positives[h]) for h in test)),
+                "n_unique_hits": int(sum(len(f) for f in found))}
+        print(f"  K={k:<3}" + "   ".join(
+            f"{t}: {v['gigs_with_unique_hit']:.3f} of gigs ({v['n_unique_hits']} hits, {v['share_of_positives']:.3f} of positives)"
+            for t, v in marginal[k].items()))
+    result["test_marginal_recall"] = {str(k): v for k, v in marginal.items()}
+
+    outside = [(h, p) for h in gigs for p in positives[h] if p not in ex["rrf2"][h].top(50)]
+    got = [(h, p) for h, p in outside if p in ex["tag"][h].top(50)]
+    print(f"positives outside the existing RRF top-50 pool: {len(outside)} (on {len({h for h, _ in outside})} gigs); "
+          f"the tag channel has {len(got)} of them in its top-50")
+    result["outside_pool"] = {"n": len(outside), "tag_top50": len(got)}
+
+    print("\nunjudged tag-only candidates (nobody graded them, so they count as irrelevant above), all gigs:")
+    result["ungraded"] = {}
+    for k in SAT_MARGINAL_KS:
+        only = {h: ex["tag"][h].top(k) - ex["bm25"][h].top(k) - ex["dense"][h].top(k) for h in hids}
+        n_only = sum(len(v) for v in only.values())
+        n_unjudged = sum(len(v - {int(p) for p in judged[h]}) for h, v in only.items())
+        n_top_unjudged = sum(len(ex["tag"][h].top(k) - {int(p) for p in judged[h]}) for h in hids)
+        result["ungraded"][str(k)] = {"tag_only_pairs": n_only, "tag_only_unjudged": n_unjudged,
+                                      "tag_top_k_unjudged": n_top_unjudged}
+        print(f"  K={k:<3} tag-only pairs {n_only}, of which unjudged {n_unjudged} ({n_unjudged / max(n_only, 1):.1%}); "
+              f"pairs to grade to cover the whole tag top-{k}: {n_top_unjudged}")
+
+    # ---- fused: refined BM25 + dense + tag, against the existing two-channel RRF -----------------------------
+    print(f"\n=== TEST, fused ranking: RRF(bm25, dense) vs RRF(bm25, dense, tag), paired 95% CI over gigs ===")
+    fused_rows = {}
+    for w in (1.0, 0.5):
+        fused = {h: (lambda ids: Ranked([p for p, _ in ids], [s for _, s in ids]))(
+            rrf_fuse_n([ex["bm25"][h].pairs(), ex["dense"][h].pairs(), ex["tag"][h].pairs()], weights=[1.0, 1.0, w]))
+            for h in test}
+        for label, jd in (("standard", None), ("condensed (unjudged dropped)", judged)):
+            base = gig_metrics(ex["rrf2"], test, gt, jd)
+            new = gig_metrics(fused, test, gt, jd)
+            fused_rows[f"w={w} {label}"] = {
+                m: {"rrf2": float(base[m].mean()), "rrf3": float(new[m].mean()), "diff": ci(new[m] - base[m], boot)}
+                for m in metric_names}
+            print(f"  tag weight {w}, {label}:")
+            for m in metric_names:
+                r = fused_rows[f"w={w} {label}"][m]
+                print(f"    {m:8} rrf2 {r['rrf2']:.4f}  rrf3 {r['rrf3']:.4f}  diff {fmt(r['diff'])}")
+    result["test_fused"] = fused_rows
+
+    result["seconds"] = round(time.time() - t_start, 1)
+    RESULTS_DIR.mkdir(exist_ok=True)
+    out = RESULTS_DIR / "sat.json"
+    out.write_text(json.dumps(result, indent=1), encoding="utf-8")
+    print(f"\nwrote {out} ({result['seconds']}s)")
+
+
+# ---------------------------------------------------------------------------
+# Tagger check: role descriptions have gold tags, so the tagger's own error can be measured
+# ---------------------------------------------------------------------------
+
+TAGGER_M_GRID = (5, 10, 20, 30)
+
+
+def run_tagger(args):
+    """Tag role descriptions (name + description, embedded as passages, tags as queries: the direction used
+    for providers) and measure (a) how many of a role's gold tags the tagger recovers and (b) how well the
+    role is then retrieved from the *predicted* tags, the gap to Part A's gold-tag queries being the price of
+    tagging. A seeded sample of equivalence classes per split; (m, b) is tuned on the dev sample only."""
+    from retrieval_dense import encode_docs, encode_queries
+    from tag_corpus import embed_in_chunks, top_tags
+
+    t_start = time.time()
+    tax = load_taxonomy(args.export_dir)
+    world = RoleWorld(tax, args.seed)
+    tag_ids = sorted(tax.tags)
+    tag_vecs = embed_in_chunks("taxonomy_tags_mxbai_queries_by_text", [tax.tags[t] for t in tag_ids], encode_queries)
+
+    rng = rng_for(args.seed, "tagger/sample")
+    sample = {s: np.sort(rng.choice(np.flatnonzero(world.split_of_class[s]), size=args.n_roles // 2, replace=False))
+              for s in ("dev", "test")}
+    order = np.concatenate([sample["dev"], sample["test"]])
+    reps = [world.reps[c] for c in order]
+    texts = [f"{tax.roles[r]['name']}. {tax.roles[r]['description']}" for r in reps]
+    print(f"tagging {len(texts)} role descriptions ({args.n_roles // 2} dev / {args.n_roles // 2} test classes)", flush=True)
+    vecs = embed_in_chunks("taxonomy_roles_mxbai_docs_by_text", texts, encode_docs)
+    predicted = top_tags(vecs, tag_vecs, tag_ids, max(TAGGER_M_GRID))
+    where = {c: i for i, c in enumerate(order)}
+
+    result = {"seed": args.seed, "n_roles_per_split": args.n_roles // 2}
+    boot = rng_for(args.seed, "tagger/boot").integers(0, args.n_roles // 2, size=(args.n_boot, args.n_roles // 2))
+    chance = float(np.mean([len(tax.role_tags[r]) for r in reps]) / len(tag_ids))
+
+    # (a) tag quality against the gold tag sets, on the test sample
+    print(f"\n=== tagger vs gold tags, TEST sample (chance precision {chance:.3f}); 95% CI over roles ===")
+    quality = {}
+    test_rows = [where[c] for c in sample["test"]]
+    for m in TAGGER_M_GRID:
+        prec, rec, hit = [], [], []
+        for i in test_rows:
+            gold = tax.role_tags[reps[i]]
+            got = {t for t, _ in predicted[i][:m]} & gold
+            prec.append(len(got) / m)
+            rec.append(len(got) / len(gold))
+            hit.append(float(bool(got)))
+        quality[m] = {"precision": ci(np.array(prec), boot), "recall": ci(np.array(rec), boot),
+                      "hit_any": ci(np.array(hit), boot)}
+        print(f"  m={m:<3} precision {fmt(quality[m]['precision'])}  recall {fmt(quality[m]['recall'])}  "
+              f"at least one gold tag {fmt(quality[m]['hit_any'])}")
+    result["test_tag_quality"] = {str(m): v for m, v in quality.items()}
+
+    # (b) role retrieval from predicted tags
+    def evaluate_split(split, m, b):
+        rows = [where[c] for c in sample[split]]
+        idx = world.index(b=b)
+        S = idx.score_matrix([[t for t, _ in predicted[i][:m]] for i in rows])
+        hm = hit_metrics(world, S, sample[split])
+        _, cm = class_means(hm, sample[split])
+        return cm
+
+    sel = lambda cm: float(np.mean([cm[f"role@{k}"].mean() for k in KS]))
+    dev_grid = {(m, b): sel(evaluate_split("dev", m, b)) for m in TAGGER_M_GRID for b in B_GRID}
+    best_m, best_b = max(dev_grid, key=lambda c: (round(dev_grid[c], 9), -c[0], -abs(c[1] - 0.75)))
+    print(f"\ndev tuning (mean of role@1/5/10 from predicted tags): best m={best_m}, b={best_b} -> {dev_grid[(best_m, best_b)]:.4f}")
+    result["dev_grid"] = {f"m={m},b={b}": v for (m, b), v in dev_grid.items()}
+    result["selected"] = {"m": best_m, "b": best_b}
+    print("=== role retrieval from PREDICTED tags, TEST sample (Part A used gold-tag queries) ===")
+    e2e = {}
+    for m in TAGGER_M_GRID:
+        cm = evaluate_split("test", m, best_b)
+        e2e[m] = {k: ci(cm[k], boot) for k in ("role@1", "role@5", "role@10", "track@1", "track@3")}
+        print(f"  m={m:<3}{' (tuned)' if m == best_m else '         '}" + "  ".join(f"{k} {fmt(v)}" for k, v in e2e[m].items()))
+    result["test_role_retrieval_from_predicted_tags"] = {str(m): v for m, v in e2e.items()}
+
+    result["seconds"] = round(time.time() - t_start, 1)
+    RESULTS_DIR.mkdir(exist_ok=True)
+    out = RESULTS_DIR / "tagger.json"
+    out.write_text(json.dumps(result, indent=1), encoding="utf-8")
+    print(f"\nwrote {out} ({result['seconds']}s)")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("part", choices=["roles", "sat"])
+    ap.add_argument("part", choices=["roles", "sat", "tagger"])
     ap.add_argument("--seed", type=int, default=SEED)
     ap.add_argument("--export-dir", type=Path, default=DEFAULT_EXPORT_DIR)
-    ap.add_argument("--n-boot", type=int, default=1000, help="bootstrap resamples over classes")
+    ap.add_argument("--data-dir", default="data_sat", help="(sat) dataset folder under pipeline/")
+    ap.add_argument("--n-boot", type=int, default=1000, help="bootstrap resamples over classes / gigs")
+    ap.add_argument("--n-roles", type=int, default=400, help="(tagger) role descriptions to tag, half dev, half test")
     ap.add_argument("--draws-scale", type=float, default=1.0,
-                    help="scale the number of random query draws per class (0.2 for a quick smoke run)")
+                    help="(roles) scale the number of random query draws per class (0.2 for a quick smoke run)")
     args = ap.parse_args()
-    if args.part == "roles":
-        run_roles(args)
-    else:
-        raise SystemExit("Part B (sat) is added once data_sat has been tagged")
+    {"roles": run_roles, "sat": run_sat, "tagger": run_tagger}[args.part](args)
 
 
 if __name__ == "__main__":

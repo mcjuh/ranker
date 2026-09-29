@@ -9,12 +9,17 @@ collapsing, track credit, query generation, and rank-based fusion. Uses a 5-role
 Run from the repo root:
     python -m unittest discover -s pipeline/tests -t pipeline -v
 """
+import hashlib
+import json
+import math
+import tempfile
 import unittest
+from pathlib import Path
 
 import numpy as np
 
-from eval_tag_channel import (CONDITIONS, RoleWorld, ci, class_means, hit_metrics, lsa_basis, rng_for,
-                              rrf_matrix)
+from eval_tag_channel import (CONDITIONS, Ranked, RoleWorld, cached_embeddings, ci, class_means, gig_metrics,
+                              hit_metrics, lsa_basis, rng_for, rrf_matrix, unique_positives)
 from greygigz import Taxonomy
 
 
@@ -193,6 +198,51 @@ class Scorers(unittest.TestCase):
     def test_rng_is_reproducible_and_purpose_specific(self):
         self.assertEqual(rng_for(7, "a").integers(0, 10**9), rng_for(7, "a").integers(0, 10**9))
         self.assertNotEqual(rng_for(7, "a").integers(0, 10**9), rng_for(7, "b").integers(0, 10**9))
+
+
+class PartBHelpers(unittest.TestCase):
+    def test_ranked_top_and_pairs(self):
+        r = Ranked([7, 3, 9], [0.9, 0.5, 0.1])
+        self.assertEqual(r.top(2), {7, 3})
+        self.assertEqual(r.pairs(), [(7, 0.9), (3, 0.5), (9, 0.1)])
+
+    def test_unique_positives_are_relevant_and_found_by_no_other_channel(self):
+        target = Ranked([1, 2, 3, 4], [4, 3, 2, 1])
+        others = [Ranked([2, 8, 9], [3, 2, 1]), Ranked([3, 5, 6], [3, 2, 1])]
+        # at K=3 the others hold {2, 8, 9} and {3, 5, 6}; the target's {1, 2, 3} minus those is {1}
+        self.assertEqual(unique_positives(target, others, positives={1, 3, 7}, k=3), {1})
+        self.assertEqual(unique_positives(target, others, positives={2, 3}, k=3), set())   # both found elsewhere
+        self.assertEqual(unique_positives(target, others, positives={4}, k=3), set())      # outside the target's top 3
+        self.assertEqual(unique_positives(target, [], positives={1, 4}, k=4), {1, 4})
+
+    def test_gig_metrics_hand_checked(self):
+        # provider 5 is graded relevant (100), provider 6 is not (33 < 40); the ranking finds 5 second
+        gt = {"1": {"5": 100, "6": 33}}
+        m = gig_metrics({"1": Ranked([9, 5, 6], [3, 2, 1])}, ["1"], gt)
+        self.assertEqual((m["R@10"][0], m["R@50"][0], m["R@100"][0]), (1.0, 1.0, 1.0))
+        self.assertAlmostEqual(m["MRR"][0], 0.5)
+        # evaluate.py uses the raw 0-100 grade as the NDCG gain, so the 33 counts too (only R and MRR threshold at 40)
+        ideal = 100 / math.log2(2) + 33 / math.log2(3)
+        self.assertAlmostEqual(m["NDCG@10"][0], (100 / math.log2(3) + 33 / math.log2(4)) / ideal)
+
+    def test_condensed_lists_drop_unjudged_providers(self):
+        gt = {"1": {"5": 100}}
+        ranking = {"1": Ranked([9, 5], [2, 1])}       # 9 was never graded
+        self.assertAlmostEqual(gig_metrics(ranking, ["1"], gt)["MRR"][0], 0.5)
+        judged = {"1": {"5": 3, "6": 1}}
+        self.assertAlmostEqual(gig_metrics(ranking, ["1"], gt, judged)["MRR"][0], 1.0)
+
+    def test_cached_embeddings_reads_by_text_hash_and_never_encodes(self):
+        texts = ["alpha", "beta", "gamma"]
+        vecs = np.arange(9, dtype=float).reshape(3, 3)
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            np.save(d / "c.npy", vecs[[2, 0]])          # cache holds gamma and alpha only
+            (d / "c.keys.json").write_text(json.dumps(
+                [hashlib.sha1(t.encode("utf-8")).hexdigest() for t in ("gamma", "alpha")]))
+            np.testing.assert_allclose(cached_embeddings("c", ["alpha", "gamma"], d), vecs[[0, 2]])
+            with self.assertRaises(SystemExit):
+                cached_embeddings("c", texts, d)         # beta is missing
 
 
 if __name__ == "__main__":
