@@ -33,3 +33,27 @@ def rrf_fuse(
         fused.append((pid, score))
 
     return sorted(fused, key=lambda x: x[1], reverse=True)
+
+
+def rrf_fuse_n(
+    ranked_lists: list[list[tuple[int, float]]],
+    k: int = 60,
+    weights: list[float] | None = None,
+) -> list[tuple[int, float]]:
+    """N-way RRF: score = sum_i weights[i] / (k + rank_i), over the lists an id appears in.
+
+    Same arithmetic as `rrf_fuse` (which is left untouched and still used by the two-channel
+    path), so for two lists the scores are identical. Ties are broken by first appearance across
+    the lists, in list order, so the output is deterministic. Returns
+    [(id, rrf_score), ...] sorted descending."""
+    if weights is None:
+        weights = [1.0] * len(ranked_lists)
+    if len(weights) != len(ranked_lists):
+        raise ValueError(f"{len(ranked_lists)} ranked lists but {len(weights)} weights")
+
+    fused: dict[int, float] = {}
+    for weight, scored in zip(weights, ranked_lists):
+        for pid, rank in _ranks_from_scored_list(scored).items():
+            fused[pid] = fused.get(pid, 0.0) + weight * (1.0 / (k + rank))
+
+    return sorted(fused.items(), key=lambda x: x[1], reverse=True)
