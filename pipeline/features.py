@@ -173,6 +173,10 @@ def main():
     ap.add_argument("--label-policy", choices=["judged", "all"], default="judged")
     ap.add_argument("--data-dir", default="data",
                     help="dataset folder under pipeline/ (e.g. data_sat); outputs are namespaced accordingly")
+    ap.add_argument("--tag-channel", action="store_true",
+                    help="add the tag-ID BM25 channel: the pool becomes a 3-way RRF (refined BM25 + dense + tag) "
+                         "and tag_score/tag_rank columns are emitted. Writes candidates_top<K>_tag.csv and "
+                         "train_pairs_tag.csv, so the baseline feature files are left untouched. Off by default")
     args = ap.parse_args()
     set_dataset(args.data_dir)
 
@@ -201,6 +205,13 @@ def main():
     doc_raw, query_raw = dense_matrix(hirers, providers, args.dense_model, args.dense_dim,
                                       cache_tag=f"{Path(args.dense_model).name}_{dim_tag}")
 
+    tag_channel = None
+    if args.tag_channel:
+        from retrieval_rrf import rrf_fuse_n
+        from tag_channel import TagChannel
+        print("Building tag-ID BM25 channel ...")
+        tag_channel = TagChannel(DATA_DIR)
+
     rows = []
     skipped_out_of_pool = 0
     judged_in_pool = 0
@@ -209,7 +220,13 @@ def main():
         hid = str(h["hire_id"])
         bm25_ranked = bm25.rank(hirer_text(h), query_title=h["hire_title"])
         dense_ranked = rank_from_raw(doc_raw, query_raw[i], provider_ids, truncate_dim=args.dense_dim)
-        fused = rrf_fuse(bm25_ranked, dense_ranked, k=60)
+        if tag_channel is None:
+            fused = rrf_fuse(bm25_ranked, dense_ranked, k=60)
+        else:
+            tag_ranked = tag_channel.rank(h["hire_id"])
+            fused = rrf_fuse_n([bm25_ranked, dense_ranked, tag_ranked], k=60)
+            tag_score = dict(tag_ranked)
+            tag_pos = {pid: r + 1 for r, (pid, _) in enumerate(tag_ranked)}
 
         bm25_score = dict(bm25_ranked)
         dense_score = dict(dense_ranked)
@@ -241,7 +258,7 @@ def main():
                 label = 0          # documented trade-off: unjudged counted as negative
             else:
                 label = ""         # excluded from training
-            rows.append({
+            row = {
                 "hire_id": hid,
                 "provider_id": pid,
                 "label": label,
@@ -257,9 +274,14 @@ def main():
                 "seniority_fit": round(seniority_fit(h_tax.get("seniority_needed", ""),
                                                      p_tax.get("seniority", "")), 4),
                 "avail_immediacy": round(avail_immediacy(p_tax, h_tax), 4),
-            })
+            }
+            if tag_channel is not None:
+                row["tag_score"] = round(float(tag_score.get(pid, 0.0)), 6)
+                row["tag_rank"] = tag_pos.get(pid, 0)
+            rows.append(row)
 
-    cand_path = FEAT_DIR / f"candidates_top{args.top_k}.csv"
+    suffix = "_tag" if tag_channel is not None else ""
+    cand_path = FEAT_DIR / f"candidates_top{args.top_k}{suffix}.csv"
     cols = list(rows[0].keys())
     with cand_path.open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
@@ -267,7 +289,7 @@ def main():
         w.writerows(rows)
 
     train_rows = [r for r in rows if r["label"] != ""]
-    train_path = FEAT_DIR / "train_pairs.csv"
+    train_path = FEAT_DIR / f"train_pairs{suffix}.csv"
     with train_path.open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
@@ -282,6 +304,8 @@ def main():
     print(f"  label distribution (train)  : {dict(sorted(dist.items()))}")
     print(f"  judged pairs inside top-{args.top_k} : {judged_in_pool}")
     print(f"  grade>=2 pairs OUTSIDE top-{args.top_k} (recall loss, unfixable by re-ranking): {skipped_out_of_pool}")
+    if tag_channel is not None:
+        print(f"  tag channel ON: wrote {cand_path.name} and {train_path.name}; baseline feature files untouched")
     print("\nNext: score with the cross-encoder, then train the LTR ranker (see pipeline/RERANK_README.md)")
 
 

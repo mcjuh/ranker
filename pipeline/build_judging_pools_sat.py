@@ -67,6 +67,11 @@ def main():
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--data-dir", type=Path, default=DATA_DIR)
     ap.add_argument("--embed-only", action="store_true", help="fill the embedding cache and exit")
+    ap.add_argument("--tag-channel", action="store_true",
+                    help="also pool the tag-ID BM25 channel's top --method-top providers per gig. The existing "
+                         "pool is rebuilt unchanged (same random draw); only the pairs the tag channel ADDS are "
+                         "written, to judging_pools_tag.json / pool_sources_tag.json, and the graded "
+                         "judging_pools.json / pool_sources.json are left untouched. Off by default")
     args = ap.parse_args()
     data_dir = args.data_dir
 
@@ -82,8 +87,14 @@ def main():
     if args.embed_only:
         return
 
+    tag_channel = None
+    if args.tag_channel:
+        from tag_channel import TagChannel
+        tag_channel = TagChannel(data_dir)
+
     rng = random.Random(args.seed)
     pools, sources = {}, {}
+    extra_pools, extra_sources = {}, {}
     for i, h in enumerate(hirers):
         sparse = bm25.rank(hirer_text(h), query_title=h["hire_title"])
         dense = rank_from_raw(doc_raw, q_raw[i], pids)
@@ -99,14 +110,27 @@ def main():
         hid = str(h["hire_id"])
         pools[hid] = sorted(src)
         sources[hid] = {str(p): s for p, s in sorted(src.items())}
+        if tag_channel is not None:
+            # after the random draw, so the existing pool is exactly what it is without the flag
+            added = sorted(pid for pid, _ in tag_channel.rank(h["hire_id"])[: args.method_top] if pid not in src)
+            if added:
+                extra_pools[hid] = added
+                extra_sources[hid] = {str(p): ["tag"] for p in added}
 
-    (data_dir / "judging_pools.json").write_text(json.dumps(pools, indent=1), encoding="utf-8")
-    (data_dir / "pool_sources.json").write_text(json.dumps(sources, indent=1), encoding="utf-8")
+    if tag_channel is None:
+        (data_dir / "judging_pools.json").write_text(json.dumps(pools, indent=1), encoding="utf-8")
+        (data_dir / "pool_sources.json").write_text(json.dumps(sources, indent=1), encoding="utf-8")
 
-    sizes = [len(v) for v in pools.values()]
-    print(f"pool size per gig: min {min(sizes)}, mean {np.mean(sizes):.1f}, max {max(sizes)}")
-    print(f"total pairs to judge: {sum(sizes)}")
-    print(f"written to {data_dir}")
+        sizes = [len(v) for v in pools.values()]
+        print(f"pool size per gig: min {min(sizes)}, mean {np.mean(sizes):.1f}, max {max(sizes)}")
+        print(f"total pairs to judge: {sum(sizes)}")
+        print(f"written to {data_dir}")
+    else:
+        (data_dir / "judging_pools_tag.json").write_text(json.dumps(extra_pools, indent=1), encoding="utf-8")
+        (data_dir / "pool_sources_tag.json").write_text(json.dumps(extra_sources, indent=1), encoding="utf-8")
+        print(f"tag channel adds {sum(len(v) for v in extra_pools.values())} pairs over {len(extra_pools)} gigs "
+              f"to the existing pool (existing pairs unchanged, judging_pools.json untouched)")
+        print(f"written to {data_dir}: judging_pools_tag.json, pool_sources_tag.json")
 
 
 if __name__ == "__main__":

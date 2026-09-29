@@ -85,6 +85,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-dir", default="data",
                     help="dataset folder under pipeline/ (e.g. data_sat); outputs are namespaced accordingly")
+    ap.add_argument("--tag-channel", action="store_true",
+                    help="also run the tag-ID BM25 recall channel (needs tags_*.json from tag_corpus.py) and "
+                         "write tagbm25.json + rrf3_k60.json; off by default, no existing output changes")
     args = ap.parse_args()
     set_dataset(args.data_dir)
 
@@ -168,6 +171,25 @@ def main():
             rrf_results[str(h["hire_id"])] = ranked_ids_only(fused)
         (RESULTS_DIR / f"rrf_w_sw{sw}_dw{dw}.json").write_text(json.dumps(rrf_results, indent=2))
         print(f"  rrf[sparse_weight={sw}, dense_weight={dw}] written")
+
+    # ---------------- Tag-ID BM25 channel + 3-way RRF (opt-in) ----------------
+    if args.tag_channel:
+        from retrieval_rrf import rrf_fuse_n
+        from tag_channel import TagChannel
+
+        print("Running tag-ID BM25 channel + 3-way RRF (refined BM25 + dense + tag)...")
+        t0 = time.time()
+        channel = TagChannel(DATA_DIR)
+        tag_scored = {h["hire_id"]: channel.rank(h["hire_id"]) for h in hirers}
+        (RESULTS_DIR / "tagbm25.json").write_text(
+            json.dumps({str(hid): ranked_ids_only(scored) for hid, scored in tag_scored.items()}, indent=2))
+        rrf3_results = {}
+        for h in hirers:
+            fused = rrf_fuse_n([bm25_refined_scored_cache[h["hire_id"]], full_dense_scored[h["hire_id"]],
+                                tag_scored[h["hire_id"]]], k=60)
+            rrf3_results[str(h["hire_id"])] = ranked_ids_only(fused)
+        (RESULTS_DIR / "rrf3_k60.json").write_text(json.dumps(rrf3_results, indent=2))
+        print(f"  tagbm25.json and rrf3_k60.json written in {time.time() - t0:.1f}s")
 
     print("\nAll results written to pipeline/results/")
 
