@@ -1,0 +1,248 @@
+category_id,sector,track
+1,Accountancy,Assurance
+2,Accountancy,Business Valuation
+3,Accountancy,Enterprise Risk Management
+4,Accountancy,Financial Accounting
+5,Accountancy,Financial Accounting / Management Accounting
+6,Accountancy,Financial Forensics
+7,Accountancy,Internal Audit
+8,Accountancy,Management Accounting
+9,Accountancy,Mergers and Acquisitions
+10,Accountancy,Restructuring and Insolvency
+11,Accountancy,Sustainability Reporting and Assurance
+12,Accountancy,Tax
+13,Aerospace,Aircraft Engine / Component Maintenance
+14,Aerospace,Aircraft Maintenance
+15,Aerospace,Fleet Management
+16,Aerospace,Manufacturing
+17,Agrifood,Agriculture
+18,Agrifood,Agriculture / Aquaculture
+19,Agrifood,Aquaculture
+20,Agrifood,General Management
+21,Air Transport,Airport Emergency Services
+22,Air Transport,Airport Engineering
+23,Air Transport,Airport Operations
+24,Air Transport,Airside Operations
+25,Air Transport,Baggage Services
+26,Air Transport,Baggage Services / Flight Operations / Load Control Services / Technical Services / Cargo Operations / Ramp and Technical Ramp Services / Catering Services
+27,Air Transport,Cabin Operations
+28,Air Transport,Cargo Operations
+29,Air Transport,Catering Services
+30,Air Transport,Customer Services
+31,Air Transport,Flight Operations (AGH)
+32,Air Transport,Flight Operations (AGO)
+33,Air Transport,Ground Services
+34,Air Transport,Load Control Services
+35,Air Transport,Network Planning
+36,Air Transport,Passenger Services
+37,Air Transport,Pilot Operations
+38,Air Transport,Ramp and Technical Ramp Services
+39,Air Transport,Technical Services
+40,Arts,Technical Theatre & Production
+41,BioPharmaceuticals Manufacturing,Engineering and Maintenance
+42,BioPharmaceuticals Manufacturing,General Management
+43,BioPharmaceuticals Manufacturing,Process Development / Manufacturing Science and Technology (MS&T)
+44,BioPharmaceuticals Manufacturing,Production
+45,BioPharmaceuticals Manufacturing,Quality Assurance and Quality Control (QA&QC)
+46,Built Environment,Architectural Consultancy and Design
+47,Built Environment,Construction Management
+48,Built Environment,Construction Management (Production)
+49,Built Environment,Digital Delivery Management
+50,Built Environment,Engineering Consultancy and Design
+51,Built Environment,Facilities Management
+52,Built Environment,General Management
+53,Built Environment,Project Management
+54,Built Environment,Quantity Surveying
+55,Carbon Services and Trading,Advisory
+56,Carbon Services and Trading,Carbon Project Development
+57,Carbon Services and Trading,Financial Intermediation
+58,Carbon Services and Trading,Governance and Infrastructure
+59,Carbon Services and Trading,Legal and Insurance
+60,Design,Business
+61,Design,Design
+62,Design,Innovation
+63,Design,Technology
+64,Early Childhood,Early Childhood Education
+65,Early Childhood,Early Intervention
+66,Early Childhood,Learning Support
+67,Electronics,Management
+68,Electronics,Technical and Engineering
+69,Energy and Chemicals,Engineering and Maintenance
+70,Energy and Chemicals,"Health, Safety and Environment (HSE)"
+71,Energy and Chemicals,Production and Process Engineering
+72,Energy and Chemicals,Production and Process Engineering / Engineering and Maintenance
+73,Energy and Chemicals,"Production and Process Engineering / Health, Safety and Environment (HSE) / Engineering and Maintenance / Quality Assurance and Quality Control (QA&QC) / Technical Service, Application and Product Development / Research and Development (R&D)"
+74,Energy and Chemicals,Quality Assurance and Quality Control (QA&QC)
+75,Energy and Chemicals,"Quality Assurance and Quality Control (QA&QC) / Technical Service, Application and Product Development / Research and Development (R&D)"
+76,Energy and Chemicals,Research and Development (R&D)
+77,Energy and Chemicals,"Technical Services, Application and Product Development"
+78,Energy and Power,Battery Energy Storage Systems
+79,Energy and Power,Distributed Generation
+80,Energy and Power,Distributed Generation / Electricity Transmission and Distribution / Energy Retail / Energy Trading and Portfolio Management / Gas Systems Operations / Gas Transmission and Distribution / Liquefied Natural Gas Trading and Research / Power Generation / Terminal Operations and Fuel System Operations / Town Gas Production and Maintenance / Town Gas Technical Services
+81,Energy and Power,Electricity Imports
+82,Energy and Power,Electricity Transmission and Distribution
+83,Energy and Power,Energy Retail
+84,Energy and Power,Energy Trading and Portfolio Management
+85,Energy and Power,Gas Systems Operations
+86,Energy and Power,Gas Transmission and Distribution
+87,Energy and Power,Generated Distribution
+88,Energy and Power,Liquefied Natural Gas Trading and Research
+89,Energy and Power,Power Generation
+90,Energy and Power,Smart Grid
+91,Energy and Power,Terminal Operations and Fuel System Operations
+92,Energy and Power,Town Gas Production and Maintenance
+93,Energy and Power,Town Gas Technical Services
+94,Engineering Services,Engineering Construction and Commissioning
+95,Engineering Services,Engineering Construction and Commissioning / Engineering Design / Engineering Procurement / Project Development
+96,Engineering Services,Engineering Construction and Commissioning / Engineering Design / Engineering Procurement / Project Development / Project Financing / Operations and Maintenance
+97,Engineering Services,Engineering Design
+98,Engineering Services,Engineering Procurement
+99,Engineering Services,Operations and Maintenance
+100,Engineering Services,Project Development
+101,Engineering Services,Project Financing
+102,Environmental Services,Cleaning Operations
+103,Environmental Services,"Cleaning Operations / Waste Collection / Materials Recovery / Treatment and Disposal / Environment, Health and Safety"
+104,Environmental Services,"Environment, Health and Safety"
+105,Environmental Services,Materials Recovery
+106,Environmental Services,Pest Management
+107,Environmental Services,Treatment and Disposal
+108,Environmental Services,Waste Collection
+109,Financial Services,Digital and Data Analytics
+110,Financial Services,Family Office
+111,Financial Services,Operations
+112,Financial Services,Product Solutioning and Management
+113,Financial Services,"Risk, Compliance and Legal"
+114,Financial Services,"Sales, After Sales, Distribution and Relationship Management"
+115,Financial Services,Sustainability
+116,Financial Services,Trading and Execution
+117,Food Manufacturing,Business Development
+118,Food Manufacturing,Business Development / Production / Quality Assurance and Quality Control / Research and Development
+119,Food Manufacturing,Production
+120,Food Manufacturing,Quality Assurance and Control
+121,Food Manufacturing,Research and Development
+122,Food Services,Beverage Service
+123,Food Services,Culinary Arts
+124,Food Services,Food and Beverage Service
+125,Food Services,Pastry and Baking
+126,Healthcare,Community Care
+127,Healthcare,Genetic Counselling
+128,Healthcare,Nursing
+129,Healthcare,Occupational Therapy
+130,Healthcare,Operations
+131,Healthcare,Oral Health Therapy
+132,Healthcare,Pharmacy Support
+133,Healthcare,Physiotherapy
+134,Healthcare,Prehospital Emergency Care
+135,Healthcare,Speech Therapy
+136,Healthcare,Therapy Support
+137,Hotel and Accommodation Services,Front Office
+138,Hotel and Accommodation Services,Front Office / Housekeeping
+139,Hotel and Accommodation Services,Front Office / Housekeeping / Revenue and Distribution / Sales and Marketing
+140,Hotel and Accommodation Services,Housekeeping
+141,Hotel and Accommodation Services,Revenue and Distribution
+142,Hotel and Accommodation Services,Sales and Marketing
+143,Human Resource,Employee Experience and Relations
+144,Human Resource,HR Business Partner
+145,Human Resource,Learning and Organisation Development
+146,Human Resource,Operations and Technology
+147,Human Resource,Operations and Technology / Performance and Rewards / HR Business Partner / Talent Attraction / Employee Experience and Relations / Talent Management / Learning and Organisation Development
+148,Human Resource,Performance and Rewards
+149,Human Resource,Talent Attraction
+150,Human Resource,Talent Attraction / Employee Experience and Relations
+151,Human Resource,Talent Management
+152,Human Resource,Talent Management / Learning and Organisation Development
+153,Infocomm Technology,Cyber Security
+154,Infocomm Technology,Data and Artificial Intelligence
+155,Infocomm Technology,Infrastructure
+156,Infocomm Technology,Infrastructure / Software and Applications / Operations and Support
+157,Infocomm Technology,Operations and Support
+158,Infocomm Technology,Product Development
+159,Infocomm Technology,Sales and Marketing
+160,Infocomm Technology,Software and Applications
+161,Infocomm Technology,Strategy and Governance
+162,Infocomm Technology,Strategy and Governance / Infrastructure / Software and Applications
+163,Intellectual Property,IP Legal
+164,Intellectual Property,IP Legal / Patents Prosecution / IP Strategy
+165,Intellectual Property,IP Strategy
+166,Intellectual Property,Patents Prosecution
+167,Landscape,Arboriculture
+168,Landscape,Arboriculture / Horticulture and Turf Maintenance / Nursery
+169,Landscape,Horticulture and Turf Maintenance
+170,Landscape,Landscape Design
+171,Landscape,Landscape Design / Landscape Implementation / Horticulture and Turf Maintenance / Arboriculture / Nursery
+172,Landscape,Landscape Implementation
+173,Landscape,Nursery
+174,Legal Services,Advisory and Advocacy
+175,Logistics,Freight Forwarding and Operations
+176,Logistics,Freight Forwarding and Operations / Logistics Process Improvement and Information System / Logistics Solutioning and Programme Management / Sales and Customer Service / Transportation Management and Operations / Warehouse Management and Operations
+177,Logistics,Logistics Process Improvement and Information System
+178,Logistics,Logistics Solutioning and Programme Management
+179,Logistics,Sales and Customer Service
+180,Logistics,Transportation Management and Operations
+181,Logistics,Warehouse Management and Operations
+182,Marine and Offshore,Design and Engineering
+183,Marine and Offshore,Design and Engineering / Production Engineering
+184,Marine and Offshore,General Management
+185,Marine and Offshore,Production Engineering
+186,Marine and Offshore,Project Management
+187,Marine and Offshore,Workplace Safety and Health
+188,Media,Content Post Production
+189,Media,Content Production and Management
+190,Media,Game Design
+191,Media,Game Production
+192,Media,Game Technical Development
+193,Media,Media Business Management
+194,Media,Media Technology and Operations
+195,Media,Production Technical Services
+196,Media,Quality Assurance
+197,Media,Visual Graphics
+198,Precision Engineering,Management
+199,Precision Engineering,Technical and Engineering
+200,Public Transport,Bus Fleet Engineering
+201,Public Transport,Bus Operations
+202,Public Transport,Rail Engineering
+203,Public Transport,Rail Operations
+204,Retail,Brand Management
+205,Retail,E-Commerce (Omni-Channel)
+206,Retail,Marketing
+207,Retail,Merchandising
+208,Retail,Retail Operations
+209,Retail,Retail Operations / Brand Management / Marketing / Merchandising / E-Commerce (Omni-Channel)
+210,Sea Transport,Maritime Services
+211,Sea Transport,Port
+212,Sea Transport,Shipping
+213,Sea Transport,Shipping and Maritime Services
+214,Security,Auxiliary Police
+215,Security,Private Security
+216,Security,Security Consultancy
+217,Social Service,Care and Programme
+218,Social Service,Counselling
+219,Social Service,Early Intervention Teaching
+220,Social Service,Psychology
+221,Social Service,Social Work
+222,Social Service,Social Work / Youth Work / Care and Programme
+223,Social Service,Youth Work
+224,Tourism,Attractions Management and Operations
+225,Tourism,"Business Development, Sales, Sponsorships and Marketing"
+226,Tourism,Event Management and Operations
+227,Tourism,General Management
+228,Tourism,Travel Management and Operations
+229,Tourism,Venue Management and Operations
+230,Trade Associations and Chambers,"Branding, Marketing and Communications"
+231,Trade Associations and Chambers,Capability Building
+232,Trade Associations and Chambers,Industry Development
+233,Trade Associations and Chambers,Internationalisation
+234,Trade Associations and Chambers,Management
+235,Trade Associations and Chambers,Membership
+236,Trade Associations and Chambers,Research
+237,Trade Associations and Chambers,Strategy & Governance
+238,Training and Adult Education,Adult Education
+239,Training and Adult Education,Adult Education / Learning Management
+240,Training and Adult Education,Learning Management
+241,Wholesale Trade,Finance and Regulations
+242,Wholesale Trade,"Marketing, Business Development and Analysis"
+243,Wholesale Trade,"Operations, Procurement and Sourcing"
+244,Wholesale Trade,Trading and Sales
+245,Workplace Safety and Health,Corporate
+246,Workplace Safety and Health,Operational Control
+247,Workplace Safety and Health,System Audit
