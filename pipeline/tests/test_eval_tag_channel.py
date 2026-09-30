@@ -18,8 +18,9 @@ from pathlib import Path
 
 import numpy as np
 
-from eval_tag_channel import (CONDITIONS, Ranked, RoleWorld, cached_embeddings, ci, class_means, gig_metrics,
-                              hit_metrics, lsa_basis, rng_for, rrf_matrix, unique_positives)
+from eval_tag_channel import (CONDITIONS, GIG_METRICS, Ranked, RoleWorld, cached_embeddings, ci, class_means,
+                              gig_metrics, hit_metrics, judged_share, lsa_basis, rng_for, rrf_matrix,
+                              unique_positives)
 from greygigz import Taxonomy
 
 
@@ -224,6 +225,28 @@ class PartBHelpers(unittest.TestCase):
         # evaluate.py uses the raw 0-100 grade as the NDCG gain, so the 33 counts too (only R and MRR threshold at 40)
         ideal = 100 / math.log2(2) + 33 / math.log2(3)
         self.assertAlmostEqual(m["NDCG@10"][0], (100 / math.log2(3) + 33 / math.log2(4)) / ideal)
+
+    def test_cutoffs_at_5_10_20(self):
+        gt = {"1": {"500": 100}}
+        filler = list(range(1, 20))
+        at = lambda rank: {"1": Ranked(filler[: rank - 1] + [500] + filler[rank - 1:], list(range(20, 0, -1)))}
+        m = gig_metrics(at(7), ["1"], gt)              # relevant provider at rank 7
+        self.assertEqual(set(m), set(GIG_METRICS))
+        self.assertEqual((m["NDCG@5"][0], m["R@10"][0], m["R@20"][0]), (0.0, 1.0, 1.0))
+        self.assertAlmostEqual(m["NDCG@10"][0], 1 / math.log2(8))
+        self.assertAlmostEqual(m["NDCG@20"][0], 1 / math.log2(8))
+        m = gig_metrics(at(12), ["1"], gt)             # rank 12: outside the top 10, inside the top 20
+        self.assertEqual((m["R@10"][0], m["R@20"][0], m["NDCG@10"][0]), (0.0, 1.0, 0.0))
+        self.assertAlmostEqual(m["NDCG@20"][0], 1 / math.log2(13))
+        m = gig_metrics(at(3), ["1"], gt)
+        self.assertAlmostEqual(m["NDCG@5"][0], 1 / math.log2(4))
+
+    def test_judged_share_of_top_k(self):
+        ranking = {"1": Ranked([1, 2, 3, 4], [4, 3, 2, 1]), "2": Ranked([1, 2], [2, 1])}
+        judged = {"1": {"1": 0, "2": 1}, "2": {"1": 0, "2": 0}}
+        self.assertAlmostEqual(judged_share(ranking, ["1"], judged, 4), 0.5)
+        self.assertAlmostEqual(judged_share(ranking, ["1", "2"], judged, 4), (0.5 + 1.0) / 2)
+        self.assertAlmostEqual(judged_share(ranking, ["1"], judged, 2), 1.0)
 
     def test_condensed_lists_drop_unjudged_providers(self):
         gt = {"1": {"5": 100}}

@@ -439,6 +439,7 @@ def run_funnel(world: RoleWorld, args, view, evaluate, score, idx: TagBM25, best
 # Part B: provider-level, on tagged data_sat
 # ---------------------------------------------------------------------------
 
+GIG_METRICS = ("R@10", "R@20", "R@50", "R@100", "NDCG@5", "NDCG@10", "NDCG@20", "MRR")
 SAT_M_GRID = (5, 10, 20, 30)         # tags kept per text (the tagger stores 30)
 SAT_MARGINAL_KS = (10, 20, 50)
 
@@ -490,21 +491,29 @@ def existing_channels(hirers, providers, doc_raw, q_raw) -> dict[str, dict[str, 
 
 
 def gig_metrics(rankings: dict[str, Ranked], gigs, gt, judged=None) -> dict[str, np.ndarray]:
-    """Per-gig R@10/50/100, NDCG@10, MRR via evaluate.py (relevant = grade >= 2). With `judged`, unjudged
-    providers are dropped from each list first ("condensed list"), so a channel that surfaces providers
-    nobody graded is not penalised for them."""
+    """Per-gig R@10/20/50/100, NDCG@5/10/20, MRR via evaluate.py (relevant = grade >= 2). With `judged`,
+    unjudged providers are dropped from each list first ("condensed list"), so a channel that surfaces
+    providers nobody graded is not penalised for them."""
     from evaluate import ndcg_at_k, recall_at_k, reciprocal_rank
-    out = {m: [] for m in ("R@10", "R@50", "R@100", "NDCG@10", "MRR")}
+    out = {m: [] for m in GIG_METRICS}
     for hid in gigs:
         ids = rankings[hid].ids.tolist()
         if judged is not None:
             ids = [p for p in ids if str(p) in judged[hid]]
         row = gt.get(hid, {})
-        for k in (10, 50, 100):
+        for k in (10, 20, 50, 100):
             out[f"R@{k}"].append(recall_at_k(ids, row, k))
-        out["NDCG@10"].append(ndcg_at_k(ids, row, 10))
+        for k in (5, 10, 20):
+            out[f"NDCG@{k}"].append(ndcg_at_k(ids, row, k))
         out["MRR"].append(reciprocal_rank(ids, row))
     return {m: np.array(v, dtype=float) for m, v in out.items()}
+
+
+def judged_share(rankings: dict[str, Ranked], gigs, judged, k: int) -> float:
+    """Mean over gigs of the fraction of a channel's top-k providers that have a grade. Below 1.0 the channel's
+    unjudged providers count as irrelevant in every metric, so its numbers at k are lower bounds."""
+    return float(np.mean([np.mean([str(p) in judged[h] for p in rankings[h].ids[:k].tolist()] or [1.0])
+                          for h in gigs]))
 
 
 def unique_positives(target: Ranked, others: list[Ranked], positives: set, k: int) -> set:
@@ -591,16 +600,23 @@ def run_sat(args):
         print(f"\n########## labels: {title} ##########")
         # ---- channel alone, test gigs ---------------------------------------------------------------------
         boot = rng_for(args.seed, "sat/boot").integers(0, len(test), size=(args.n_boot, len(test)))
-        metric_names = ("R@10", "R@50", "R@100", "NDCG@10", "MRR")
+        metric_names = ("R@10", "R@50", "R@100", "NDCG@10", "MRR")      # fused section
         alone = {}
         print(f"\n=== TEST ({len(test)} gigs with a grade>=2 provider), channels alone; 95% CI over gigs ===")
-        print(f"{'channel':22}" + "".join(f"{m:>22}" for m in metric_names))
+        print(f"{'channel':10}" + "".join(f"{m:>21}" for m in GIG_METRICS))
         per_gig = {}
         for name in ("bm25", "dense", "rrf2", "tag"):
             per_gig[name] = gig_metrics(ex[name], test, gt)
-            alone[name] = {m: ci(per_gig[name][m], boot) for m in metric_names}
-            print(f"{name:22}" + "".join(f"{fmt(alone[name][m]):>22}" for m in metric_names))
+            alone[name] = {m: ci(per_gig[name][m], boot) for m in GIG_METRICS}
+            print(f"{name:10}" + "".join(f"{fmt(alone[name][m]):>21}" for m in GIG_METRICS))
         res["test_channels_alone"] = alone
+        shares = {name: {str(k): judged_share(ex[name], test, judged, k) for k in (10, 20, 50)}
+                  for name in ("bm25", "dense", "rrf2", "tag")}
+        res["test_judged_share_of_top_k"] = shares
+        print("share of each channel's top-K that has a grade (1.00 = fully judged, so its metrics at K are exact; "
+              "less = lower bound):")
+        for name, row in shares.items():
+            print(f"  {name:6}" + "".join(f"  top-{k}: {v:.3f}" for k, v in row.items()))
 
         # control: the same channel with every gig's tags swapped for another gig's
         shuffled = rng_for(args.seed, "sat/permute").permutation(len(hids))
@@ -608,7 +624,7 @@ def run_sat(args):
         swapped = {int(hids[i]): tags_h[int(hids[j])] for i, j in enumerate(shuffled)}
         control = tag_rankings(m_p, m_h, b, test, hirer_tags=swapped)
         ctl = gig_metrics(control, test, gt)
-        res["control_permuted_gig_tags"] = {m: ci(ctl[m], boot) for m in metric_names}
+        res["control_permuted_gig_tags"] = {m: ci(ctl[m], boot) for m in GIG_METRICS}
         print(f"control, gig tags shuffled across gigs: R@50 {fmt(res['control_permuted_gig_tags']['R@50'])} "
               f"(a random ranking gives about {50 / len(pids):.3f})")
 
