@@ -30,9 +30,10 @@ pip install -r pipeline/requirements-rerank.txt
 python -c "import torch, xgboost, sentence_transformers; print(torch.cuda.is_available())"
 ```
 
-`fi-bench` already has torch 2.11.0+cu130 and sees the RTX 3060 Laptop GPU (6.4 GB) where
-available; this repo's `data_sat` run so far has been CPU/MPS-only (no CUDA host), which is why
-cross-encoder fine-tuning (§5) hasn't been completed yet — it's slow without a GPU.
+`fi-bench` already has torch 2.11.0+cu130 and sees the RTX 3060 Laptop GPU (6.4 GB). An earlier
+`data_sat` run was CPU/MPS-only, which is why cross-encoder fine-tuning (§6) was originally left
+undone — it is slow without a GPU. **It has since been completed on the RTX 3060 (~65 min for
+5 folds); §6 records the result, which is that the fine-tuned CE is NOT used as a ranker feature.**
 If `import sentence_transformers` fails after install, it's a transformers-version clash —
 `sentence-transformers` may pin `transformers<5`; check with `pip check` before assuming the env is fine.
 
@@ -75,13 +76,47 @@ for consulting/finance text. Its score is **not** fed into LambdaMART below.
 ## 5. LambdaMART (Stage 2b) + ablation table
 
 ```bash
-python pipeline/rerank_ltr.py --mode ablation --data-dir data_sat --top-k 50            # current: text + structured signals, no CE
-python pipeline/rerank_ltr.py --mode ablation --data-dir data_sat --top-k 50 --ce-tag <tag>   # + cross-encoder score, once a usable CE score exists
+# RECOMMENDED — the configuration whose numbers are in the Results table
+python pipeline/rerank_ltr.py --mode ablation --data-dir data_sat --top-k 50 \
+    --linear-gain --normalize-scores zscore --tag linz
+
+# baseline for comparison: exponential gain, raw feature scales
+python pipeline/rerank_ltr.py --mode ablation --data-dir data_sat --top-k 50 --tag noce
+
+# + cross-encoder score (measured negative on data_sat -- see the CE note below)
+python pipeline/rerank_ltr.py --mode ablation --data-dir data_sat --top-k 50 --ce-tag cecv --ce-normalize zscore
 ```
 
 Prints the ablation (RRF → [+CE] → +LTR), per-fold NDCG@10 with mean/std, and feature
 importances. Predictions are **out-of-fold** (GroupKFold by query), so no query is scored by a
 model that saw it.
+
+### The two flags that matter
+
+**`--linear-gain`** — `rank:ndcg` uses *exponential* gain by default (2^label−1 → 0/1/3/7) while
+`evaluate.py` scores NDCG with *linear* gain on the 0-100 scores (0/33/66/100). Exponential gain
+weights grade-3 seven times grade-1; linear weights it three times. Without this flag the model
+optimises a different ranking than the one being reported. Worth **+0.023 NDCG@10**.
+
+**`--normalize-scores zscore`** — `bm25_score`, `dense_cosine` and `rrf_score` have query-dependent
+scales, and trees split on absolute values, so one threshold meant a different thing per gig.
+Rescaling within each query makes a split mean "how does this candidate compare to its siblings
+for this gig". Worth a further **+0.006 to +0.010 NDCG@10**. `rank` normalisation is available but
+measured worse; *percentile* normalisation is worse still.
+
+### Fusion: how the shipped ranker is built
+
+The linear-gain model wins NDCG@10 but gives back some P@5 versus the exponential-gain model.
+Fusing the two ranked lists with weighted RRF recovers that at no NDCG cost:
+
+```bash
+python pipeline/fuse_rankers.py --data-dir data_sat --inputs linz noce --weights 0.7 0.3 \
+    --out fused_linz_noce.json
+```
+
+Prints each input's metrics and the fused row, and writes the fused list. Fusion at w=0.7 is a
+strict Pareto point against `linz` alone (P@5 +0.0049 and MRR +0.0082 both significant, NDCG@10
+unchanged within CI).
 
 ## 6. Optional: fine-tune the cross-encoder (do this last)
 
@@ -92,10 +127,19 @@ python pipeline/rerank_crossencoder.py --mode finetune --data-dir data_sat \
 python pipeline/rerank_ltr.py --mode ablation --data-dir data_sat --ce-tag cecv     # re-run with the honest scores
 ```
 
-**Not yet completed for `data_sat`.** This was started and deliberately stopped (multi-hour
-CPU cost, given the zero-shot regression above) — an open item. With 19,193 judged pairs (vs. a
-few hundred on the archived synthetic run), it has a much better chance of working than a
-zero-shot score suggests; worth revisiting with GPU access.
+**Completed for `data_sat` on an RTX 3060 (5 folds, 2 epochs, ~65 min).** Result — and the reason
+the CE is **not** a ranker feature:
+
+| CE variant (1,023 queries) | P@5 | NDCG@10 | MRR |
+|---|---|---|---|
+| zero-shot | 0.064 | 0.3649 | 0.183 |
+| fine-tuned (OOF) | 0.116 | **0.5552** ± 0.0228 | 0.295 |
+
+Fine-tuning lifts the CE by **+0.190 NDCG@10** — it is no longer catastrophic. But folding
+`ce_score` into LambdaMART costs **−0.0246 NDCG@10 [−0.0349, −0.0141]** and buys only
+**+0.0259 MRR [+0.0123, +0.0396]**, so the shipped ranker (`models_data_sat/noce_xgb.json`) omits
+it. The OOF scores are still written for measurement, and the fine-tuned weights are kept for the
+semantic-score role.
 
 **Why CV and not a single split.** An earlier version trained on 80% of queries and evaluated on
 the other 20%, then wrote *in-sample* scores for the training queries — which silently made every

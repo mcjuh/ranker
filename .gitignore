@@ -4,6 +4,8 @@
 # fine-tuned cross-encoder weights (~87 MB each)
 pipeline/models/ce-*/
 pipeline/models/_ce_trainer_output/
+pipeline/models_data_sat/ce-*/
+pipeline/models_data_sat/_ce_trainer_output/
 
 # fine-tuned embedding model (~1.3 GB) + trainer scratch
 pipeline/models/mxbai-*
