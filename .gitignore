@@ -18,6 +18,11 @@ __pycache__/
 .DS_Store
 .venv/
 
+# secrets: API keys for the LLM labeller. Never commit; copy .env.example to .env
+.env
+.env.*
+!.env.example
+
 # data_sat run: large regenerable Stage-1 sweep dumps + embedding cache
 # (regenerate with: python pipeline/run_pipeline.py --data-dir data_sat)
 pipeline/results_data_sat/
