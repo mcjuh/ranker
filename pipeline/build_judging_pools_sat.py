@@ -72,6 +72,11 @@ def main():
                          "pool is rebuilt unchanged (same random draw); only the pairs the tag channel ADDS are "
                          "written, to judging_pools_tag.json / pool_sources_tag.json, and the graded "
                          "judging_pools.json / pool_sources.json are left untouched. Off by default")
+    ap.add_argument("--cover-k", type=int, default=0,
+                    help="with --tag-channel: also write judging_pools_cover.json, every pair in the top K of "
+                         "refined BM25, dense or the tag channel that is not in the existing pool, so all three "
+                         "channels' top-K lists are fully graded (needed to compare them alone at K without "
+                         "pool bias). The graded pool files are left untouched")
     args = ap.parse_args()
     data_dir = args.data_dir
 
@@ -95,6 +100,7 @@ def main():
     rng = random.Random(args.seed)
     pools, sources = {}, {}
     extra_pools, extra_sources = {}, {}
+    cover_pools = {}
     for i, h in enumerate(hirers):
         sparse = bm25.rank(hirer_text(h), query_title=h["hire_title"])
         dense = rank_from_raw(doc_raw, q_raw[i], pids)
@@ -116,6 +122,11 @@ def main():
             if added:
                 extra_pools[hid] = added
                 extra_sources[hid] = {str(p): ["tag"] for p in added}
+            if args.cover_k:
+                tag_full = tag_channel.rank(h["hire_id"])
+                cover = sorted({pid for ranked in (sparse, dense, tag_full) for pid, _ in ranked[: args.cover_k]} - set(src))
+                if cover:
+                    cover_pools[hid] = cover
 
     if tag_channel is None:
         (data_dir / "judging_pools.json").write_text(json.dumps(pools, indent=1), encoding="utf-8")
@@ -131,6 +142,10 @@ def main():
         print(f"tag channel adds {sum(len(v) for v in extra_pools.values())} pairs over {len(extra_pools)} gigs "
               f"to the existing pool (existing pairs unchanged, judging_pools.json untouched)")
         print(f"written to {data_dir}: judging_pools_tag.json, pool_sources_tag.json")
+        if args.cover_k:
+            (data_dir / "judging_pools_cover.json").write_text(json.dumps(cover_pools, indent=1), encoding="utf-8")
+            print(f"--cover-k {args.cover_k}: {sum(len(v) for v in cover_pools.values())} pairs outside the existing "
+                  f"pool over {len(cover_pools)} gigs -> judging_pools_cover.json")
 
 
 if __name__ == "__main__":
