@@ -18,7 +18,9 @@ Two label sets, because the tag channel surfaces providers nobody graded:
     extended   + llm_judgments_merged_tag.json (--extra-grades): tag-only pairs graded by labeller.py, which is
                more lenient than the original grader and only covers what the tag channel adds
 and two treatments of unjudged candidates: "standard" (irrelevant) and "condensed" (dropped from every list).
-Training rows are the judged candidates under the same label set as the evaluation.
+Training rows are the judged candidates. By default both systems train on the ORIGINAL grades only, whatever
+label set they are scored on (--train-labels same trains on the extended grades too; that comparison is unfair,
+see the option's help).
 
 Run from the repo root, after features.py (with and without --tag-channel):
     python pipeline/eval_tag_downstream.py --extra-grades
@@ -172,6 +174,12 @@ def main():
     ap.add_argument("--baseline-csv", type=Path, default=None, help="default: features_<data-dir>/candidates_top50.csv")
     ap.add_argument("--tag-csv", type=Path, default=None, help="default: features_<data-dir>/candidates_top50_tag.csv")
     ap.add_argument("--extra-grades", action="store_true", help="also report on the extended labels")
+    ap.add_argument("--train-labels", choices=["same", "original"], default="original",
+                    help="labels the rankers TRAIN on when evaluating on the extended labels. 'original' (default) "
+                         "trains both systems on the original grades only. 'same' trains on the extended grades too, "
+                         "which is not a fair comparison: which candidates got an extra grade depends on the tag "
+                         "channel, a signal the baseline's features cannot see, so the baseline learns that deep-ranked "
+                         "graded candidates are positive and then ranks ungraded ones high")
     ap.add_argument("--folds", type=int, default=5)
     ap.add_argument("--seed", type=int, default=SEED)
     ap.add_argument("--n-boot", type=int, default=2000)
@@ -188,14 +196,16 @@ def main():
     if args.extra_grades:
         label_sets["extended"] = (load("llm_judgments_merged_tag.json"), load("ground_truth_llm_tag.json"))
 
-    result = {"seed": args.seed, "folds": args.folds, "baseline_csv": base_csv.name, "tag_csv": tag_csv.name,
+    result = {"seed": args.seed, "folds": args.folds, "train_labels": args.train_labels,
+              "baseline_csv": base_csv.name, "tag_csv": tag_csv.name,
               "recipes": {"fuse_weights": FUSE_WEIGHTS, "k": 60}}
     for label_name, (judged, gt) in label_sets.items():
         print(f"\n################ labels: {label_name} ################", flush=True)
         systems = {}
         for system, path, feats in (("base", base_csv, list(ltr.DEFAULT_FEATURES)),
                                     ("tag", tag_csv, list(ltr.DEFAULT_FEATURES) + TAG_FEATURES)):
-            for stage, lst in ranked_lists(path, feats, judged, args.folds, args.seed).items():
+            train_grades = label_sets["original"][0] if args.train_labels == "original" else judged
+            for stage, lst in ranked_lists(path, feats, train_grades, args.folds, args.seed).items():
                 systems[f"{system}_{stage}"] = lst
         gigs = sorted(systems["base_rrf"])
         assert gigs == sorted(systems["tag_rrf"]), "baseline and tag candidates cover different gigs"
