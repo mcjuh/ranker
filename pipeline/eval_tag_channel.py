@@ -586,84 +586,98 @@ def run_sat(args):
     tag = tag_rankings(m_p, m_h, b, hids)
     ex["tag"] = tag
 
-    # ---- channel alone, test gigs ---------------------------------------------------------------------
-    boot = rng_for(args.seed, "sat/boot").integers(0, len(test), size=(args.n_boot, len(test)))
-    metric_names = ("R@10", "R@50", "R@100", "NDCG@10", "MRR")
-    alone = {}
-    print(f"\n=== TEST ({len(test)} gigs with a grade>=2 provider), channels alone; 95% CI over gigs ===")
-    print(f"{'channel':22}" + "".join(f"{m:>22}" for m in metric_names))
-    per_gig = {}
-    for name in ("bm25", "dense", "rrf2", "tag"):
-        per_gig[name] = gig_metrics(ex[name], test, gt)
-        alone[name] = {m: ci(per_gig[name][m], boot) for m in metric_names}
-        print(f"{name:22}" + "".join(f"{fmt(alone[name][m]):>22}" for m in metric_names))
-    result["test_channels_alone"] = alone
+    def report(res, judged, gt, positives, title):
+        """Everything from 'channel alone' to 'fused', against one label set. Fills `res`."""
+        print(f"\n########## labels: {title} ##########")
+        # ---- channel alone, test gigs ---------------------------------------------------------------------
+        boot = rng_for(args.seed, "sat/boot").integers(0, len(test), size=(args.n_boot, len(test)))
+        metric_names = ("R@10", "R@50", "R@100", "NDCG@10", "MRR")
+        alone = {}
+        print(f"\n=== TEST ({len(test)} gigs with a grade>=2 provider), channels alone; 95% CI over gigs ===")
+        print(f"{'channel':22}" + "".join(f"{m:>22}" for m in metric_names))
+        per_gig = {}
+        for name in ("bm25", "dense", "rrf2", "tag"):
+            per_gig[name] = gig_metrics(ex[name], test, gt)
+            alone[name] = {m: ci(per_gig[name][m], boot) for m in metric_names}
+            print(f"{name:22}" + "".join(f"{fmt(alone[name][m]):>22}" for m in metric_names))
+        res["test_channels_alone"] = alone
 
-    # control: the same channel with every gig's tags swapped for another gig's
-    shuffled = rng_for(args.seed, "sat/permute").permutation(len(hids))
-    tags_h = tag_lists(raw_h, m_h)
-    swapped = {int(hids[i]): tags_h[int(hids[j])] for i, j in enumerate(shuffled)}
-    control = tag_rankings(m_p, m_h, b, test, hirer_tags=swapped)
-    ctl = gig_metrics(control, test, gt)
-    result["control_permuted_gig_tags"] = {m: ci(ctl[m], boot) for m in metric_names}
-    print(f"control, gig tags shuffled across gigs: R@50 {fmt(result['control_permuted_gig_tags']['R@50'])} "
-          f"(a random ranking gives about {50 / len(pids):.3f})")
+        # control: the same channel with every gig's tags swapped for another gig's
+        shuffled = rng_for(args.seed, "sat/permute").permutation(len(hids))
+        tags_h = tag_lists(raw_h, m_h)
+        swapped = {int(hids[i]): tags_h[int(hids[j])] for i, j in enumerate(shuffled)}
+        control = tag_rankings(m_p, m_h, b, test, hirer_tags=swapped)
+        ctl = gig_metrics(control, test, gt)
+        res["control_permuted_gig_tags"] = {m: ci(ctl[m], boot) for m in metric_names}
+        print(f"control, gig tags shuffled across gigs: R@50 {fmt(res['control_permuted_gig_tags']['R@50'])} "
+              f"(a random ranking gives about {50 / len(pids):.3f})")
 
-    # ---- what the tag channel adds ---------------------------------------------------------------------
-    print("\n=== marginal recall on TEST: relevant providers in a channel's top-K that neither of the other two "
-          "channels has in theirs ===")
-    print("(labels were pooled from the two existing channels, so this is biased against the tag channel; "
-          "see the unjudged counts below)")
-    marginal = {}
-    for k in SAT_MARGINAL_KS:
-        marginal[k] = {}
-        for target, others in (("tag", ("bm25", "dense")), ("bm25", ("dense", "tag")), ("dense", ("bm25", "tag"))):
-            found = [unique_positives(ex[target][h], [ex[o][h] for o in others], positives[h], k) for h in test]
-            marginal[k][target] = {
-                "gigs_with_unique_hit": float(np.mean([len(f) > 0 for f in found])),
-                "share_of_positives": float(sum(len(f) for f in found) / sum(len(positives[h]) for h in test)),
-                "n_unique_hits": int(sum(len(f) for f in found))}
-        print(f"  K={k:<3}" + "   ".join(
-            f"{t}: {v['gigs_with_unique_hit']:.3f} of gigs ({v['n_unique_hits']} hits, {v['share_of_positives']:.3f} of positives)"
-            for t, v in marginal[k].items()))
-    result["test_marginal_recall"] = {str(k): v for k, v in marginal.items()}
+        # ---- what the tag channel adds ---------------------------------------------------------------------
+        print("\n=== marginal recall on TEST: relevant providers in a channel's top-K that neither of the other two "
+              "channels has in theirs ===")
+        print("(labels were pooled from the two existing channels, so this is biased against the tag channel; "
+              "see the unjudged counts below)")
+        marginal = {}
+        for k in SAT_MARGINAL_KS:
+            marginal[k] = {}
+            for target, others in (("tag", ("bm25", "dense")), ("bm25", ("dense", "tag")), ("dense", ("bm25", "tag"))):
+                found = [unique_positives(ex[target][h], [ex[o][h] for o in others], positives[h], k) for h in test]
+                marginal[k][target] = {
+                    "gigs_with_unique_hit": float(np.mean([len(f) > 0 for f in found])),
+                    "share_of_positives": float(sum(len(f) for f in found) / sum(len(positives[h]) for h in test)),
+                    "n_unique_hits": int(sum(len(f) for f in found))}
+            print(f"  K={k:<3}" + "   ".join(
+                f"{t}: {v['gigs_with_unique_hit']:.3f} of gigs ({v['n_unique_hits']} hits, {v['share_of_positives']:.3f} of positives)"
+                for t, v in marginal[k].items()))
+        res["test_marginal_recall"] = {str(k): v for k, v in marginal.items()}
 
-    outside = [(h, p) for h in gigs for p in positives[h] if p not in ex["rrf2"][h].top(50)]
-    got = [(h, p) for h, p in outside if p in ex["tag"][h].top(50)]
-    print(f"positives outside the existing RRF top-50 pool: {len(outside)} (on {len({h for h, _ in outside})} gigs); "
-          f"the tag channel has {len(got)} of them in its top-50")
-    result["outside_pool"] = {"n": len(outside), "tag_top50": len(got)}
+        outside = [(h, p) for h in gigs for p in positives[h] if p not in ex["rrf2"][h].top(50)]
+        got = [(h, p) for h, p in outside if p in ex["tag"][h].top(50)]
+        print(f"positives outside the existing RRF top-50 pool: {len(outside)} (on {len({h for h, _ in outside})} gigs); "
+              f"the tag channel has {len(got)} of them in its top-50")
+        res["outside_pool"] = {"n": len(outside), "tag_top50": len(got)}
 
-    print("\nunjudged tag-only candidates (nobody graded them, so they count as irrelevant above), all gigs:")
-    result["ungraded"] = {}
-    for k in SAT_MARGINAL_KS:
-        only = {h: ex["tag"][h].top(k) - ex["bm25"][h].top(k) - ex["dense"][h].top(k) for h in hids}
-        n_only = sum(len(v) for v in only.values())
-        n_unjudged = sum(len(v - {int(p) for p in judged[h]}) for h, v in only.items())
-        n_top_unjudged = sum(len(ex["tag"][h].top(k) - {int(p) for p in judged[h]}) for h in hids)
-        result["ungraded"][str(k)] = {"tag_only_pairs": n_only, "tag_only_unjudged": n_unjudged,
-                                      "tag_top_k_unjudged": n_top_unjudged}
-        print(f"  K={k:<3} tag-only pairs {n_only}, of which unjudged {n_unjudged} ({n_unjudged / max(n_only, 1):.1%}); "
-              f"pairs to grade to cover the whole tag top-{k}: {n_top_unjudged}")
+        print("\nunjudged tag-only candidates (nobody graded them, so they count as irrelevant above), all gigs:")
+        res["ungraded"] = {}
+        for k in SAT_MARGINAL_KS:
+            only = {h: ex["tag"][h].top(k) - ex["bm25"][h].top(k) - ex["dense"][h].top(k) for h in hids}
+            n_only = sum(len(v) for v in only.values())
+            n_unjudged = sum(len(v - {int(p) for p in judged[h]}) for h, v in only.items())
+            n_top_unjudged = sum(len(ex["tag"][h].top(k) - {int(p) for p in judged[h]}) for h in hids)
+            res["ungraded"][str(k)] = {"tag_only_pairs": n_only, "tag_only_unjudged": n_unjudged,
+                                          "tag_top_k_unjudged": n_top_unjudged}
+            print(f"  K={k:<3} tag-only pairs {n_only}, of which unjudged {n_unjudged} ({n_unjudged / max(n_only, 1):.1%}); "
+                  f"pairs to grade to cover the whole tag top-{k}: {n_top_unjudged}")
 
-    # ---- fused: refined BM25 + dense + tag, against the existing two-channel RRF -----------------------------
-    print(f"\n=== TEST, fused ranking: RRF(bm25, dense) vs RRF(bm25, dense, tag), paired 95% CI over gigs ===")
-    fused_rows = {}
-    for w in (1.0, 0.5):
-        fused = {h: (lambda ids: Ranked([p for p, _ in ids], [s for _, s in ids]))(
-            rrf_fuse_n([ex["bm25"][h].pairs(), ex["dense"][h].pairs(), ex["tag"][h].pairs()], weights=[1.0, 1.0, w]))
-            for h in test}
-        for label, jd in (("standard", None), ("condensed (unjudged dropped)", judged)):
-            base = gig_metrics(ex["rrf2"], test, gt, jd)
-            new = gig_metrics(fused, test, gt, jd)
-            fused_rows[f"w={w} {label}"] = {
-                m: {"rrf2": float(base[m].mean()), "rrf3": float(new[m].mean()), "diff": ci(new[m] - base[m], boot)}
-                for m in metric_names}
-            print(f"  tag weight {w}, {label}:")
-            for m in metric_names:
-                r = fused_rows[f"w={w} {label}"][m]
-                print(f"    {m:8} rrf2 {r['rrf2']:.4f}  rrf3 {r['rrf3']:.4f}  diff {fmt(r['diff'])}")
-    result["test_fused"] = fused_rows
+        # ---- fused: refined BM25 + dense + tag, against the existing two-channel RRF -----------------------------
+        print(f"\n=== TEST, fused ranking: RRF(bm25, dense) vs RRF(bm25, dense, tag), paired 95% CI over gigs ===")
+        fused_rows = {}
+        for w in (1.0, 0.5):
+            fused = {h: (lambda ids: Ranked([p for p, _ in ids], [s for _, s in ids]))(
+                rrf_fuse_n([ex["bm25"][h].pairs(), ex["dense"][h].pairs(), ex["tag"][h].pairs()], weights=[1.0, 1.0, w]))
+                for h in test}
+            for label, jd in (("standard", None), ("condensed (unjudged dropped)", judged)):
+                base = gig_metrics(ex["rrf2"], test, gt, jd)
+                new = gig_metrics(fused, test, gt, jd)
+                fused_rows[f"w={w} {label}"] = {
+                    m: {"rrf2": float(base[m].mean()), "rrf3": float(new[m].mean()), "diff": ci(new[m] - base[m], boot)}
+                    for m in metric_names}
+                print(f"  tag weight {w}, {label}:")
+                for m in metric_names:
+                    r = fused_rows[f"w={w} {label}"][m]
+                    print(f"    {m:8} rrf2 {r['rrf2']:.4f}  rrf3 {r['rrf3']:.4f}  diff {fmt(r['diff'])}")
+        res["test_fused"] = fused_rows
+
+    report(result, judged, gt, positives, "original (pooled from bm25 + dense + random)")
+    if args.extra_grades:
+        judged_x, gt_x = load("llm_judgments_merged_tag.json"), load("ground_truth_llm_tag.json")
+        positives_x = {h: {int(p) for p, sc in gt_x.get(h, {}).items() if sc >= RELEVANCE_THRESHOLD} for h in hids}
+        added = sum(len(judged_x[h]) - len(judged.get(h, {})) for h in judged_x)
+        new_pos = sum(len(positives_x[h]) - len(positives[h]) for h in hids)
+        print(f"\nextended labels: +{added} graded pairs, +{new_pos} positives (dev/test split unchanged)")
+        result["extended_labels"] = {"extra_graded_pairs": added, "extra_positives": new_pos}
+        report(result["extended_labels"], judged_x, gt_x, positives_x,
+               "extended (+ tag-only pairs graded by labeller.py)")
 
     result["seconds"] = round(time.time() - t_start, 1)
     RESULTS_DIR.mkdir(exist_ok=True)
@@ -762,6 +776,10 @@ def main():
     ap.add_argument("--seed", type=int, default=SEED)
     ap.add_argument("--export-dir", type=Path, default=DEFAULT_EXPORT_DIR)
     ap.add_argument("--data-dir", default="data_sat", help="(sat) dataset folder under pipeline/")
+    ap.add_argument("--extra-grades", action="store_true",
+                    help="(sat) also report on the extended labels (llm_judgments_merged_tag.json and "
+                         "ground_truth_llm_tag.json in --data-dir, made by labeller.py merge); the "
+                         "original-label numbers are unchanged")
     ap.add_argument("--n-boot", type=int, default=1000, help="bootstrap resamples over classes / gigs")
     ap.add_argument("--n-roles", type=int, default=400, help="(tagger) role descriptions to tag, half dev, half test")
     ap.add_argument("--draws-scale", type=float, default=1.0,
