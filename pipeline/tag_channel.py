@@ -13,10 +13,11 @@ from pathlib import Path
 
 from retrieval_tagbm25 import TagBM25
 
-# How many of the tagger's top tags are kept per text. These are starting points, to be tuned on a
-# dev split (see the evaluation), not settled values.
-DEFAULT_TOP_M_PROVIDER = 10
-DEFAULT_TOP_M_HIRER = 10
+# How many of the tagger's top tags are kept per text. 30 is the most the tagger stores and the value
+# eval_tag_channel.py sat selected on the dev gigs (results_tag/sat.json, "selected"); fewer tags scored
+# lower. Pools and labels must be built with the same value the evaluation ranks with.
+DEFAULT_TOP_M_PROVIDER = 30
+DEFAULT_TOP_M_HIRER = 30
 
 
 def load_tags(path: Path, top_m: int) -> dict[int, list[int]]:
