@@ -439,7 +439,7 @@ def run_funnel(world: RoleWorld, args, view, evaluate, score, idx: TagBM25, best
 # Part B: provider-level, on tagged data_sat
 # ---------------------------------------------------------------------------
 
-GIG_METRICS = ("R@10", "R@20", "R@50", "R@100", "NDCG@5", "NDCG@10", "NDCG@20", "MRR")
+GIG_METRICS = ("P@5", "P@10", "P@20", "R@10", "R@20", "R@50", "R@100", "NDCG@5", "NDCG@10", "NDCG@20", "MRR")
 SAT_M_GRID = (5, 10, 20, 30)         # tags kept per text (the tagger stores 30)
 SAT_MARGINAL_KS = (10, 20, 50)
 
@@ -491,10 +491,10 @@ def existing_channels(hirers, providers, doc_raw, q_raw) -> dict[str, dict[str, 
 
 
 def gig_metrics(rankings: dict[str, Ranked], gigs, gt, judged=None) -> dict[str, np.ndarray]:
-    """Per-gig R@10/20/50/100, NDCG@5/10/20, MRR via evaluate.py (relevant = grade >= 2). With `judged`,
+    """Per-gig P@5/10/20, R@10/20/50/100, NDCG@5/10/20, MRR via evaluate.py (relevant = grade >= 2). With `judged`,
     unjudged providers are dropped from each list first ("condensed list"), so a channel that surfaces
     providers nobody graded is not penalised for them."""
-    from evaluate import ndcg_at_k, recall_at_k, reciprocal_rank
+    from evaluate import ndcg_at_k, precision_at_k, recall_at_k, reciprocal_rank
     out = {m: [] for m in GIG_METRICS}
     for hid in gigs:
         ids = rankings[hid].ids.tolist()
@@ -505,6 +505,7 @@ def gig_metrics(rankings: dict[str, Ranked], gigs, gt, judged=None) -> dict[str,
             out[f"R@{k}"].append(recall_at_k(ids, row, k))
         for k in (5, 10, 20):
             out[f"NDCG@{k}"].append(ndcg_at_k(ids, row, k))
+            out[f"P@{k}"].append(precision_at_k(ids, row, k))
         out["MRR"].append(reciprocal_rank(ids, row))
     return {m: np.array(v, dtype=float) for m, v in out.items()}
 
@@ -603,7 +604,7 @@ def run_sat(args):
         metric_names = ("R@10", "R@50", "R@100", "NDCG@10", "MRR")      # fused section
         alone = {}
         print(f"\n=== TEST ({len(test)} gigs with a grade>=2 provider), channels alone; 95% CI over gigs ===")
-        print(f"{'channel':10}" + "".join(f"{m:>21}" for m in GIG_METRICS))
+        print(f"{'channel':10}" + "".join(f"{m:>21}" for m in GIG_METRICS))   # wide: one CI per cell
         per_gig = {}
         for name in ("bm25", "dense", "rrf2", "tag"):
             per_gig[name] = gig_metrics(ex[name], test, gt)

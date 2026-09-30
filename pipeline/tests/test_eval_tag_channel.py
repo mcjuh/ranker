@@ -232,6 +232,7 @@ class PartBHelpers(unittest.TestCase):
         at = lambda rank: {"1": Ranked(filler[: rank - 1] + [500] + filler[rank - 1:], list(range(20, 0, -1)))}
         m = gig_metrics(at(7), ["1"], gt)              # relevant provider at rank 7
         self.assertEqual(set(m), set(GIG_METRICS))
+        self.assertEqual((m["P@5"][0], m["P@10"][0], m["P@20"][0]), (0.0, 0.1, 0.05))
         self.assertEqual((m["NDCG@5"][0], m["R@10"][0], m["R@20"][0]), (0.0, 1.0, 1.0))
         self.assertAlmostEqual(m["NDCG@10"][0], 1 / math.log2(8))
         self.assertAlmostEqual(m["NDCG@20"][0], 1 / math.log2(8))
