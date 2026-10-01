@@ -6,7 +6,8 @@ Why: every label in this repo comes from one model (qwen3.8:27b), and the tag-ch
 reconstruction of its prompt that is more lenient (labeller.py calibration). This asks whether the
 verdicts on the channel survive a grader from a different model family.
 
-Modes (run from the repo root; --round 1 is the 40-pair pilot, --round 2 the 160-pair follow-up):
+Modes (run from the repo root; --round 1 is the 40-pair pilot, --round 2 the 160-pair follow-up, --round 3 the
+adjudication of the pairs the hubness result rests on, see ROUNDS):
     python pipeline/claude_audit.py sample   [--round N]            # draws the sample, writes the key
     python pipeline/claude_audit.py show     [--round N] --part K   # prints items WITHOUT any qwen information
     python pipeline/claude_audit.py score    [--round N]            # joins the grades to the key and compares
@@ -66,12 +67,40 @@ ROUNDS = {
             "orig_neg": ("judgments.jsonl", 10, lambda r: r["grade"] < 2),
         },
     },
+    3: {
+        # Adjudication of what the hubness-corrected channel's gain rests on (TAG_CHANNEL.md section 11). Only repro
+        # positives are drawn from the two diff strata: a gain that is pure grader leniency shows up as the entering
+        # positives being confirmed less often than the leaving ones. The discordant stratum (original < 2, repro >= 2,
+        # the very same pairs) separates the prompt's leniency from the pairs' population; concordant is its control.
+        "seed": 9, "prefix": "R", "per_page": 40, "key": "sample3_key.json", "grades": "claude_grades3.jsonl",
+        "strata": {
+            "diff_in_pos": ("diff_in", 70, lambda r: r["grade"] >= 2),
+            "diff_out_pos": ("diff_out", 70, lambda r: r["grade"] >= 2),
+            "discordant": ("doubly_graded", 40, lambda r: r["orig_grade"] < 2 <= r["grade"]),
+            "concordant_pos": ("doubly_graded", 15, lambda r: r["orig_grade"] >= 2 and r["grade"] >= 2),
+        },
+    },
 }
 
 
 def _records(name: str) -> list[dict]:
     path = DATA / name
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def _round3_pools(original: list[dict]) -> dict[str, list[dict]]:
+    """Reproduction-graded records for the round 3 strata, each with the original grade attached when there is one."""
+    repro = {}
+    for name in ("judgments_variants.jsonl", "judgments_regrade.jsonl", "judgments_tag.jsonl", "calibration.jsonl"):
+        for r in _records(name):
+            if r["status"] == "ok":
+                repro.setdefault((r["hire_id"], r["provider_id"]), r)
+    orig = {(r["hire_id"], r["provider_id"]): r["grade"] for r in original if r["status"] == "ok"}
+    with_orig = lambda key, r: {**r, "orig_grade": orig.get(key)}
+    diff = json.loads((AUDIT / "diff_pairs_test.json").read_text(encoding="utf-8"))
+    side = lambda pairs: [with_orig(tuple(k), repro[tuple(k)]) for k in pairs if tuple(k) in repro]
+    return {"diff_in": side(diff["entering"]), "diff_out": side(diff["leaving"]),
+            "doubly_graded": [with_orig(k, r) for k, r in repro.items() if k in orig]}
 
 
 def draw_sample(rnd: int) -> list[dict]:
@@ -82,6 +111,8 @@ def draw_sample(rnd: int) -> list[dict]:
     pools = {"judgments.jsonl": [r for r in original if r["status"] == "ok"],
              "judgments_tag.jsonl": [r for r in _records("judgments_tag.jsonl")
                                      if r["status"] == "ok" and (r["hire_id"], r["provider_id"]) not in in_original]}
+    if rnd == 3:
+        pools.update(_round3_pools(original))
     used = set()  # pairs already audited in an earlier round are never drawn again
     for earlier in range(1, rnd):
         key_path = AUDIT / ROUNDS[earlier]["key"]
@@ -103,7 +134,8 @@ def draw_sample(rnd: int) -> list[dict]:
             raise SystemExit(f"stratum {stratum}: only {len(picked)} of {n} available")
         for r in picked:
             chosen.append({"hire_id": r["hire_id"], "provider_id": r["provider_id"], "stratum": stratum,
-                           "qwen_grade": r["grade"], "qwen_probs": r["probs"], "qwen_prompt": r["prompt_version"]})
+                           "qwen_grade": r["grade"], "qwen_probs": r["probs"], "qwen_prompt": r["prompt_version"],
+                           "orig_grade": r.get("orig_grade")})
     rng.shuffle(chosen)
     width = 2 if rnd == 1 else 3
     for i, item in enumerate(chosen, start=1):
@@ -164,6 +196,43 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
 def _fmt_ci(k: int, n: int) -> str:
     lo, hi = wilson(k, n)
     return f"{k}/{n} = {k / n:.2f} [{lo:.2f}, {hi:.2f}]" if n else "n/a"
+
+
+def newcombe_diff(k1: int, n1: int, k2: int, n2: int) -> tuple[float, float, float]:
+    """p1 - p2 with Newcombe's hybrid-score 95% interval (Wilson bounds of each proportion)."""
+    p1, p2 = k1 / n1, k2 / n2
+    l1, u1 = wilson(k1, n1)
+    l2, u2 = wilson(k2, n2)
+    d = p1 - p2
+    return d, d - math.sqrt((p1 - l1) ** 2 + (u2 - p2) ** 2), d + math.sqrt((u1 - p1) ** 2 + (p2 - l2) ** 2)
+
+
+def score_round3(rows: list) -> None:
+    """The two questions round 3 was drawn for. The verdict rule was fixed before any grade was read:
+    entering positives confirmed LOWER than leaving ones (interval excludes 0) = the gain is grader leniency;
+    otherwise the audit does not contradict the gain (it is underpowered for a small gap, which is stated)."""
+    cnt = {}
+    for stratum in ("diff_in_pos", "diff_out_pos", "discordant", "concordant_pos"):
+        sub = [g for r, g in rows if r["stratum"] == stratum]
+        cnt[stratum] = (sum(g >= 2 for g in sub), len(sub))
+    print("\nROUND 3 (Claude >= 2 rates, Wilson 95%)")
+    for stratum, (k, n) in cnt.items():
+        print(f"  {stratum:<15} {_fmt_ci(k, n)}")
+    (ka, na), (kb, nb) = cnt["discordant"], cnt["concordant_pos"]
+    print(f"  discordant (original < 2, repro >= 2): Claude sides with the reproduction on {ka}/{na}, with the original "
+          f"on {na - ka}/{na}; concordant control confirmed {kb}/{nb}")
+    (k1, n1), (k2, n2) = cnt["diff_in_pos"], cnt["diff_out_pos"]
+    d, lo, hi = newcombe_diff(k1, n1, k2, n2)
+    verdict = ("ENTERING LOWER: the gain looks like grader leniency" if hi < 0 else
+               "no evidence the entering positives are confirmed less often" if d >= 0 or hi >= 0 and lo < 0 else "")
+    print(f"  entering minus leaving positives, confirmed by Claude: {d:+.3f} [{lo:+.3f}, {hi:+.3f}]  -> {verdict}")
+    try:
+        from scipy.stats import fisher_exact
+        print(f"  Fisher exact p = {fisher_exact([[k1, n1 - k1], [k2, n2 - k2]])[1]:.4f}")
+    except ImportError:
+        pass
+    print(f"  power note: with n = {n1} and {n2}, a true gap of 0.08 (what the Stage-1 P@10 gain implies at about 3 "
+          f"swapped pairs per gig) is not reliably detectable; a wide interval is not evidence of no gap.")
 
 
 def cmd_score(args):
@@ -234,6 +303,8 @@ def cmd_score(args):
             print(f"  tag-only vs original positives, Fisher exact p = {p:.4f}")
         except ImportError:
             pass
+    if args.round == 3:
+        score_round3(rows)
 
 
 def _serious_mismatch(h: dict, p: dict) -> list[str]:
@@ -260,6 +331,23 @@ def _serious_mismatch(h: dict, p: dict) -> list[str]:
     return out
 
 
+def cmd_termcheck_paired(hirers, providers):
+    """Same rule, but on pairs graded under BOTH prompts, so the population is identical: the conditional rate
+    P(grade >= 2 | serious mismatch) for each prompt (the share-of-positives above depends on the population)."""
+    orig = {(r["hire_id"], r["provider_id"]): r["grade"] for r in _records("judgments.jsonl") if r["status"] == "ok"}
+    repro = {}
+    for name in ("judgments_variants.jsonl", "judgments_regrade.jsonl", "judgments_tag.jsonl", "calibration.jsonl"):
+        for r in _records(name):
+            if r["status"] == "ok":
+                repro.setdefault((r["hire_id"], r["provider_id"]), r["grade"])
+    both = [k for k in repro if k in orig]
+    flagged = {k for k in both if _serious_mismatch(hirers[str(k[0])], providers[str(k[1])])}
+    print(f"\npairs graded under both prompts: {len(both)}, of which with a serious term mismatch: {len(flagged)}")
+    for label, keys in (("serious mismatch", flagged), ("no mismatch", set(both) - flagged)):
+        o, r = sum(orig[k] >= 2 for k in keys), sum(repro[k] >= 2 for k in keys)
+        print(f"  {label:<17} n={len(keys):<5} original >= 2: {_fmt_ci(o, len(keys))}   repro >= 2: {_fmt_ci(r, len(keys))}")
+
+
 def cmd_termcheck(_args):
     hirers, providers = _load_entities()
     in_original = set()
@@ -279,6 +367,7 @@ def cmd_termcheck(_args):
         print(f"{label}: {len(recs)} pairs, {len(pos)} graded >= 2")
         print(f"  graded >= 2 despite a serious term mismatch: {_fmt_ci(len(flagged), len(pos))}   by kind {by_kind}")
         print(f"  share of ALL pairs with a serious mismatch: {allflag / len(recs):.3f}")
+    cmd_termcheck_paired(hirers, providers)
 
 
 def main():

@@ -57,6 +57,10 @@ FEAT_DIR = BASE / "features"
 CACHE_DIR = BASE / "cache"
 
 
+# --tag-variant -> TagChannel keyword arguments (see tag_channel.py)
+TAG_VARIANTS = {"raw": {}, "hc": {"variant": "hc"}, "hcw": {"variant": "hc", "scorer": "wcos"}}
+
+
 def set_dataset(tag: str):
     """Point every module-level path at `tag`'s data + a namespaced output
     tree, so a non-default dataset (e.g. data_sat) never overwrites the
@@ -177,7 +181,14 @@ def main():
                     help="add the tag-ID BM25 channel: the pool becomes a 3-way RRF (refined BM25 + dense + tag) "
                          "and tag_score/tag_rank columns are emitted. Writes candidates_top<K>_tag.csv and "
                          "train_pairs_tag.csv, so the baseline feature files are left untouched. Off by default")
+    ap.add_argument("--tag-variant", choices=["raw", "hc", "hcw"], default="raw",
+                    help="with --tag-channel: raw = the original channel (raw-cosine tags, BM25; output files "
+                         "unchanged); hc = hubness-corrected tags (tag_corpus.py --hubness center), BM25; hcw = the "
+                         "same tags with the weighted-cosine scorer. hc/hcw write *_tag_hc.csv / *_tag_hcw.csv, and a "
+                         "provider the channel did not return gets an empty (NaN) tag_score/tag_rank instead of 0")
     args = ap.parse_args()
+    if args.tag_variant != "raw" and not args.tag_channel:
+        ap.error("--tag-variant needs --tag-channel")
     set_dataset(args.data_dir)
 
     FEAT_DIR.mkdir(exist_ok=True)
@@ -209,8 +220,8 @@ def main():
     if args.tag_channel:
         from retrieval_rrf import rrf_fuse_n
         from tag_channel import TagChannel
-        print("Building tag-ID BM25 channel ...")
-        tag_channel = TagChannel(DATA_DIR)
+        print(f"Building tag-ID channel (variant {args.tag_variant}) ...")
+        tag_channel = TagChannel(DATA_DIR, **TAG_VARIANTS[args.tag_variant])
 
     rows = []
     skipped_out_of_pool = 0
@@ -276,11 +287,14 @@ def main():
                 "avail_immediacy": round(avail_immediacy(p_tax, h_tax), 4),
             }
             if tag_channel is not None:
-                row["tag_score"] = round(float(tag_score.get(pid, 0.0)), 6)
-                row["tag_rank"] = tag_pos.get(pid, 0)
+                # raw keeps the original 0 sentinel (its files must stay reproducible); the new variants leave a
+                # provider the channel did not return empty, which rerank_ltr reads as NaN (missing), not as rank 0
+                raw = args.tag_variant == "raw"
+                row["tag_score"] = round(float(tag_score[pid]), 6) if pid in tag_score else (0.0 if raw else "")
+                row["tag_rank"] = tag_pos.get(pid, 0 if raw else "")
             rows.append(row)
 
-    suffix = "_tag" if tag_channel is not None else ""
+    suffix = "" if tag_channel is None else "_tag" if args.tag_variant == "raw" else f"_tag_{args.tag_variant}"
     cand_path = FEAT_DIR / f"candidates_top{args.top_k}{suffix}.csv"
     cols = list(rows[0].keys())
     with cand_path.open("w", newline="") as f:

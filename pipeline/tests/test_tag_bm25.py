@@ -27,7 +27,7 @@ import unittest
 
 import numpy as np
 
-from retrieval_tagbm25 import TagBM25
+from retrieval_tagbm25 import TagBM25, TagWeightedCosine
 
 LN2 = math.log(2)
 IDF_RARE = math.log(10 / 3)
@@ -171,6 +171,38 @@ class TagBM25EdgeCases(unittest.TestCase):
                 build(**kwargs)
         with self.assertRaises(ValueError):
             TagBM25([1, 2], [{1}])
+
+
+class WeightedCosine(unittest.TestCase):
+    """Docs are {tag: z}; weights are relu(z - tau) with tau = 1, then cosine. Worked by hand."""
+    DOCS = {10: {101: 3.0, 102: 2.0}, 20: {101: 2.0, 103: 4.0}, 30: {104: 0.5, 105: 3.0}, 40: {}}
+
+    def setUp(self):
+        self.index = TagWeightedCosine(list(self.DOCS), list(self.DOCS.values()), tau=1.0)
+
+    def test_cosine_of_thresholded_weights(self):
+        # doc 10 -> (2, 1), doc 20 -> (1, 0, 3); query (2, 1) on tags 101, 102
+        s = dict(self.index.rank({101: 3.0, 102: 2.0}))
+        self.assertAlmostEqual(s[10], 1.0)
+        self.assertAlmostEqual(s[20], 2.0 / (math.sqrt(5) * math.sqrt(10)))
+
+    def test_below_threshold_tags_carry_nothing_and_zero_scores_are_dropped(self):
+        ranked = self.index.rank({104: 0.5})          # 0.5 - 1 < 0: an empty query matches nothing
+        self.assertEqual(ranked, [])
+        self.assertEqual([d for d, _ in self.index.rank({105: 3.0})], [30])
+        self.assertNotIn(40, dict(self.index.rank({101: 3.0, 105: 3.0})))   # empty document never returned
+
+    def test_unknown_tags_are_ignored_and_top_k_truncates(self):
+        self.assertEqual(self.index.rank({999: 9.0}), [])
+        self.assertEqual(len(self.index.rank({101: 3.0, 103: 4.0}, top_k=1)), 1)
+
+    def test_cosine_ignores_a_common_rescaling_of_the_weights(self):
+        stretch = lambda d: {t: 1.0 + 2.0 * (z - 1.0) for t, z in d.items()}   # relu(z - 1) doubles for every tag
+        scaled = TagWeightedCosine(list(self.DOCS), [stretch(d) for d in self.DOCS.values()], tau=1.0)
+        query = {101: 3.0, 102: 2.0}
+        for (d1, s1), (d2, s2) in zip(self.index.rank(query), scaled.rank(stretch(query))):
+            self.assertEqual(d1, d2)
+            self.assertAlmostEqual(s1, s2)
 
 
 if __name__ == "__main__":

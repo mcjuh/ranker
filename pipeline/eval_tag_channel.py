@@ -710,6 +710,38 @@ def run_sat(args):
 TAGGER_M_GRID = (5, 10, 20, 30)
 
 
+HUBNESS_FILE = {"center": "tags_providers_hc.json", "z": "tags_providers_hz.json"}
+
+
+def tagger_hubness_variants(text_vecs: np.ndarray, tag_vecs: np.ndarray, tag_ids: list[int], mode: str,
+                            data_dir: Path) -> dict[str, list]:
+    """Hubness-corrected tag rankings of the role descriptions, to be scored against the gold tags (no LLM grader).
+
+    Role descriptions are tagged in the provider direction (passage text, query-side tag titles), so the matching
+    corpus statistics are the provider side's. Two sources for the per-tag mean (and sd, for 'z'):
+      '<mode>/roles'            from the role descriptions being tagged (unsupervised, no gold tags used)
+      '<mode>/stored-provider'  the means stored in data_dir/tags_providers_hc.json (from the provider texts),
+                                a domain-mismatch control: role descriptions are cleaner than provider profiles
+    """
+    from tag_corpus import hubness_stats, tag_similarities, top_tags
+
+    m = max(TAGGER_M_GRID)
+    mean, sd = hubness_stats(tag_similarities(text_vecs, tag_vecs))
+    scale = lambda sd_: np.ones_like(sd_) if mode == "center" else sd_
+    out = {f"{mode}/roles": top_tags(text_vecs, tag_vecs, tag_ids, m, (mean, scale(sd)))}
+    stored = data_dir / HUBNESS_FILE[mode]
+    if stored.exists():
+        payload = json.loads(stored.read_text(encoding="utf-8"))
+        if payload.get("tag_ids") != tag_ids:
+            raise SystemExit(f"{stored} was built for a different tag list than the taxonomy now loaded")
+        s_mean, s_sd = np.array(payload["mean"]), np.array(payload["sd"])
+        out[f"{mode}/stored-provider"] = top_tags(text_vecs, tag_vecs, tag_ids, m, (s_mean, scale(s_sd)))
+    else:
+        print(f"note: {stored} not found; skipping the stored-provider-means control "
+              f"(run tag_corpus.py --data-dir {data_dir.name} --hubness {mode})")
+    return out
+
+
 def run_tagger(args):
     """Tag role descriptions (name + description, embedded as passages, tags as queries: the direction used
     for providers) and measure (a) how many of a role's gold tags the tagger recovers and (b) how well the
@@ -732,57 +764,80 @@ def run_tagger(args):
     texts = [f"{tax.roles[r]['name']}. {tax.roles[r]['description']}" for r in reps]
     print(f"tagging {len(texts)} role descriptions ({args.n_roles // 2} dev / {args.n_roles // 2} test classes)", flush=True)
     vecs = embed_in_chunks("taxonomy_roles_mxbai_docs_by_text", texts, encode_docs)
-    predicted = top_tags(vecs, tag_vecs, tag_ids, max(TAGGER_M_GRID))
     where = {c: i for i, c in enumerate(order)}
+    predicted_by = {"raw": top_tags(vecs, tag_vecs, tag_ids, max(TAGGER_M_GRID))}
+    if args.hubness != "none":
+        predicted_by.update(tagger_hubness_variants(vecs, tag_vecs, tag_ids, args.hubness, BASE / args.data_dir))
 
     result = {"seed": args.seed, "n_roles_per_split": args.n_roles // 2}
     boot = rng_for(args.seed, "tagger/boot").integers(0, args.n_roles // 2, size=(args.n_boot, args.n_roles // 2))
     chance = float(np.mean([len(tax.role_tags[r]) for r in reps]) / len(tag_ids))
-
-    # (a) tag quality against the gold tag sets, on the test sample
-    print(f"\n=== tagger vs gold tags, TEST sample (chance precision {chance:.3f}); 95% CI over roles ===")
-    quality = {}
     test_rows = [where[c] for c in sample["test"]]
-    for m in TAGGER_M_GRID:
-        prec, rec, hit = [], [], []
-        for i in test_rows:
-            gold = tax.role_tags[reps[i]]
-            got = {t for t, _ in predicted[i][:m]} & gold
-            prec.append(len(got) / m)
-            rec.append(len(got) / len(gold))
-            hit.append(float(bool(got)))
-        quality[m] = {"precision": ci(np.array(prec), boot), "recall": ci(np.array(rec), boot),
-                      "hit_any": ci(np.array(hit), boot)}
-        print(f"  m={m:<3} precision {fmt(quality[m]['precision'])}  recall {fmt(quality[m]['recall'])}  "
-              f"at least one gold tag {fmt(quality[m]['hit_any'])}")
-    result["test_tag_quality"] = {str(m): v for m, v in quality.items()}
+    per_role_precision = {}
 
-    # (b) role retrieval from predicted tags
-    def evaluate_split(split, m, b):
-        rows = [where[c] for c in sample[split]]
-        idx = world.index(b=b)
-        S = idx.score_matrix([[t for t, _ in predicted[i][:m]] for i in rows])
-        hm = hit_metrics(world, S, sample[split])
-        _, cm = class_means(hm, sample[split])
-        return cm
+    def report(label, predicted):
+        """(a) tag quality against the gold tag sets and (b) role retrieval from the predicted tags, for one way of
+        ranking the tags; m and b are tuned on the dev sample of this way alone."""
+        print(f"\n######## {label}")
+        print(f"=== tagger vs gold tags, TEST sample (chance precision {chance:.3f}); 95% CI over roles ===")
+        quality = {}
+        for m in TAGGER_M_GRID:
+            prec, rec, hit = [], [], []
+            for i in test_rows:
+                gold = tax.role_tags[reps[i]]
+                got = {t for t, _ in predicted[i][:m]} & gold
+                prec.append(len(got) / m)
+                rec.append(len(got) / len(gold))
+                hit.append(float(bool(got)))
+            quality[m] = {"precision": ci(np.array(prec), boot), "recall": ci(np.array(rec), boot),
+                          "hit_any": ci(np.array(hit), boot)}
+            per_role_precision[(label, m)] = np.array(prec)
+            print(f"  m={m:<3} precision {fmt(quality[m]['precision'])}  recall {fmt(quality[m]['recall'])}  "
+                  f"at least one gold tag {fmt(quality[m]['hit_any'])}")
 
-    sel = lambda cm: float(np.mean([cm[f"role@{k}"].mean() for k in KS]))
-    dev_grid = {(m, b): sel(evaluate_split("dev", m, b)) for m in TAGGER_M_GRID for b in B_GRID}
-    best_m, best_b = max(dev_grid, key=lambda c: (round(dev_grid[c], 9), -c[0], -abs(c[1] - 0.75)))
-    print(f"\ndev tuning (mean of role@1/5/10 from predicted tags): best m={best_m}, b={best_b} -> {dev_grid[(best_m, best_b)]:.4f}")
-    result["dev_grid"] = {f"m={m},b={b}": v for (m, b), v in dev_grid.items()}
-    result["selected"] = {"m": best_m, "b": best_b}
-    print("=== role retrieval from PREDICTED tags, TEST sample (Part A used gold-tag queries) ===")
-    e2e = {}
-    for m in TAGGER_M_GRID:
-        cm = evaluate_split("test", m, best_b)
-        e2e[m] = {k: ci(cm[k], boot) for k in ("role@1", "role@5", "role@10", "track@1", "track@3")}
-        print(f"  m={m:<3}{' (tuned)' if m == best_m else '         '}" + "  ".join(f"{k} {fmt(v)}" for k, v in e2e[m].items()))
-    result["test_role_retrieval_from_predicted_tags"] = {str(m): v for m, v in e2e.items()}
+        def evaluate_split(split, m, b):
+            rows = [where[c] for c in sample[split]]
+            idx = world.index(b=b)
+            S = idx.score_matrix([[t for t, _ in predicted[i][:m]] for i in rows])
+            hm = hit_metrics(world, S, sample[split])
+            _, cm = class_means(hm, sample[split])
+            return cm
+
+        sel = lambda cm: float(np.mean([cm[f"role@{k}"].mean() for k in KS]))
+        dev_grid = {(m, b): sel(evaluate_split("dev", m, b)) for m in TAGGER_M_GRID for b in B_GRID}
+        best_m, best_b = max(dev_grid, key=lambda c: (round(dev_grid[c], 9), -c[0], -abs(c[1] - 0.75)))
+        print(f"dev tuning (mean of role@1/5/10 from predicted tags): best m={best_m}, b={best_b} -> {dev_grid[(best_m, best_b)]:.4f}")
+        print("=== role retrieval from PREDICTED tags, TEST sample (Part A used gold-tag queries) ===")
+        e2e = {}
+        for m in TAGGER_M_GRID:
+            cm = evaluate_split("test", m, best_b)
+            e2e[m] = {k: ci(cm[k], boot) for k in ("role@1", "role@5", "role@10", "track@1", "track@3")}
+            print(f"  m={m:<3}{' (tuned)' if m == best_m else '         '}" + "  ".join(f"{k} {fmt(v)}" for k, v in e2e[m].items()))
+        return {"test_tag_quality": {str(m): v for m, v in quality.items()},
+                "dev_grid": {f"m={m},b={b}": v for (m, b), v in dev_grid.items()},
+                "selected": {"m": best_m, "b": best_b},
+                "test_role_retrieval_from_predicted_tags": {str(m): v for m, v in e2e.items()}}
+
+    reports = {label: report(label, predicted) for label, predicted in predicted_by.items()}
+    result.update(reports["raw"])                    # the published layout: tagger.json keys are the raw tagger's
+    if args.hubness != "none":
+        # the CIs above are per variant; whether a variant beats raw is a paired question over the same roles
+        paired = {}
+        print("\n=== paired difference in gold-tag precision vs raw (same test roles; 95% CI; * = excludes 0) ===")
+        for label in reports:
+            if label == "raw":
+                continue
+            paired[label] = {}
+            for m in TAGGER_M_GRID:
+                diff = ci(per_role_precision[(label, m)] - per_role_precision[("raw", m)], boot)
+                paired[label][str(m)] = diff
+                print(f"  {label:22} m={m:<3} {fmt(diff)}{'*' if diff[1] > 0 or diff[2] < 0 else ''}")
+        result["hubness"] = {"mode": args.hubness, "variants": {k: v for k, v in reports.items() if k != "raw"},
+                             "precision_minus_raw": paired}
 
     result["seconds"] = round(time.time() - t_start, 1)
     RESULTS_DIR.mkdir(exist_ok=True)
-    out = RESULTS_DIR / "tagger.json"
+    out = RESULTS_DIR / ("tagger.json" if args.hubness == "none" else f"tagger_hubness_{args.hubness}.json")
     out.write_text(json.dumps(result, indent=1), encoding="utf-8")
     print(f"\nwrote {out} ({result['seconds']}s)")
 
@@ -799,6 +854,9 @@ def main():
                          "original-label numbers are unchanged")
     ap.add_argument("--n-boot", type=int, default=1000, help="bootstrap resamples over classes / gigs")
     ap.add_argument("--n-roles", type=int, default=400, help="(tagger) role descriptions to tag, half dev, half test")
+    ap.add_argument("--hubness", choices=["none", "center", "z"], default="none",
+                    help="(tagger) also score hubness-corrected tag rankings (tag_corpus.py --hubness) against the "
+                         "gold tags; writes results_tag/tagger_hubness_<mode>.json and leaves tagger.json alone")
     ap.add_argument("--draws-scale", type=float, default=1.0,
                     help="(roles) scale the number of random query draws per class (0.2 for a quick smoke run)")
     args = ap.parse_args()

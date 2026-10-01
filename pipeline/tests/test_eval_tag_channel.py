@@ -20,7 +20,7 @@ import numpy as np
 
 from eval_tag_channel import (CONDITIONS, GIG_METRICS, Ranked, RoleWorld, cached_embeddings, ci, class_means,
                               gig_metrics, hit_metrics, judged_share, lsa_basis, rng_for, rrf_matrix,
-                              unique_positives)
+                              tagger_hubness_variants, unique_positives)
 from greygigz import Taxonomy
 
 
@@ -267,6 +267,39 @@ class PartBHelpers(unittest.TestCase):
             np.testing.assert_allclose(cached_embeddings("c", ["alpha", "gamma"], d), vecs[[0, 2]])
             with self.assertRaises(SystemExit):
                 cached_embeddings("c", texts, d)         # beta is missing
+
+
+class TaggerHubness(unittest.TestCase):
+    """tagger_hubness_variants: tag 0 is a hub (every text is close to it), so raw cosine picks it first for all
+    texts; centring by the corpus mean must demote it, and a stored mean must be honoured."""
+
+    def setUp(self):
+        rng = np.random.default_rng(0)
+        self.tag_ids = [10, 11, 12, 13, 14]
+        hub = np.array([[1.0, 0.0, 0.0, 0.0]])
+        others = np.eye(4)[1:].tolist() + [[0.0, 0.0, 0.0, 1.0]]
+        self.tag_vecs = np.vstack([hub, np.array(others)])[:5]
+        # every text leans towards the hub and otherwise towards one other tag
+        lean = np.eye(5, 4)[1:5]
+        self.texts = np.vstack([np.array([3.0, 0, 0, 0]) + 2.0 * lean[i % 3] + 0.01 * rng.normal(size=4) for i in range(12)])
+
+    def test_centring_demotes_the_hub_tag(self):
+        from tag_corpus import top_tags
+        centred = tagger_hubness_variants(self.texts, self.tag_vecs, self.tag_ids, "center",
+                                          Path("/nonexistent"))["center/roles"]
+        self.assertEqual({row[0][0] for row in top_tags(self.texts, self.tag_vecs, self.tag_ids, 3)}, {10})   # raw: hub first
+        self.assertNotIn(10, {row[0][0] for row in centred})
+
+    def test_stored_means_are_used_and_must_match_the_tag_list(self):
+        with tempfile.TemporaryDirectory() as d:
+            stored = Path(d) / "tags_providers_hc.json"
+            stored.write_text(json.dumps({"tag_ids": self.tag_ids, "mean": [0.0] * 5, "sd": [1.0] * 5}), encoding="utf-8")
+            out = tagger_hubness_variants(self.texts, self.tag_vecs, self.tag_ids, "center", Path(d))
+            self.assertEqual(set(out), {"center/roles", "center/stored-provider"})
+            self.assertEqual({row[0][0] for row in out["center/stored-provider"]}, {10})   # zero mean = no correction
+            stored.write_text(json.dumps({"tag_ids": [1, 2, 3, 4, 5], "mean": [0.0] * 5, "sd": [1.0] * 5}), encoding="utf-8")
+            with self.assertRaises(SystemExit):
+                tagger_hubness_variants(self.texts, self.tag_vecs, self.tag_ids, "center", Path(d))
 
 
 if __name__ == "__main__":

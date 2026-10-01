@@ -116,3 +116,56 @@ class TagBM25:
         if top_k is not None:
             order = order[:top_k]
         return [(self.doc_ids[i], float(s[i])) for i in order]
+
+
+class TagWeightedCosine:
+    """Cosine between weighted tag vectors: the scorer for hubness-corrected tags (tag_corpus.py --hubness center|z).
+
+    Each text is a sparse vector over tag IDs whose weight is relu(s - tau), where s is the corrected score the
+    tagger stored (the cosine minus the tag's corpus mean for `center`, a z-score for `z`; TagChannel's default tau is
+    0.05 and 1.0 respectively). Unlike TagBM25 it keeps the *strength* of each tag, not just whether it made the top m,
+    and it has no IDF or length term: the correction already down-weights generic tags, and cosine normalises length.
+
+    `rank()` returns the same [(doc_id, score), ...] shape as TagBM25.rank, best first, zero scores dropped."""
+
+    def __init__(self, doc_ids, doc_weights, tau: float = 1.0):
+        doc_ids = list(doc_ids)
+        doc_weights = list(doc_weights)
+        if len(doc_ids) != len(doc_weights):
+            raise ValueError(f"{len(doc_ids)} doc_ids but {len(doc_weights)} weight maps")
+        self.doc_ids, self.tau = doc_ids, tau
+        self.tag_ids = sorted(set().union(*(w.keys() for w in doc_weights)))
+        self._col = {t: j for j, t in enumerate(self.tag_ids)}
+        self.D = self._unit_rows(self._matrix(doc_weights))
+
+    def _matrix(self, weight_maps) -> sp.csr_matrix:
+        rows, cols, vals = [], [], []
+        for i, weights in enumerate(weight_maps):
+            for t, z in weights.items():
+                w = z - self.tau
+                if w > 0 and t in self._col:
+                    rows.append(i)
+                    cols.append(self._col[t])
+                    vals.append(w)
+        return sp.csr_matrix((vals, (rows, cols)), shape=(len(weight_maps), len(self.tag_ids)))
+
+    @staticmethod
+    def _unit_rows(M: sp.csr_matrix) -> sp.csr_matrix:
+        norms = np.sqrt(np.asarray(M.multiply(M).sum(axis=1)).ravel())
+        return sp.diags(np.divide(1.0, norms, out=np.zeros_like(norms), where=norms > 0)) @ M
+
+    def score_matrix(self, queries) -> np.ndarray:
+        """Dense (n_queries x n_docs) cosines. `queries` is an iterable of {tag_id: z} maps."""
+        Q = self._unit_rows(self._matrix(list(queries)))
+        return (Q @ self.D.T).toarray()
+
+    def scores(self, weights: dict) -> np.ndarray:
+        return self.score_matrix([weights])[0]
+
+    def rank(self, weights: dict, top_k: int | None = None) -> list[tuple]:
+        s = self.scores(weights)
+        order = np.argsort(-s, kind="stable")
+        order = order[s[order] > 0]
+        if top_k is not None:
+            order = order[:top_k]
+        return [(self.doc_ids[i], float(s[i])) for i in order]
