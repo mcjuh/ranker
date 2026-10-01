@@ -1,0 +1,240 @@
+{"item": "S001", "grade": 1, "note": "retail transformation, not B2B journey mapping; rate 11% over"}
+{"item": "S002", "grade": 1, "note": "development social protection research, not extractives political economy"}
+{"item": "S003", "grade": 3, "note": "AML/consumer-protection regulatory work, ex-examiner, terms fine"}
+{"item": "S004", "grade": 2, "note": "OT/critical-infrastructure security advisory, not automation design"}
+{"item": "S005", "grade": 0, "note": "SAP cloud advisory, no Kubernetes"}
+{"item": "S006", "grade": 2, "note": "ESG reporting/sustainability, no explicit materiality; start 27 days late"}
+{"item": "S007", "grade": 0, "note": "incentives/site selection, not environmental assessment"}
+{"item": "S008", "grade": 1, "note": "banking IT/digital channels; rate 2x budget, expert vs senior"}
+{"item": "S009", "grade": 2, "note": "health services research and evaluation, evidence review (aligned with S189)"}
+{"item": "S010", "grade": 1, "note": "transaction accounting, not finance function build; rate 33% over"}
+{"item": "S011", "grade": 2, "note": "production AI/data infra leader, no Databricks, strategy-level"}
+{"item": "S012", "grade": 3, "note": "forensic investigations, CFE, direct"}
+{"item": "S013", "grade": 1, "note": "healthcare revenue cycle, not revenue recognition modelling"}
+{"item": "S014", "grade": 1, "note": "building sustainability, not EIA permitting; start 17 days late"}
+{"item": "S015", "grade": 1, "note": "energy retail CX, not data-sharing architecture"}
+{"item": "S016", "grade": 1, "note": "carve-out DD fits but industrial; 1 day a week vs 3 (serious)"}
+{"item": "S017", "grade": 1, "note": "climate finance, no solar/technical audit"}
+{"item": "S018", "grade": 2, "note": "M&E/RCT/gender research, adjacent to MEL framework design"}
+{"item": "S019", "grade": 1, "note": "insurer finance transformation, not corporate insurance spend"}
+{"item": "S020", "grade": 2, "note": "data privacy/compliance legal, not PDPA/healthcare"}
+{"item": "S021", "grade": 1, "note": "transaction DD, not bank KYC/CDD efficiency"}
+{"item": "S022", "grade": 2, "note": "digital forensics + IR leader; rate 24% over"}
+{"item": "S023", "grade": 1, "note": "insurance data engineering/AI, not predictive maintenance"}
+{"item": "S024", "grade": 1, "note": "consumer products ops, not consumer research; terms off"}
+{"item": "S025", "grade": 2, "note": "clinical informatics/EHR interoperability, not NCD surveillance"}
+{"item": "S026", "grade": 3, "note": "expert witness damages/valuation, direct"}
+{"item": "S027", "grade": 2, "note": "cyber/tech expert, source code review; no pentest per se"}
+{"item": "S028", "grade": 2, "note": "telecom valuation of divisions, adjacent to carve-out finance"}
+{"item": "S029", "grade": 1, "note": "marketing transformation FS; 1 day vs 3 days (serious)"}
+{"item": "S030", "grade": 1, "note": "climate strategy, not waste management; 1 day vs 3"}
+{"item": "S031", "grade": 2, "note": "production AI + data infrastructure, no Databricks"}
+{"item": "S032", "grade": 2, "note": "restaurant consumer insights/growth, adjacent to loyalty analytics"}
+{"item": "S033", "grade": 0, "note": "entrepreneurship leadership, no research synthesis"}
+{"item": "S034", "grade": 0, "note": "forensic accounting, no legal ops/NDA"}
+{"item": "S035", "grade": 1, "note": "pentest+security assessment match but rate 74% over (serious)"}
+{"item": "S036", "grade": 1, "note": "retirement operating model, no nCino/treasury onboarding"}
+{"item": "S037", "grade": 1, "note": "energy transition strategy, not building LCA"}
+{"item": "S038", "grade": 0, "note": "insurance data engineering, no public-sector process design"}
+{"item": "S039", "grade": 1, "note": "business valuation, not asset reinstatement; 1 day vs 5 (serious)"}
+{"item": "S040", "grade": 2, "note": "statistician predictive modelling, domain differs"}
+{"item": "S041", "grade": 1, "note": "valuation expert witness fits, but 2 days vs 5 (serious)"}
+{"item": "S042", "grade": 1, "note": "cyber risk assessments, not SOC/alert tuning; rate 53% over"}
+{"item": "S043", "grade": 2, "note": "CFO who built global finance functions; tech services, not SFRS/MAS"}
+{"item": "S044", "grade": 1, "note": "red team/OT, not web app pentest; 1 day vs 5 (serious)"}
+{"item": "S045", "grade": 1, "note": "litigation support incl. antitrust damages, not competition-law counsel"}
+{"item": "S046", "grade": 0, "note": "insolvency practitioner, no data matching"}
+{"item": "S047", "grade": 2, "note": "financial services regulation (MiFID/UK), not MAS statutes"}
+{"item": "S048", "grade": 1, "note": "CIO/conversational AI, not agent build; rate 51% over"}
+{"item": "S049", "grade": 2, "note": "healthcare workflow automation, adjacent to intake redesign"}
+{"item": "S050", "grade": 2, "note": "labor market/employment services policy; rate 39% over"}
+{"item": "S051", "grade": 2, "note": "development TA with PPP use, education focus"}
+{"item": "S052", "grade": 1, "note": "procurement AI tools, not legal contract extraction"}
+{"item": "S053", "grade": 2, "note": "Singapore bank regulatory principal; start 28 days late"}
+{"item": "S054", "grade": 1, "note": "investment mgmt finance transformation, no Salesforce"}
+{"item": "S055", "grade": 1, "note": "private capital operating models, not prospectus templates"}
+{"item": "S056", "grade": 1, "note": "contaminated land/PFAS, not waste management"}
+{"item": "S057", "grade": 1, "note": "programme evaluation economist; rate 96% over"}
+{"item": "S058", "grade": 2, "note": "AI-enabled contract mgmt legal advisor; several minor mismatches"}
+{"item": "S059", "grade": 2, "note": "audit and internal controls partner, not insurer claims"}
+{"item": "S060", "grade": 1, "note": "healthcare data analytics, no privacy design"}
+{"item": "S061", "grade": 2, "note": "eDiscovery AI/ML document review, adjacent to contract extraction"}
+{"item": "S062", "grade": 1, "note": "AI supply chain, no emissions modelling"}
+{"item": "S063", "grade": 1, "note": "M&A DD fits partly, no AI extraction; 3 days vs 5, start late (serious)"}
+{"item": "S064", "grade": 1, "note": "insurance audit/SOX, not spend cataloguing; rate 83% over"}
+{"item": "S065", "grade": 1, "note": "education M&A advisory, not classroom quality"}
+{"item": "S066", "grade": 2, "note": "fire protection performance review, forensic rather than design review"}
+{"item": "S067", "grade": 3, "note": "talent attraction and retention strategy, direct"}
+{"item": "S068", "grade": 1, "note": "real-estate valuation w/ environmental impact, not EIA; rate 19% over"}
+{"item": "S069", "grade": 2, "note": "AppSec/DevSecOps, adjacent to security assessment + pentest"}
+{"item": "S070", "grade": 1, "note": "CX design FS; rate 21% over, 1 day vs 2, expert vs senior"}
+{"item": "S071", "grade": 2, "note": "cyber IR + microsegmentation, healthcare focus, not OT"}
+{"item": "S072", "grade": 1, "note": "FS audit and reporting; rate 54% over"}
+{"item": "S073", "grade": 2, "note": "climate adaptation and resilience planning"}
+{"item": "S074", "grade": 2, "note": "procurement spend analytics, adjacent to invoice fraud screening"}
+{"item": "S075", "grade": 1, "note": "consumer goods portfolio strategy; rate 55% over"}
+{"item": "S076", "grade": 0, "note": "climate risk, no virtual assets/AML"}
+{"item": "S077", "grade": 2, "note": "global health IT and data analytics, adjacent to NCD surveillance"}
+{"item": "S078", "grade": 1, "note": "specialty finance process re-engineering, not finance function design"}
+{"item": "S079", "grade": 0, "note": "legal notice design, no public-sector process work"}
+{"item": "S080", "grade": 1, "note": "cash flow projections; no ESOP/tax; rate 37% over"}
+{"item": "S081", "grade": 1, "note": "investment-mgmt audit, no SAP/asset data"}
+{"item": "S082", "grade": 1, "note": "cyber incident advisory, not hands-on; 1 day vs 3, rate 35% over"}
+{"item": "S083", "grade": 1, "note": "travel pricing/revenue mgmt, not web funnel; rate 38% over"}
+{"item": "S084", "grade": 3, "note": "property tax and machinery valuation, direct"}
+{"item": "S085", "grade": 2, "note": "legal ops/contract mgmt advisor; start 22 days late"}
+{"item": "S086", "grade": 1, "note": "construction cost-growth forensics; rate 73% over"}
+{"item": "S087", "grade": 1, "note": "manufacturing ops strategy, no digital twin; rate 2x"}
+{"item": "S088", "grade": 1, "note": "CX/data fits partly but 1 day vs 3 (serious)"}
+{"item": "S089", "grade": 2, "note": "business valuation, uncertain-asset focus"}
+{"item": "S090", "grade": 1, "note": "energy markets economist, not building energy modelling"}
+{"item": "S091", "grade": 1, "note": "urban strategy decarbonisation, not LEED"}
+{"item": "S092", "grade": 1, "note": "breach response workflows, not IT triage automation"}
+{"item": "S093", "grade": 1, "note": "infrastructure PPP climate, not LEED"}
+{"item": "S094", "grade": 1, "note": "audit partner; rate 46% over (serious)"}
+{"item": "S095", "grade": 3, "note": "healthcare revenue cycle workflow redesign, direct"}
+{"item": "S096", "grade": 1, "note": "AI strategy GTM; 1 day vs 3"}
+{"item": "S097", "grade": 1, "note": "investigations with contract disputes angle, no extraction"}
+{"item": "S098", "grade": 1, "note": "cyber crisis fits; start 6 weeks late (serious)"}
+{"item": "S099", "grade": 2, "note": "IR and pentest leader; rate 25% over"}
+{"item": "S100", "grade": 2, "note": "MEL skills, climate focus; refugee programme evaluation adjacent"}
+{"item": "S101", "grade": 2, "note": "customer journey redesign for FinTech"}
+{"item": "S102", "grade": 1, "note": "healthcare revenue cycle; rate 43% over, expert vs mid"}
+{"item": "S103", "grade": 1, "note": "machinery valuation fits; 3 days vs 5 (serious)"}
+{"item": "S104", "grade": 2, "note": "banking regulatory compliance, not AML"}
+{"item": "S105", "grade": 1, "note": "M&A sell-side fits; 1 day vs 3 (serious)"}
+{"item": "S106", "grade": 1, "note": "climate/infrastructure, not circular economy"}
+{"item": "S107", "grade": 1, "note": "trade compliance, not competition law; start late"}
+{"item": "S108", "grade": 1, "note": "banking AI strategy, not healthcare intake"}
+{"item": "S109", "grade": 2, "note": "social protection policy research, implementation study methods"}
+{"item": "S110", "grade": 0, "note": "sales leadership, no automation build"}
+{"item": "S111", "grade": 2, "note": "contract review/CLM, not vendor spend optimisation"}
+{"item": "S112", "grade": 2, "note": "HR talent management, D&I focus"}
+{"item": "S113", "grade": 1, "note": "climate/development governance, no PPP"}
+{"item": "S114", "grade": 0, "note": "fund restructuring, no evaluation"}
+{"item": "S115", "grade": 2, "note": "healthcare change management; rate 32% over, start 20 days late"}
+{"item": "S116", "grade": 1, "note": "construction legal counsel, no AI extraction"}
+{"item": "S117", "grade": 1, "note": "M&A operational DD, different diligence; 5 days vs 3"}
+{"item": "S118", "grade": 1, "note": "forensic fraud fits; start 41 days late (serious)"}
+{"item": "S119", "grade": 1, "note": "healthcare IT data exchange, not privacy design"}
+{"item": "S120", "grade": 1, "note": "data visualisation, not usability review"}
+{"item": "S121", "grade": 2, "note": "finance-led ERP assessment/selection, not enterprise-wide consolidation"}
+{"item": "S122", "grade": 1, "note": "energy legal, no techno-economic modelling"}
+{"item": "S123", "grade": 2, "note": "Salesforce CRM implementation leader, strategic not hands-on, no LNG"}
+{"item": "S124", "grade": 1, "note": "regulatory/AML governance; rate 43% over"}
+{"item": "S125", "grade": 2, "note": "AI agents, CRM, personalisation; rate 19% over, no insurance"}
+{"item": "S126", "grade": 1, "note": "industrial transformation; 1 day vs 3"}
+{"item": "S127", "grade": 2, "note": "fair value/valuation for alternative assets"}
+{"item": "S128", "grade": 1, "note": "fraud analytics fits; rate 53% over"}
+{"item": "S129", "grade": 1, "note": "physical security risk, not cyber"}
+{"item": "S130", "grade": 2, "note": "financial DD, adjacent to commercial DD"}
+{"item": "S131", "grade": 1, "note": "CPG supply chain; rate 58% over"}
+{"item": "S132", "grade": 0, "note": "children's hospital strategy, no fire safety"}
+{"item": "S133", "grade": 0, "note": "valuation advisory, no evaluation"}
+{"item": "S134", "grade": 1, "note": "accounting advisory/ERP; start 40 days late, rate 33% over"}
+{"item": "S135", "grade": 2, "note": "commerce platform transformation, adjacent to e-commerce blueprint"}
+{"item": "S136", "grade": 1, "note": "ZBB cost-out fits; 1 day vs 3 (serious)"}
+{"item": "S137", "grade": 2, "note": "social inclusion MEL, adjacent to registry gap analysis"}
+{"item": "S138", "grade": 1, "note": "gov data analytics, not marketplace data profiling; rate 24% over"}
+{"item": "S139", "grade": 0, "note": "back-office admin, no lending systems"}
+{"item": "S140", "grade": 1, "note": "healthcare quality, not early childhood; rate 2x"}
+{"item": "S141", "grade": 1, "note": "valuation modelling, not churn/upsell; rate 47% over"}
+{"item": "S142", "grade": 2, "note": "user-centric BA, adjacent to journey design"}
+{"item": "S143", "grade": 2, "note": "external wall fire engineer, direct; start 28 days late, rate 5% over"}
+{"item": "S144", "grade": 2, "note": "assurance analytics, adjacent to audit-oriented regression"}
+{"item": "S145", "grade": 1, "note": "health governance assessment, not social registry"}
+{"item": "S146", "grade": 1, "note": "security risk management, not insurance ERM"}
+{"item": "S147", "grade": 1, "note": "cyber insurance risk; 1 day vs 3, rate 35% over"}
+{"item": "S148", "grade": 1, "note": "lean/RPA process work; minor mismatches stack, no ServiceNow"}
+{"item": "S149", "grade": 2, "note": "ISO 27001 compliance frameworks, adjacent to control mapping"}
+{"item": "S150", "grade": 0, "note": "geotechnical forensics, no circular economy"}
+{"item": "S151", "grade": 1, "note": "cloud/engineering leader; 1 day vs 3 (serious)"}
+{"item": "S152", "grade": 0, "note": "junior financial audit, no security"}
+{"item": "S153", "grade": 2, "note": "Python/data platform, AI infra rather than modelling"}
+{"item": "S154", "grade": 1, "note": "energy digital transformation exec; rate 2x budget"}
+{"item": "S155", "grade": 1, "note": "healthcare data governance, not privacy policy"}
+{"item": "S156", "grade": 1, "note": "consumer insights/pricing; rate 2x, expert vs mid"}
+{"item": "S157", "grade": 3, "note": "due diligence with revenue management and go-to-market, direct"}
+{"item": "S158", "grade": 2, "note": "MDM/data governance, adjacent to matching system"}
+{"item": "S159", "grade": 2, "note": "forensic asset tracing; rate 29% over, start 30 days late"}
+{"item": "S160", "grade": 2, "note": "AI-to-production and data infrastructure, no Kubernetes"}
+{"item": "S161", "grade": 1, "note": "industrial sustainability, not LEED"}
+{"item": "S162", "grade": 0, "note": "fixed-asset valuation, no AML/virtual assets"}
+{"item": "S163", "grade": 2, "note": "AI/data governance in regulated FS, strategy-level"}
+{"item": "S164", "grade": 1, "note": "AI-to-production leader, not workflow mapping; rate 70% over, expert vs mid"}
+{"item": "S165", "grade": 2, "note": "fire engineering for ships, adjacent to building fire safety"}
+{"item": "S166", "grade": 1, "note": "healthcare workflow redesign fits; rate 2x+, expert vs mid, 1 day vs 3"}
+{"item": "S167", "grade": 1, "note": "internal audit/risk assurance; 1 day vs 3 (serious)"}
+{"item": "S168", "grade": 1, "note": "energy damages forensics, not storage modelling; rate 66% over"}
+{"item": "S169", "grade": 3, "note": "technology roadmaps, cloud and enterprise architecture, direct"}
+{"item": "S170", "grade": 2, "note": "climate strategy and low-carbon adoption, other sector"}
+{"item": "S171", "grade": 1, "note": "OT security governance, not alert tuning; rate 94% over"}
+{"item": "S172", "grade": 1, "note": "asset-intensive ops and AI strategy, no data pipeline"}
+{"item": "S173", "grade": 1, "note": "IT attestation/controls, not pentest; 3 days vs 5"}
+{"item": "S174", "grade": 2, "note": "AI product design, automotive domain"}
+{"item": "S175", "grade": 1, "note": "automotive innovation fits; rate 60% over (serious)"}
+{"item": "S176", "grade": 2, "note": "internal audit risk domain, no ML/Python"}
+{"item": "S177", "grade": 2, "note": "healthcare research methods, adjacent to protocol design"}
+{"item": "S178", "grade": 2, "note": "safety/risk engineering and evacuation analysis, not building fire code"}
+{"item": "S179", "grade": 1, "note": "asset register reconciliation fits partly; 1 day vs 3 (serious)"}
+{"item": "S180", "grade": 1, "note": "SAP/ERP leader fits; rate 70% over"}
+{"item": "S181", "grade": 2, "note": "safety engineering and evacuation analysis; start 18 days late"}
+{"item": "S182", "grade": 1, "note": "digital sales funnel fits; rate 73% over"}
+{"item": "S183", "grade": 2, "note": "procurement with AI workflow and negotiation, not legal"}
+{"item": "S184", "grade": 1, "note": "finance function redesign fits; 1 day vs 3 (serious)"}
+{"item": "S185", "grade": 1, "note": "mining hydrogeology, not Phase I ESA"}
+{"item": "S186", "grade": 0, "note": "retail audit, no data platform work"}
+{"item": "S187", "grade": 1, "note": "cloud/app security, not notification drafting; 1 day vs 3"}
+{"item": "S188", "grade": 1, "note": "energy transition strategy, not rating scheme design"}
+{"item": "S189", "grade": 2, "note": "health services research and evaluation, evidence synthesis"}
+{"item": "S190", "grade": 1, "note": "M&A advisory fits; 1 day vs 3 (serious)"}
+{"item": "S191", "grade": 1, "note": "M&A purchase agreements, no AI extraction; 3 days vs 5"}
+{"item": "S192", "grade": 1, "note": "industrial sustainability, not LEED; rate 29% over"}
+{"item": "S193", "grade": 2, "note": "building enclosure engineer, external walls; rate 19% over"}
+{"item": "S194", "grade": 1, "note": "healthcare SDOH pilot analysis, not implementation study"}
+{"item": "S195", "grade": 1, "note": "data analytics CEO; rate 86% over, expert vs mid"}
+{"item": "S196", "grade": 1, "note": "low-carbon strategy, not building carbon assessment"}
+{"item": "S197", "grade": 1, "note": "social-impact non-profit leader, no employment services work"}
+{"item": "S198", "grade": 1, "note": "property tax fits; rate 44% over (serious)"}
+{"item": "S199", "grade": 2, "note": "user-centric BA, adjacent to usability review"}
+{"item": "S200", "grade": 1, "note": "shared services/payments; 1 day vs 3, start late"}
+{"item": "S201", "grade": 3, "note": "health policy evaluator of payment-model implementation, direct"}
+{"item": "S202", "grade": 2, "note": "M&A/PMI advisor, not contract review"}
+{"item": "S203", "grade": 1, "note": "evaluation design fits; rate 78% over, expert vs mid"}
+{"item": "S204", "grade": 2, "note": "energy-transition investment advisor; rate 30% over"}
+{"item": "S205", "grade": 0, "note": "restructuring advisor, no lending systems"}
+{"item": "S206", "grade": 1, "note": "construction quantum expert (offshore wind), not prospectus; rate 33% over"}
+{"item": "S207", "grade": 2, "note": "public-sector institutional reform and policy"}
+{"item": "S208", "grade": 1, "note": "private fund valuation; rate 47% over"}
+{"item": "S209", "grade": 1, "note": "life sciences M&A accounting, no contract review; 2 days vs 4"}
+{"item": "S210", "grade": 1, "note": "energy efficiency analytics, not building modelling; rate 2x"}
+{"item": "S211", "grade": 2, "note": "hospital process redesign, no ServiceNow"}
+{"item": "S212", "grade": 1, "note": "AI governance fits; 1 day vs 3 (serious)"}
+{"item": "S213", "grade": 2, "note": "legal counsel with breach-response experience"}
+{"item": "S214", "grade": 1, "note": "energy performance improvement; rate 2x"}
+{"item": "S215", "grade": 1, "note": "upstream oil and gas strategy, not clean energy portfolio"}
+{"item": "S216", "grade": 1, "note": "CO2/supply chain fits; 1 day vs 3 (serious)"}
+{"item": "S217", "grade": 0, "note": "indirect tax, no solar"}
+{"item": "S218", "grade": 1, "note": "biodiversity/climate resilience, not water"}
+{"item": "S219", "grade": 1, "note": "patient charge automation fits; rate 78% over, start 32 days late"}
+{"item": "S220", "grade": 2, "note": "investment-management financial reporting, adjacent to chart of accounts"}
+{"item": "S221", "grade": 1, "note": "supply chain analytics, no compliance"}
+{"item": "S222", "grade": 1, "note": "change management fits; rate 3x, expert vs mid"}
+{"item": "S223", "grade": 1, "note": "infrastructure/climate, not rating scheme"}
+{"item": "S224", "grade": 2, "note": "energy digital strategy, not data-sharing architecture"}
+{"item": "S225", "grade": 3, "note": "responsible AI governance and risk, direct"}
+{"item": "S226", "grade": 2, "note": "asset searches and forensic investigations"}
+{"item": "S227", "grade": 1, "note": "legal AI contract review fits; 2 days vs 4 (serious)"}
+{"item": "S228", "grade": 1, "note": "education policy evidence, not child maltreatment research"}
+{"item": "S229", "grade": 1, "note": "digital growth/e-commerce fits; rate 60% over"}
+{"item": "S230", "grade": 1, "note": "junior transaction advisory, no GL design"}
+{"item": "S231", "grade": 1, "note": "revenue cycle ops, not outcome evaluation"}
+{"item": "S232", "grade": 1, "note": "digital engineering leader; start 35 days late"}
+{"item": "S233", "grade": 2, "note": "cyber crisis/IR with notification relevance; start 17 days late"}
+{"item": "S234", "grade": 1, "note": "manufacturing AI fits; 1 day vs 3 (serious)"}
+{"item": "S235", "grade": 1, "note": "GenAI architecture leader; rate 52% over"}
+{"item": "S236", "grade": 1, "note": "restructuring financial modelling, not public budgeting"}
+{"item": "S237", "grade": 2, "note": "sales-force AI and segmentation, adjacent to churn modelling"}
+{"item": "S238", "grade": 1, "note": "fire forensics, not design strategy"}
+{"item": "S239", "grade": 1, "note": "research firm CEO, not protocol design"}
+{"item": "S240", "grade": 3, "note": "strategic sourcing and cost, direct"}
