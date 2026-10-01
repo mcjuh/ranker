@@ -143,6 +143,95 @@ class Prompt(unittest.TestCase):
         self.assertIn("1 day a week", build_prompt({**HIRER, "commitment": "1"}, PROVIDER))
 
 
+class OriginalTextPrompt(unittest.TestCase):
+    def test_default_variant_is_the_reconstruction(self):
+        self.assertEqual(build_prompt(HIRER, PROVIDER), build_prompt(HIRER, PROVIDER, variant="repro"))
+        self.assertEqual(Labeller(lambda p: {}, "m").prompt_version, "rubric_0_3.v2-repro")
+
+    def test_orig_carries_the_adjacency_anchors_the_terms_and_the_output_instruction(self):
+        text = build_prompt(HIRER, PROVIDER, variant="orig")
+        for needle in ("for example an adjacent sub-focus", "an adjacent area or a transferable skill",
+                       "Up to about 15% over the top of the range", "mid against expert is serious",
+                       "Gig: Audit data room", "Provider profile: Corporate lawyer",
+                       "Budget: S$165-235 per hour", "Rate: S$310 per hour",
+                       "Availability: from 19 Nov 2026, 2 days a week"):
+            self.assertIn(needle, text)
+        self.assertTrue(text.endswith("Output only a single integer between 0 and 3 inclusive."))
+        self.assertNotIn("Terms can only lower a grade", text)       # the reconstruction's own addition
+
+    def test_orig_is_versioned_apart_from_the_reconstruction(self):
+        self.assertEqual(Labeller(lambda p: {}, "m", variant="orig").prompt_version, "rubric_0_3.v2-orig-text")
+
+    def test_unknown_variant(self):
+        with self.assertRaises(ValueError):
+            build_prompt(HIRER, PROVIDER, variant="bogus")
+
+
+def text_response(content):
+    return {"choices": [{"message": {"content": content}}], "usage": {"prompt_tokens": 800, "completion_tokens": 4}}
+
+
+class ContinuousVariant(unittest.TestCase):
+    def test_prompt_has_the_bands_the_date_the_terms_and_the_output_instruction(self):
+        text = build_prompt(HIRER, PROVIDER, variant="cont")
+        for needle in ("continuous scale from 0 to 1", "Today is 1 October 2026.", "0.85-1.00 = excellent match",
+                       "0.20-0.45 = weak match", "for example an adjacent sub-focus", "Gig: Audit data room",
+                       "Provider profile: Corporate lawyer", "Budget: S$165-235 per hour", "Rate: S$310 per hour"):
+            self.assertIn(needle, text)
+        self.assertTrue(text.endswith("(for example 0.07, 0.38, 0.64 or 0.91)."))
+        self.assertIn("Today is 25 December 2026.", build_prompt(HIRER, PROVIDER, date(2026, 12, 25), "cont"))
+
+    def test_parse_score(self):
+        for text, want in (("0.64", 0.64), (" 0.07\n", 0.07), ("1", 1.0), ("0", 0.0), (".5", 0.5), ("Score: 0.38", 0.38)):
+            self.assertEqual(labeller.parse_score(text), want, text)
+        for text in ("", "high", "1.5", "7", "0.64.2", "12"):
+            self.assertIsNone(labeller.parse_score(text), text)
+
+    def test_band_grade_cuts_the_gaps_between_the_anchor_bands(self):
+        got = [labeller.band_grade(s) for s in (0.0, 0.15, 0.17, 0.2, 0.45, 0.5, 0.55, 0.8, 0.82, 0.85, 1.0)]
+        self.assertEqual(got, [0, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3])
+
+    def label(self, content):
+        calls = []
+        def complete(payload):
+            calls.append(payload)
+            return text_response(content)
+        return Labeller(complete, "m", clock=fake_clock(), variant="cont").grade_pair(HIRER, PROVIDER), calls
+
+    def test_record_carries_the_decoded_score_and_its_band(self):
+        rec, calls = self.label("0.64")
+        self.assertEqual((rec["status"], rec["score"], rec["grade"], rec["scoring"]), ("ok", 0.64, 2, "generated"))
+        self.assertEqual(rec["prompt_version"], "rubric_0_1.v2-cont")
+        self.assertIsNone(rec["probs"])
+        self.assertEqual(calls[0]["max_tokens"], 8)
+
+    def test_unparseable_answer_is_an_error(self):
+        rec, _ = self.label("very good")
+        self.assertTrue(rec["status"].startswith("error"))
+        self.assertNotIn("score", rec)
+
+    def test_continuous_report_on_a_perfectly_ordered_regrade(self):
+        original = [0, 0, 1, 1, 2, 2, 3, 3]
+        scores = [0.03, 0.10, 0.25, 0.40, 0.60, 0.72, 0.88, 0.95]
+        r = labeller.continuous_calibration_report(original, scores)
+        self.assertGreater(r["spearman_with_original_grade"], 0.97)      # grades tie in pairs, so just under 1
+        self.assertEqual((r["auc_original_ge1"], r["auc_original_ge2"], r["auc_original_ge3"]), (1.0, 1.0, 1.0))
+        self.assertEqual(r["banded_exact_agreement"], 1.0)
+        self.assertEqual(r["banded_kappa_grade_ge2"], 1.0)
+        self.assertEqual(r["score_by_original_grade"][3]["mean"], (0.88 + 0.95) / 2)
+        self.assertEqual(r["share_of_scores_in_band_gaps"], 0.0)
+        self.assertEqual(r["distinct_scores"], 8)
+
+    def test_auc_counts_ties_half(self):
+        self.assertEqual(labeller._auc([0.5], [0.5]), 0.5)
+        self.assertEqual(labeller._auc([0.9, 0.1], [0.5]), 0.5)
+        self.assertIsNone(labeller._auc([], [0.5]))
+
+    def test_spearman_handles_ties_and_reversal(self):
+        self.assertAlmostEqual(labeller.spearman([1, 2, 3], [3, 2, 1]), -1.0)
+        self.assertAlmostEqual(labeller.spearman([1, 1, 2], [5, 5, 9]), 1.0)
+
+
 class Runner(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

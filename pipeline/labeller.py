@@ -26,6 +26,7 @@ import json
 import math
 import os
 import random
+import re
 import time
 import urllib.error
 import urllib.request
@@ -122,6 +123,44 @@ Grades:
 Answer with a single digit, 0, 1, 2 or 3, and nothing else."""
 
 
+# The text of the original prompt as supplied by its owner (BT4103-Scrape-and-Tag `rubric_0_3_v2.md`, pasted into a
+# session, not read from that repo, so it is unverified against the file). Selected with `--prompt orig`. It carries the
+# anchors the reconstruction above lacks: grade 2 is "an adjacent sub-focus", grade 1 is "an adjacent area or a
+# transferable skill". The pasted text has no output instruction, so OUTPUT_INSTRUCTION is appended; scoring reads the
+# first token's log-probabilities, so that instruction is what makes the first token a grade digit.
+RUBRIC_ORIG = """You are matching a gig (a piece of work a client wants done) to a provider profile (an experienced professional's showcase). Score how well the provider fits this gig on an ordinal scale from 0 to 3: both what they have done and whether the practical terms work.
+
+First judge the content fit: does the provider's expertise address what the gig needs? Then check the terms:
+
+Budget: the provider's hourly rate against the gig's budget range. Up to about 15% over the top of the range is a minor mismatch; more than about 40% over is serious. A rate below the range is fine.
+Seniority: the provider's level against the level the gig asks for (mid < senior < expert). One level apart is a minor mismatch; mid against expert is serious.
+Availability: whether the provider can start by the gig's start date and offers the days per week the gig needs. Starting up to 2 weeks late, or offering 1 day a week fewer, is minor; starting more than a month late, or 2 or more days a week fewer, is serious.
+Judgement: 3 = excellent match: the provider's specific expertise directly addresses this gig's specific need, and the terms work (at most one minor mismatch). 2 = good match: genuinely relevant domain and skill set, but not a perfect fit (for example an adjacent sub-focus), with at most minor mismatches in the terms; OR an excellent content fit with several minor mismatches. 1 = weak match: some surface relevance (an adjacent area or a transferable skill), but not a real fit for this need; OR relevant expertise with a serious mismatch in the terms. 0 = not relevant: no genuine content-level relevance, whatever the terms."""
+OUTPUT_INSTRUCTION = "Output only a single integer between 0 and 3 inclusive."
+RUBRIC_VERSION_ORIG = "rubric_0_3.v2-orig-text"
+
+# A continuous 0-1 variant (`--prompt cont`): the same content-then-terms rubric with anchor bands instead of integer
+# grades. The model writes a decimal, so the score is the greedy-decoded number, not a first-token log-probability read.
+# "Today is ..." is rendered from the anchor date, which is the 1 October 2026 the pasted text gives.
+CONT_RUBRIC = """You are matching a gig (a piece of work a client wants done) to a provider profile (an experienced professional's showcase). Score how well the provider fits this gig on a continuous scale from 0 to 1: both what they have done and whether the practical terms work. Today is {today}.
+
+First judge the content fit: does the provider's expertise address what the gig needs? Then check the terms:
+
+Budget: the provider's hourly rate against the gig's budget range. Up to about 15% over the top of the range is a minor mismatch; more than about 40% over is serious. A rate below the range is fine.
+Seniority: the provider's level against the level the gig asks for (mid < senior < expert). One level apart is a minor mismatch; mid against expert is serious.
+Availability: whether the provider can start by the gig's start date and offers the days per week the gig needs. Starting up to 2 weeks late, or offering 1 day a week fewer, is minor; starting more than a month late, or 2 or more days a week fewer, is serious.
+Use these anchor bands: 0.85-1.00 = excellent match: the provider's specific expertise directly addresses this gig's specific need, and the terms work (at most one minor mismatch). 0.55-0.80 = good match: genuinely relevant domain and skill set, but not a perfect fit (for example an adjacent sub-focus), with at most minor mismatches in the terms; OR an excellent content fit with several minor mismatches. 0.20-0.45 = weak match: some surface relevance (an adjacent area or a transferable skill), but not a real fit for this need; OR relevant expertise with a serious mismatch in the terms. 0.00-0.15 = not relevant: no genuine content-level relevance, whatever the terms.
+
+Pick the band first, then place the score within it: higher when the content fit is closer to the band above and the terms are clean, lower when it is closer to the band below or the terms have mismatches. Use the full range of each band rather than defaulting to its edges or to round numbers. The terms can only lower a score, never raise it above what the content fit supports."""
+CONT_OUTPUT_INSTRUCTION = ("Output only the score, as a decimal number between 0 and 1 with two decimal places "
+                           "(for example 0.07, 0.38, 0.64 or 0.91).")
+RUBRIC_VERSION_CONT = "rubric_0_1.v2-cont"
+# The anchor bands leave gaps (0.15-0.20, 0.45-0.55, 0.80-0.85); a score maps to the 0-3 grade of the band it falls in,
+# cutting each gap in the middle. Only for comparison with the integer grades, the score itself is the label.
+BAND_CUTS = (0.175, 0.50, 0.825)
+PROMPT_VERSIONS = {"repro": RUBRIC_VERSION, "orig": RUBRIC_VERSION_ORIG, "cont": RUBRIC_VERSION_CONT}
+
+
 def _fmt_date(value: str | None, today: date) -> str | None:
     d = _parse_avail_date(value, today)
     return f"{d.day} {d.strftime('%b %Y')}" if d else None
@@ -172,7 +211,25 @@ def provider_terms(p: dict, today: date = ANCHOR_DATE) -> list[str]:
     return lines
 
 
-def build_prompt(hirer: dict, provider: dict, today: date = ANCHOR_DATE) -> str:
+def build_prompt(hirer: dict, provider: dict, today: date = ANCHOR_DATE, variant: str = "repro") -> str:
+    """The grading prompt for one pair. `variant` "repro" is the reconstruction (the default every earlier grade used);
+    "orig" is the rubric text supplied by the original's owner, with the gig and profile followed by their terms."""
+    if variant == "cont":
+        return "\n".join([
+            CONT_RUBRIC.format(today=f"{today.day} {today.strftime('%B %Y')}"), "",
+            "Gig: " + hirer_text(hirer), *hirer_terms(hirer, today), "",
+            "Provider profile: " + provider_text(provider), *provider_terms(provider, today), "",
+            CONT_OUTPUT_INSTRUCTION,
+        ])
+    if variant == "orig":
+        return "\n".join([
+            RUBRIC_ORIG, "",
+            "Gig: " + hirer_text(hirer), *hirer_terms(hirer, today), "",
+            "Provider profile: " + provider_text(provider), *provider_terms(provider, today), "",
+            OUTPUT_INSTRUCTION,
+        ])
+    if variant != "repro":
+        raise ValueError(f"variant must be one of {sorted(PROMPT_VERSIONS)}, got {variant!r}")
     return "\n".join([
         RUBRIC, "",
         "=== GIG ===", hirer_text(hirer), *hirer_terms(hirer, today), "",
@@ -213,15 +270,34 @@ def _content(response: dict) -> str:
         return ""
 
 
+SCORE_RE = re.compile(r"(?<![\d.])(?:[01](?:\.\d+)?|\.\d+)(?![\d.])")
+
+
+def parse_score(text: str) -> float | None:
+    """The first decimal in [0, 1] in a model's answer ("0.64", "1", ".5"), else None. A number outside the range, or
+    one glued to other digits or dots, is not a score."""
+    m = SCORE_RE.search(text or "")
+    if m is None:
+        return None
+    value = float(m.group())
+    return value if 0.0 <= value <= 1.0 else None
+
+
+def band_grade(score: float) -> int:
+    """The 0-3 grade of the anchor band a 0-1 score falls in (BAND_CUTS cut the gaps between bands)."""
+    return sum(score >= cut for cut in BAND_CUTS)
+
+
 class Labeller:
-    def __init__(self, complete, model: str, today: date = ANCHOR_DATE, clock=time.time):
+    def __init__(self, complete, model: str, today: date = ANCHOR_DATE, clock=time.time, variant: str = "repro"):
         self.complete, self.model, self.today, self.clock = complete, model, today, clock
+        self.variant, self.prompt_version = variant, PROMPT_VERSIONS[variant]
 
     def payload(self, prompt: str, *, alt_thinking_off: bool = False) -> dict:
         body = {
             "model": self.model,
             "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0, "max_tokens": 2, "logprobs": True, "top_logprobs": 20,
+            "temperature": 0, "max_tokens": 8 if self.variant == "cont" else 2, "logprobs": True, "top_logprobs": 20,
         }
         if alt_thinking_off:
             body["chat_template_kwargs"] = {"enable_thinking": False}
@@ -231,7 +307,7 @@ class Labeller:
 
     def grade_pair(self, hirer: dict, provider: dict) -> dict:
         """One graded record, schema of a judgments.jsonl line. status is "ok" or "error: <why>"."""
-        prompt = build_prompt(hirer, provider, self.today)
+        prompt = build_prompt(hirer, provider, self.today, self.variant)
         started = self.clock()
         response, error = None, None
         for alt in (False, True):                       # retry once, thinking switched off the other way
@@ -242,13 +318,23 @@ class Labeller:
             error = "error: empty content (thinking leaked)"
         record = {
             "hire_id": str(hirer["hire_id"]), "provider_id": str(provider["provider_id"]),
-            "model": self.model, "prompt_version": RUBRIC_VERSION,
+            "model": self.model, "prompt_version": self.prompt_version,
             "timestamp": datetime.fromtimestamp(self.clock()).isoformat(timespec="seconds"),
             "status": "ok", "grade": None, "expected_grade": None, "probs": None,
             "generated": _content(response), "scoring": "logprobs",
             "usage": {k: (response.get("usage") or {}).get(k) for k in ("prompt_tokens", "completion_tokens")},
             "elapsed": round(self.clock() - started, 2),
         }
+        if self.variant == "cont":                      # the score is the decoded number; no grade distribution exists
+            score = None if error else parse_score(_content(response))
+            if error is None and score is None:
+                error = "error: no score in output"
+            record["scoring"] = "generated"
+            if error:
+                record["status"] = error
+                return record
+            record["score"], record["grade"] = score, band_grade(score)
+            return record
         probs = None if error else grade_distribution(_first_token_top_logprobs(response))
         if error is None and probs is None:
             error = "error: no grade token in top_logprobs"
@@ -312,7 +398,7 @@ def run_pairs(pairs, hirers: dict, providers: dict, labeller: Labeller, out_path
                     break
                 except (urllib.error.URLError, TimeoutError, ConnectionError, json.JSONDecodeError, OSError) as exc:
                     record = {"hire_id": hid, "provider_id": pid, "model": labeller.model,
-                              "prompt_version": RUBRIC_VERSION, "status": f"error: {type(exc).__name__}",
+                              "prompt_version": labeller.prompt_version, "status": f"error: {type(exc).__name__}",
                               "grade": None, "expected_grade": None, "probs": None}
                     if attempt < MAX_ATTEMPTS - 1:
                         sleep(2.0 ** (attempt + 1))
@@ -391,6 +477,66 @@ def cohen_kappa(a: list[int], b: list[int], labels=GRADES, weights: str | None =
     return 1.0 - observed / expected if expected > 0 else 1.0
 
 
+def _auc(pos: list[float], neg: list[float]) -> float | None:
+    """P(a random positive scores above a random negative); ties count half. None if either side is empty."""
+    if not pos or not neg:
+        return None
+    return sum((p > n) + 0.5 * (p == n) for p in pos for n in neg) / (len(pos) * len(neg))
+
+
+def _ranks(values: list[float]) -> list[float]:
+    order = sorted(range(len(values)), key=lambda i: values[i])
+    ranks, i = [0.0] * len(values), 0
+    while i < len(order):
+        j = i
+        while j + 1 < len(order) and values[order[j + 1]] == values[order[i]]:
+            j += 1
+        for k in range(i, j + 1):
+            ranks[order[k]] = (i + j) / 2 + 1
+        i = j + 1
+    return ranks
+
+
+def spearman(a: list[float], b: list[float]) -> float:
+    ra, rb = _ranks(a), _ranks(b)
+    ma, mb = sum(ra) / len(ra), sum(rb) / len(rb)
+    cov = sum((x - ma) * (y - mb) for x, y in zip(ra, rb))
+    var = math.sqrt(sum((x - ma) ** 2 for x in ra) * sum((y - mb) ** 2 for y in rb))
+    return cov / var if var else 0.0
+
+
+def continuous_calibration_report(original: list[int], scores: list[float]) -> dict:
+    """How a continuous 0-1 regrade relates to the integer grades it replaces: rank agreement, how well the score
+    separates each grade boundary (AUC), the score distribution per original grade, and the banded comparison
+    (score -> the grade of its anchor band) that the integer calibration report uses."""
+    n = len(original)
+    banded = [band_grade(s) for s in scores]
+    per_grade = {}
+    for g in GRADES:
+        vals = sorted(s for o, s in zip(original, scores) if o == g)
+        per_grade[g] = {"n": len(vals), "mean": sum(vals) / len(vals) if vals else None,
+                        "median": vals[len(vals) // 2] if vals else None,
+                        "min": vals[0] if vals else None, "max": vals[-1] if vals else None}
+    in_gap = sum(0.15 < s < 0.20 or 0.45 < s < 0.55 or 0.80 < s < 0.85 for s in scores)
+    hundredths = [round(s * 100) for s in scores]
+    return {
+        "n": n,
+        "spearman_with_original_grade": spearman([float(o) for o in original], scores),
+        "auc_original_ge1": _auc([s for o, s in zip(original, scores) if o >= 1], [s for o, s in zip(original, scores) if o < 1]),
+        "auc_original_ge2": _auc([s for o, s in zip(original, scores) if o >= 2], [s for o, s in zip(original, scores) if o < 2]),
+        "auc_original_ge3": _auc([s for o, s in zip(original, scores) if o >= 3], [s for o, s in zip(original, scores) if o < 3]),
+        "score_by_original_grade": per_grade,
+        "banded_exact_agreement": sum(o == b for o, b in zip(original, banded)) / n,
+        "banded_within_one": sum(abs(o - b) <= 1 for o, b in zip(original, banded)) / n,
+        "banded_quadratic_weighted_kappa": cohen_kappa(original, banded, weights="quadratic"),
+        "banded_kappa_grade_ge2": cohen_kappa([int(o >= 2) for o in original], [int(b >= 2) for b in banded], labels=(0, 1)),
+        "banded_confusion_matrix_rows_original_cols_banded": confusion_matrix(original, banded),
+        "share_of_scores_in_band_gaps": in_gap / n,
+        "distinct_scores": len(set(scores)),
+        "share_ending_in_0_or_5_hundredths": sum(h % 5 == 0 for h in hundredths) / n,
+    }
+
+
 def calibration_report(original: list[int], regraded: list[int], regraded_expected: list[float]) -> dict:
     n = len(original)
     by_assigned = {}
@@ -453,7 +599,15 @@ def main(argv=None):
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--limit", type=int, default=None, help="grade at most this many pairs this run")
     ap.add_argument("--per-grade", type=int, default=75, help="calibrate mode: pairs per original grade")
+    ap.add_argument("--prompt", choices=sorted(PROMPT_VERSIONS), default="repro",
+                    help="repro: the reconstruction every earlier grade used (default); orig: the rubric text supplied "
+                         "by the original's owner plus an explicit output instruction; cont: the same rubric as a "
+                         "continuous 0-1 score with anchor bands (records carry `score`; `grade` is its band). "
+                         "With orig or cont the default output files get an _orig / _cont suffix, so no earlier file "
+                         "is overwritten")
     args = ap.parse_args(argv)
+    suffix = {"repro": "", "orig": "_orig", "cont": "_cont"}[args.prompt]
+    version = PROMPT_VERSIONS[args.prompt]
     data_dir = args.data_dir
 
     if args.mode == "merge":
@@ -466,29 +620,32 @@ def main(argv=None):
 
     cfg = endpoint_config()
     hirers, providers = _load_data(data_dir)
-    labeller = Labeller(http_complete(cfg), cfg["model"])
+    labeller = Labeller(http_complete(cfg), cfg["model"], variant=args.prompt)
 
     if args.mode == "pairs":
         pairs = _pairs_from_pools(_load_json(data_dir / args.pools))
-        out = data_dir / (args.out or "judgments_tag.jsonl")
-        print(f"{len(set(pairs))} pairs -> {out.name} (model {cfg['model']}, prompt {RUBRIC_VERSION}, {args.rps} calls/s)")
+        out = data_dir / (args.out or f"judgments_tag{suffix}.jsonl")
+        print(f"{len(set(pairs))} pairs -> {out.name} (model {cfg['model']}, prompt {version}, {args.rps} calls/s)")
         print(run_pairs(pairs, hirers, providers, labeller, out, rps=args.rps, seed=args.seed, limit=args.limit))
         return
 
     merged = _load_json(data_dir / "llm_judgments_merged.json")
     sample = calibration_sample(merged, args.per_grade, args.seed)
-    out = data_dir / (args.out or "calibration.jsonl")
-    print(f"regrading {len(sample)} already-graded pairs -> {out.name}")
+    out = data_dir / (args.out or f"calibration{suffix}.jsonl")
+    print(f"regrading {len(sample)} already-graded pairs with prompt {version} -> {out.name}")
     run_pairs([(h, p) for h, p, _ in sample], hirers, providers, labeller, out, rps=args.rps, seed=args.seed, limit=args.limit)
     latest = {(r["hire_id"], r["provider_id"]): r for r in read_records(out) if r.get("status") == "ok"}
     rows = [(g, latest[(h, p)]) for h, p, g in sample if (h, p) in latest]
     if not rows:
         raise SystemExit("no regraded pairs to report")
-    report = calibration_report([g for g, _ in rows], [r["grade"] for _, r in rows], [r["expected_grade"] for _, r in rows])
-    report["rubric_version"] = RUBRIC_VERSION
+    if args.prompt == "cont":
+        report = continuous_calibration_report([g for g, _ in rows], [r["score"] for _, r in rows])
+    else:
+        report = calibration_report([g for g, _ in rows], [r["grade"] for _, r in rows], [r["expected_grade"] for _, r in rows])
+    report["rubric_version"] = version
     print(json.dumps(report, indent=1))
     (BASE / "results_tag").mkdir(exist_ok=True)
-    (BASE / "results_tag" / "calibration.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
+    (BASE / "results_tag" / f"calibration{suffix}.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
 
 
 if __name__ == "__main__":

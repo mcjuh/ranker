@@ -1,0 +1,56 @@
+{
+ "n": 300,
+ "exact_agreement": 0.7333333333333333,
+ "within_one": 0.99,
+ "quadratic_weighted_kappa": 0.889578163771712,
+ "kappa_grade_ge2": 0.8600000000000005,
+ "confusion_matrix_rows_original_cols_new": [
+  [
+   62,
+   10,
+   3,
+   0
+  ],
+  [
+   21,
+   49,
+   5,
+   0
+  ],
+  [
+   0,
+   13,
+   38,
+   24
+  ],
+  [
+   0,
+   0,
+   4,
+   71
+  ]
+ ],
+ "by_assigned_grade": {
+  "0": {
+   "n": 83,
+   "mean_expected_grade": 0.2683698795180723,
+   "original_mean_expected_grade": 0.2
+  },
+  "1": {
+   "n": 72,
+   "mean_expected_grade": 1.104525,
+   "original_mean_expected_grade": 0.83
+  },
+  "2": {
+   "n": 50,
+   "mean_expected_grade": 1.84179,
+   "original_mean_expected_grade": 1.47
+  },
+  "3": {
+   "n": 95,
+   "mean_expected_grade": 2.568555789473684,
+   "original_mean_expected_grade": 2.26
+  }
+ },
+ "rubric_version": "rubric_0_3.v2-orig-text"
+}

@@ -1,0 +1,71 @@
+{
+ "n": 300,
+ "spearman_with_original_grade": 0.9169254398639831,
+ "auc_original_ge1": 0.9511703703703703,
+ "auc_original_ge2": 0.9838222222222223,
+ "auc_original_ge3": 0.9776,
+ "score_by_original_grade": {
+  "0": {
+   "n": 75,
+   "mean": 0.1668,
+   "median": 0.12,
+   "min": 0.0,
+   "max": 0.72
+  },
+  "1": {
+   "n": 75,
+   "mean": 0.36493333333333333,
+   "median": 0.32,
+   "min": 0.12,
+   "max": 0.68
+  },
+  "2": {
+   "n": 75,
+   "mean": 0.6656,
+   "median": 0.68,
+   "min": 0.42,
+   "max": 0.78
+  },
+  "3": {
+   "n": 75,
+   "mean": 0.8442666666666667,
+   "median": 0.88,
+   "min": 0.62,
+   "max": 0.98
+  }
+ },
+ "banded_exact_agreement": 0.7566666666666667,
+ "banded_within_one": 0.9933333333333333,
+ "banded_quadratic_weighted_kappa": 0.8761755485893415,
+ "banded_kappa_grade_ge2": 0.9000000000000005,
+ "banded_confusion_matrix_rows_original_cols_banded": [
+  [
+   47,
+   26,
+   2,
+   0
+  ],
+  [
+   2,
+   62,
+   11,
+   0
+  ],
+  [
+   0,
+   2,
+   73,
+   0
+  ],
+  [
+   0,
+   0,
+   30,
+   45
+  ]
+ ],
+ "share_of_scores_in_band_gaps": 0.0033333333333333335,
+ "distinct_scores": 22,
+ "share_ending_in_0_or_5_hundredths": 0.24,
+ "rubric_version": "rubric_0_1.v2-cont"
+}
