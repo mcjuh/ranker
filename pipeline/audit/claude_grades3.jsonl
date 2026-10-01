@@ -1,0 +1,195 @@
+{"item": "R001", "grade": 2, "note": "finance transformation/ERP, GL, R2R-adjacent; no explicit close review; seniority and days minor"}
+{"item": "R002", "grade": 3, "note": "sell-side FDD/advisory, automotive manufacturing, expert, in budget"}
+{"item": "R003", "grade": 2, "note": "enterprise data governance, no catalog/metadata specifics; seniority minor"}
+{"item": "R004", "grade": 1, "note": "supply-chain planning software advisory, not product migration/ARR"}
+{"item": "R005", "grade": 2, "note": "ERP selection/implementation fits; rate ~27% over top, worse than minor"}
+{"item": "R006", "grade": 2, "note": "privacy/compliance in healthcare but cyber-focused, HIPAA not PDPA; rate ~22% over"}
+{"item": "R007", "grade": 2, "note": "product management for e-commerce/real estate; no maturity assessment stated"}
+{"item": "R008", "grade": 2, "note": "data-driven audit analytics fits need; not an ML/Python builder; seniority minor"}
+{"item": "R009", "grade": 1, "note": "procurement specialist, not B2B commerce platform evaluation"}
+{"item": "R010", "grade": 3, "note": "Singapore FS regulatory compliance, MAS, in budget and terms"}
+{"item": "R011", "grade": 3, "note": "economic damages, business interruption, insurance claims; Monte Carlo not stated"}
+{"item": "R012", "grade": 2, "note": "AI governance for FS fits; template design not stated"}
+{"item": "R013", "grade": 2, "note": "journey mapping skill fits, insurance not B2B distribution; seniority and rate minor"}
+{"item": "R014", "grade": 1, "note": "valuation expert, only surface link to financial reporting"}
+{"item": "R015", "grade": 1, "note": "PE operational improvement, not exit/realization planning; 1 day short"}
+{"item": "R016", "grade": 3, "note": "family-support programme evaluation, implement and test programmes"}
+{"item": "R017", "grade": 1, "note": "procurement specialist, not B2B e-commerce platform design"}
+{"item": "R018", "grade": 2, "note": "digital CX platforms and journeys, retail not manufacturing; 1 day short"}
+{"item": "R019", "grade": 1, "note": "FS governance/transformation, not chart of accounts or finance process"}
+{"item": "R020", "grade": 1, "note": "retirement-services cost benchmarking, not G&A reduction"}
+{"item": "R021", "grade": 3, "note": "construction legal, pre-M&A contract review at scale, efficiency"}
+{"item": "R022", "grade": 1, "note": "unclaimed-property compliance analytics, not data-use capacity"}
+{"item": "R023", "grade": 2, "note": "bribery/sanctions compliance fits; rate ~16% over and start ~18 days late"}
+{"item": "R024", "grade": 2, "note": "research/survey design for social programmes; not CalWORKs/trauma-informed"}
+{"item": "R025", "grade": 1, "note": "fire investigator, not fire and life safety design"}
+{"item": "R026", "grade": 2, "note": "valuation designee for illiquid assets, divestment; seniority minor"}
+{"item": "R027", "grade": 1, "note": "data-privacy testimony expert; rate ~47% over = serious mismatch"}
+{"item": "R028", "grade": 3, "note": "incident response and digital forensics; seniority minor"}
+{"item": "R029", "grade": 2, "note": "AI process integration fits; not marketing; seniority and rate minor"}
+{"item": "R030", "grade": 2, "note": "NY-licensed FS compliance counsel; SEC/FINRA not DFS"}
+{"item": "R031", "grade": 2, "note": "manufacturing data modelling; digital twin not stated; 1 day short"}
+{"item": "R032", "grade": 2, "note": "scenario planning method fits; not geopolitical/financial; seniority minor"}
+{"item": "R033", "grade": 2, "note": "antitrust economist, not competition counsel/filings"}
+{"item": "R034", "grade": 2, "note": "FS cyber threat intel fits; rate ~21% over and seniority minor"}
+{"item": "R035", "grade": 2, "note": "operating model design, not HR-function-specific"}
+{"item": "R036", "grade": 1, "note": "exec-level ERP, not hands-on integration; rate ~37% over"}
+{"item": "R037", "grade": 1, "note": "generic digital strategy, no venue/ICT link"}
+{"item": "R038", "grade": 1, "note": "finance leader fits; 1 day vs 3 = serious availability mismatch"}
+{"item": "R039", "grade": 3, "note": "global carve-out leader, vendor DD, in terms"}
+{"item": "R040", "grade": 1, "note": "marine casualty/LNG, not fire-fighting system risk assessment"}
+{"item": "R041", "grade": 1, "note": "purpose/culture strategy for public sector, not grant KPIs or channel strategy"}
+{"item": "R042", "grade": 1, "note": "IT architecture fits; rate ~44% over = serious mismatch"}
+{"item": "R043", "grade": 2, "note": "sourcing and spend optimisation, IT only; in terms"}
+{"item": "R044", "grade": 3, "note": "sell-side QoE for manufacturing; 1 day short"}
+{"item": "R045", "grade": 2, "note": "restructuring lawyer/IFA, not valuation expert evidence; 1 day short"}
+{"item": "R046", "grade": 3, "note": "MAS-focused risk advisory, COSO frameworks, in terms"}
+{"item": "R047", "grade": 2, "note": "healthcare patient access/ops; no AI tooling; mid vs senior minor"}
+{"item": "R048", "grade": 2, "note": "banking digital enablement; no nCino/treasury specifics"}
+{"item": "R049", "grade": 1, "note": "valuation/loss expert fits; 2 days vs 5 = serious availability mismatch"}
+{"item": "R050", "grade": 2, "note": "controls/SOX design fits; no AI frameworks; rate ~16% over, seniority minor"}
+{"item": "R051", "grade": 3, "note": "crypto-exchange liquidator and restructuring; 1 day short"}
+{"item": "R052", "grade": 2, "note": "FS tax compliance fits; US state/local flavour, not process review; seniority minor"}
+{"item": "R053", "grade": 3, "note": "cyber incident response and digital forensics, in terms"}
+{"item": "R054", "grade": 1, "note": "social protection research, no costing/fiscal affordability"}
+{"item": "R055", "grade": 1, "note": "forensic asset tracing fits; rate ~35% over and start ~18 days late"}
+{"item": "R056", "grade": 2, "note": "energy strategy, but M&A/nuclear not decarbonisation portfolio"}
+{"item": "R057", "grade": 1, "note": "segmentation/consumer insight fits partly; start 31 days late = serious"}
+{"item": "R058", "grade": 1, "note": "transaction advisory, not buyer outreach; rate ~44% over = serious"}
+{"item": "R059", "grade": 3, "note": "FMCG food portfolio optimisation, in terms"}
+{"item": "R060", "grade": 2, "note": "AI agent deployment fits; no IT ops/ServiceNow"}
+{"item": "R061", "grade": 2, "note": "financial modelling for raising fits; start 14 days late and 1 day short"}
+{"item": "R062", "grade": 2, "note": "AI data infrastructure and stream processing fits; no predictive maintenance"}
+{"item": "R063", "grade": 2, "note": "pen testing and code review fit; rate ~8% over, seniority and days minor"}
+{"item": "R064", "grade": 1, "note": "revenue cycle (billing), not accounts payable/P2P"}
+{"item": "R065", "grade": 2, "note": "esoteric/hard-asset structuring and valuation; not collateral framework design"}
+{"item": "R066", "grade": 2, "note": "audit data analytics adjacent; rate ~23% over, seniority minor"}
+{"item": "R067", "grade": 3, "note": "AI and engineering strategy for engineering function, in terms"}
+{"item": "R068", "grade": 2, "note": "restructuring and distressed sales fit; rate ~15% over, start 25 days late"}
+{"item": "R069", "grade": 1, "note": "insurance data engineering, no revenue recognition/finance"}
+{"item": "R070", "grade": 2, "note": "insurance AI/data fits; conversational AI not stated"}
+{"item": "R071", "grade": 1, "note": "valuation not modelling build; rate ~37% over"}
+{"item": "R072", "grade": 3, "note": "post-merger integration and logistics supply chain; seniority minor"}
+{"item": "R073", "grade": 1, "note": "forensic fire investigator, not code-compliance design review"}
+{"item": "R074", "grade": 2, "note": "AI/ML initiatives for retail; strategy rather than builder"}
+{"item": "R075", "grade": 1, "note": "marine engine knowledge, not process standardisation; rate ~22% over"}
+{"item": "R076", "grade": 2, "note": "controls review/risk assessment fit, CIS 18 not stated; rate and seniority minor"}
+{"item": "R077", "grade": 1, "note": "insurance data/AI, no contract or legal extraction"}
+{"item": "R078", "grade": 1, "note": "GenAI strategy fits; rate ~57% over = serious"}
+{"item": "R079", "grade": 1, "note": "decarbonisation strategy, not carbon footprint assessment; rate ~23% over"}
+{"item": "R080", "grade": 1, "note": "healthcare data platform, not Azure landing zone/security"}
+{"item": "R081", "grade": 1, "note": "ECD impact-evaluation lead, no mentorship framework design"}
+{"item": "R082", "grade": 1, "note": "financial litigation support junior, not HR/legal-ops playbook"}
+{"item": "R083", "grade": 2, "note": "vulnerability assessment and remediation fit; rate ~22% over, seniority and days minor"}
+{"item": "R084", "grade": 1, "note": "customs/tariff advisory, not smuggling intelligence investigation"}
+{"item": "R085", "grade": 2, "note": "AI/NLP automation fits; no Microsoft agent; 1 day short"}
+{"item": "R086", "grade": 2, "note": "advanced analytics generic fit; no regression/audit context"}
+{"item": "R087", "grade": 2, "note": "sustainability leadership, CSRD DMA not stated, industrial focus"}
+{"item": "R088", "grade": 2, "note": "PFM reform and multilateral background, not oil political economy"}
+{"item": "R089", "grade": 3, "note": "restructuring and crypto-exchange liquidation fit; 1 day short"}
+{"item": "R090", "grade": 1, "note": "family policy research, no behavioural science or process redesign"}
+{"item": "R091", "grade": 2, "note": "financial modelling for infrastructure/climate resilience, not disaster budgeting"}
+{"item": "R092", "grade": 2, "note": "forensic accounting investigations fit; rate ~27% over"}
+{"item": "R093", "grade": 2, "note": "HR/talent strategy fits; DEI-oriented tech firm"}
+{"item": "R094", "grade": 2, "note": "Medicaid expertise, not programme evaluation"}
+{"item": "R095", "grade": 1, "note": "forensic/dispute expert with SAP; rate ~75% over = serious"}
+{"item": "R096", "grade": 1, "note": "policy advisory; no circular-economy diagnostics"}
+{"item": "R097", "grade": 2, "note": "impact evaluation methods fit; no education/RCT design stated"}
+{"item": "R098", "grade": 2, "note": "sales performance/go-to-market, consumer not med devices; seniority minor"}
+{"item": "R099", "grade": 2, "note": "low-carbon commercial strategy; no automotive/MFI"}
+{"item": "R100", "grade": 1, "note": "healthcare IT analytics, not usability review; rate ~57% over = serious"}
+{"item": "R101", "grade": 2, "note": "revenue leakage/revenue integrity fits; mid vs senior, start ~15 days late"}
+{"item": "R102", "grade": 1, "note": "forensic data analytics, no Azure engineering or ESMA"}
+{"item": "R103", "grade": 2, "note": "data analysis and policy research generic fit; mid vs senior minor"}
+{"item": "R104", "grade": 1, "note": "sales leadership, not churn/cohort modelling"}
+{"item": "R105", "grade": 2, "note": "FS compliance and legal qualification fit; rate ~16% over, seniority and days minor"}
+{"item": "R106", "grade": 2, "note": "cruise-line strategy fits; synergy/integration not stated"}
+{"item": "R107", "grade": 2, "note": "forensic data analytics fits; JE testing/audit platform not stated"}
+{"item": "R108", "grade": 1, "note": "offensive security, not digital forensics/investigation"}
+{"item": "R109", "grade": 3, "note": "tax operations process and technology fit; mid vs senior minor"}
+{"item": "R110", "grade": 3, "note": "data-incident and breach-notification legal work; GDPR/CCPA rather than PDPA"}
+{"item": "R111", "grade": 1, "note": "executive AI/cloud strategy, no Kubernetes architecture"}
+{"item": "R112", "grade": 2, "note": "cloud security architecture review fits; mid vs senior; no K8s/GCP"}
+{"item": "R113", "grade": 1, "note": "upstream energy strategy, not go-to-market messaging"}
+{"item": "R114", "grade": 1, "note": "turnaround/cash flow, not ESOP viability or tax impact"}
+{"item": "R115", "grade": 1, "note": "enterprise application transformation, not infrastructure cloud migration"}
+{"item": "R116", "grade": 2, "note": "qualitative synthesis fits; no GenAI; rate ~6% over"}
+{"item": "R117", "grade": 3, "note": "fund wind-down specialist; seniority minor"}
+{"item": "R118", "grade": 2, "note": "consumer growth strategy for FMCG; not market-economics assessment"}
+{"item": "R119", "grade": 1, "note": "AI strategy, no OCR/invoice-to-pay"}
+{"item": "R120", "grade": 2, "note": "assurance fits; no DLI/results-based financing; 1 day short"}
+{"item": "R121", "grade": 1, "note": "data transformation expert fits; rate ~43% over = serious"}
+{"item": "R122", "grade": 1, "note": "FS compliance, no virtual assets/AML risk assessment; seniority minor"}
+{"item": "R123", "grade": 3, "note": "rural community-based organisation capacity building, manuals and guidelines"}
+{"item": "R124", "grade": 1, "note": "insurer-side claims technology, not buyer insurance spend analysis"}
+{"item": "R125", "grade": 3, "note": "electronics supply chain footprint under geopolitical shifts"}
+{"item": "R126", "grade": 1, "note": "damages/valuation modelling; rate ~43% over = serious"}
+{"item": "R127", "grade": 2, "note": "FS regulatory gap assessments; UK FCA not DORA/ISO 27001; seniority minor"}
+{"item": "R128", "grade": 2, "note": "AI strategy blueprint fits; no AWS or segmentation"}
+{"item": "R129", "grade": 2, "note": "revenue cycle and claims fit; mid vs senior, start ~22 days late"}
+{"item": "R130", "grade": 2, "note": "cyber risk assessment fits, pen testing not stated; mid vs senior"}
+{"item": "R131", "grade": 1, "note": "supply chain network strategy, no emissions/ML modelling"}
+{"item": "R132", "grade": 3, "note": "employment programme evaluation incl. NextGen TANF-type work; 1 day short"}
+{"item": "R133", "grade": 2, "note": "consumer digital strategy transferable; no insurance/annuity"}
+{"item": "R134", "grade": 1, "note": "AI strategy, no watsonx implementation; mid vs senior, rate ~11% over"}
+{"item": "R135", "grade": 3, "note": "insurance distribution platforms and GenAI; seniority minor"}
+{"item": "R136", "grade": 1, "note": "healthcare digital transformation, not ECD scaling"}
+{"item": "R137", "grade": 1, "note": "climate risk/insurance domain, no evaluation methodology"}
+{"item": "R138", "grade": 2, "note": "FS IT strategy; sourcing not explicit"}
+{"item": "R139", "grade": 2, "note": "experimental evaluation methods fit; workforce not child maltreatment"}
+{"item": "R140", "grade": 2, "note": "cyber investigations and forensic remediation fit; physical archives; rate ~12% over, seniority minor"}
+{"item": "R141", "grade": 2, "note": "security assessments fit; offensive rather than ransomware readiness/O365"}
+{"item": "R142", "grade": 2, "note": "CRM/AI sales platforms, strategy not prototype build; seniority minor"}
+{"item": "R143", "grade": 2, "note": "controls assurance fits; UK frameworks not MAS/PDPA"}
+{"item": "R144", "grade": 2, "note": "divestment/restructuring advisory, not healthcare sale-side structuring"}
+{"item": "R145", "grade": 2, "note": "social protection in Africa; no sovereign insurance analysis"}
+{"item": "R146", "grade": 1, "note": "CRM sales strategy, no predictive modelling; seniority minor"}
+{"item": "R147", "grade": 2, "note": "regulation-to-controls domain fits; no AI tooling"}
+{"item": "R148", "grade": 1, "note": "edtech M&A, not O2C systems integration"}
+{"item": "R149", "grade": 2, "note": "property tax valuation fits but US jurisdiction; start ~19 days late"}
+{"item": "R150", "grade": 2, "note": "energy legal counsel incl. real estate leases; mid vs senior"}
+{"item": "R151", "grade": 2, "note": "operational DD and synergy, edtech not smart-home commercial DD; 1 day short"}
+{"item": "R152", "grade": 3, "note": "policymaker stakeholder engagement strategy, in terms"}
+{"item": "R153", "grade": 3, "note": "digital forensics/threat hunting, GCFA; 1 day short"}
+{"item": "R154", "grade": 1, "note": "digital strategy fits; rate ~104% over = serious"}
+{"item": "R155", "grade": 2, "note": "AI risk governance and agentic AI fit; not audit execution"}
+{"item": "R156", "grade": 2, "note": "forensic accounting and analytics fit; rate ~14% over, start ~19 days late"}
+{"item": "R157", "grade": 3, "note": "social assistance system design and capacity assessment"}
+{"item": "R158", "grade": 2, "note": "breach notification service listed, but cyber not legal drafting"}
+{"item": "R159", "grade": 3, "note": "IP/trade-secret disputes with digital forensics; start 12 days late"}
+{"item": "R160", "grade": 2, "note": "healthcare workforce productivity; change management not explicit"}
+{"item": "R161", "grade": 1, "note": "retirement operating-model strategy, no UX/UI design"}
+{"item": "R162", "grade": 1, "note": "physical/enterprise security risk, not insurance ERM"}
+{"item": "R163", "grade": 1, "note": "procurement strategy, no legal document extraction"}
+{"item": "R164", "grade": 1, "note": "infrastructure PPP, no waste management"}
+{"item": "R165", "grade": 2, "note": "AI agent deployment fits; governance not stated; start ~16 days late"}
+{"item": "R166", "grade": 2, "note": "green building/clean tech; not solar yield verification"}
+{"item": "R167", "grade": 3, "note": "employment programme evaluation with interviews and grantee surveys"}
+{"item": "R168", "grade": 2, "note": "contract lifecycle legal fits, drafting not explicit; rate ~8% over"}
+{"item": "R169", "grade": 2, "note": "retail planning analytics adjacent; no network design"}
+{"item": "R170", "grade": 2, "note": "BI dashboard design fits; no RCM; mid vs senior"}
+{"item": "R171", "grade": 2, "note": "revenue cycle expert fits; rate ~16% over, seniority minor"}
+{"item": "R172", "grade": 1, "note": "AI/data fits partly; rate ~55% over = serious"}
+{"item": "R173", "grade": 2, "note": "AppSec advisory fits; hands-on pen test not stated"}
+{"item": "R174", "grade": 3, "note": "lost profits and damages quantification; seniority minor"}
+{"item": "R175", "grade": 1, "note": "health governance in LMICs, no school-based services reimbursement"}
+{"item": "R176", "grade": 2, "note": "controls and third-party risk fit; rate ~26% over, seniority minor"}
+{"item": "R177", "grade": 2, "note": "cloud transformation strategy fits; rate ~27% over, seniority and days minor"}
+{"item": "R178", "grade": 1, "note": "urban planning, no evidence gap mapping; rate ~44% over = serious"}
+{"item": "R179", "grade": 2, "note": "data governance/automation fit; finance reporting not core; seniority and days minor"}
+{"item": "R180", "grade": 3, "note": "finance operating model and process design, in terms"}
+{"item": "R181", "grade": 1, "note": "supply chain AI, not skills or workforce analysis"}
+{"item": "R182", "grade": 2, "note": "integrated care operating models, not contract audit/D-SNP"}
+{"item": "R183", "grade": 1, "note": "public sector feasibility generic; no energy/data-sharing architecture"}
+{"item": "R184", "grade": 3, "note": "aerospace/defence legal, contract lifecycle management, in terms"}
+{"item": "R185", "grade": 3, "note": "social assistance system design and intake/eligibility strengthening"}
+{"item": "R186", "grade": 1, "note": "global health strategy, no PPP enabling environment"}
+{"item": "R187", "grade": 1, "note": "payer AI automation fits; rate ~59% over = serious"}
+{"item": "R188", "grade": 1, "note": "fire investigator, not fire/life safety design and SCDF approval"}
+{"item": "R189", "grade": 2, "note": "risk assurance fits, not ERM taxonomy for insurance; 1 day short"}
+{"item": "R190", "grade": 2, "note": "AI/ML initiatives to deployment fit; no Databricks or insurance"}
+{"item": "R191", "grade": 2, "note": "vendor management fits; no contract portfolio analysis; seniority minor"}
+{"item": "R192", "grade": 2, "note": "finance function excellence fits; close process not explicit"}
+{"item": "R193", "grade": 2, "note": "AI/data governance in regulated settings; not biotech"}
+{"item": "R194", "grade": 1, "note": "junior data cleansing for diligence, no SAP master data"}
+{"item": "R195", "grade": 1, "note": "power utility strategy, not industrial captive power; rate ~29% over"}
