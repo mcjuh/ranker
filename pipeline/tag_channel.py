@@ -13,6 +13,11 @@ Hubness-corrected variants (tag_corpus.py --hubness center writes tags_*_hc.json
 
     TagChannel(DATA_DIR, variant="hc")                  # same BM25 over the corrected top-30 tags
     TagChannel(DATA_DIR, variant="hc", scorer="wcos")   # cosine of relu(score - tau) tag weights (TagWeightedCosine)
+
+Another encoder (tag_corpus.py --encoder qwen3-0.6b writes tags_*_hc-qwen3-0.6b.json): the same centring, with the scores
+divided by one pooled sd, so the weighted scorer's default threshold is 1.0 (one sd, which is 0.05 for mxbai):
+
+    TagChannel(DATA_DIR, variant="hc-qwen3-0.6b")
 """
 import json
 from pathlib import Path
@@ -29,6 +34,14 @@ DEFAULT_TOP_M_HIRER = 30
 # weighted scorer: tags whose corrected score is <= tau carry no weight. Centred scores are cosine differences
 # (per-tag sd is about 0.05), z-scores are in sd units. Flat in a sweep over 0.03-0.07 (centred) and 1.0-1.5 (z).
 VARIANT_TAU = {"hc": 0.05, "hz": 1.0}
+ENCODER_VARIANT_PREFIX = "hc-"      # tag_corpus.py --encoder <name>: centred, scaled to unit pooled sd
+
+
+def variant_tau(variant: str) -> float | None:
+    """Default weighted-scorer threshold of a variant, or None if the variant has no weighted scorer."""
+    if variant.startswith(ENCODER_VARIANT_PREFIX):
+        return 1.0
+    return VARIANT_TAU.get(variant)
 SCORERS = ("bm25", "wcos")
 
 
@@ -69,13 +82,15 @@ class TagChannel:
         data_dir = Path(data_dir)
         if scorer not in SCORERS:
             raise ValueError(f"scorer must be one of {SCORERS}, got {scorer!r}")
-        if scorer == "wcos" and variant not in VARIANT_TAU:
+        if scorer == "wcos" and variant_tau(variant) is None:
             raise ValueError("scorer='wcos' needs hubness-corrected tags: run tag_corpus.py --hubness center "
                              "and pass variant='hc'")
         for side in ("providers", "hirers"):
             path = tag_file(data_dir, side, variant)
             if not path.exists():
                 hint = {"hc": " --hubness center", "hz": " --hubness z"}.get(variant, "")
+                if variant.startswith(ENCODER_VARIANT_PREFIX):
+                    hint = f" --encoder {variant.removeprefix(ENCODER_VARIANT_PREFIX)}"
                 raise FileNotFoundError(f"{path} not found; run pipeline/tag_corpus.py{hint} first")
         self.scorer, self.max_returned, self.variant, self.top_m_hirer = scorer, max_returned, variant, top_m_hirer
         self._hirer_stats = load_tag_stats(tag_file(data_dir, "hirers", variant)) if variant else None
@@ -83,7 +98,7 @@ class TagChannel:
             providers = load_tag_scores(tag_file(data_dir, "providers", variant), top_m_provider)
             self.hirer_tags = load_tag_scores(tag_file(data_dir, "hirers", variant), top_m_hirer)
             self.index = TagWeightedCosine(list(providers), list(providers.values()),
-                                          tau=VARIANT_TAU[variant] if tau is None else tau)
+                                          tau=variant_tau(variant) if tau is None else tau)
         else:
             providers = load_tags(tag_file(data_dir, "providers", variant), top_m_provider)
             self.hirer_tags = load_tags(tag_file(data_dir, "hirers", variant), top_m_hirer)

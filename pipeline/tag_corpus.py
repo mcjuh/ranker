@@ -28,6 +28,11 @@ Run (from the repo root, in the .venv):
     python pipeline/tag_corpus.py --data-dir data_sat --hubness center  # hubness-corrected tags, *_hc.json
     python pipeline/tag_corpus.py --data-dir data_sat --limit 24     # smoke test: prints, writes nothing
 
+--encoder NAME (a tag_encoders.SPECS entry other than the default mxbai) tags with that model instead: centred tags only,
+scaled by one pooled sd per side (so the weighted scorer's threshold is 1.0), written to tags_hirers_hc-NAME.json /
+tags_providers_hc-NAME.json. Embeddings come from the tag_encoders cache (pipeline/cache/tagenc/), which eval_tag_encoder.py
+fills, so use the same device for them as for the comparison.
+
 Embedding is cached in chunks under pipeline/cache/ (git-ignored), so an interrupted run resumes.
 """
 import argparse
@@ -120,10 +125,21 @@ def main():
                     help="center: rank tags by cosine minus the tag's mean over the gig / provider corpus (removes "
                          "generic 'hub' tags); z: also divide by the tag's sd. Writes tags_*_hc.json / tags_*_hz.json "
                          "with the corrected scores and the per-tag mean/sd, and leaves the raw-cosine files untouched")
+    ap.add_argument("--encoder", default=None,
+                    help="tag_encoders.SPECS name to tag with instead of mxbai (centred tags, see above)")
     ap.add_argument("--limit", type=int, help="tag only the first N gigs and providers; print, write nothing")
     args = ap.parse_args()
 
-    from retrieval_dense import BASE_MODEL_NAME, encode_docs, encode_queries
+    if args.encoder and args.hubness == "z":
+        ap.error("--encoder writes centred tags only (--hubness center)")
+    if args.encoder:
+        args.hubness = "center"
+        from tag_encoders import embed, get_spec
+
+        spec = get_spec(args.encoder)
+        BASE_MODEL_NAME = spec.hf_id
+    else:
+        from retrieval_dense import BASE_MODEL_NAME, encode_docs, encode_queries
 
     data_dir = BASE / args.data_dir
     prefix = args.data_dir.removeprefix("data_")  # data_sat -> "sat": shares build_judging_pools_sat's cache names
@@ -138,17 +154,23 @@ def main():
     titles = [tax.tags[t] for t in tag_ids]
     print(f"{len(hirers)} gigs, {len(providers)} providers, {len(tag_ids)} tags; model {BASE_MODEL_NAME}", flush=True)
 
+    gig_texts, prov_texts = [hirer_text(h) for h in hirers], [provider_text(p) for p in providers]
     t0 = time.time()
-    tag_as_passage = embed_in_chunks("taxonomy_tags_mxbai_docs_by_text", titles, encode_docs)
-    tag_as_query = embed_in_chunks("taxonomy_tags_mxbai_queries_by_text", titles, encode_queries)
-    print(f"tag titles embedded in {time.time() - t0:.0f}s", flush=True)
+    if args.encoder:        # same calls, so the same cache entries, as eval_tag_encoder.Embeds
+        tag_as_passage, tag_as_query = embed(spec, titles, "doc", "tags"), embed(spec, titles, "query", "tags")
+        print(f"tag titles embedded in {time.time() - t0:.0f}s", flush=True)
+        gig_vecs, prov_vecs = embed(spec, gig_texts, "query", "gigs"), embed(spec, prov_texts, "doc", "provs")
+    else:
+        tag_as_passage = embed_in_chunks("taxonomy_tags_mxbai_docs_by_text", titles, encode_docs)
+        tag_as_query = embed_in_chunks("taxonomy_tags_mxbai_queries_by_text", titles, encode_queries)
+        print(f"tag titles embedded in {time.time() - t0:.0f}s", flush=True)
 
-    t0 = time.time()
-    gig_vecs = embed_in_chunks(f"{prefix}_queries_mxbai_by_text", [hirer_text(h) for h in hirers], encode_queries)
-    print(f"gigs embedded in {time.time() - t0:.0f}s", flush=True)
-    t0 = time.time()
-    prov_vecs = embed_in_chunks(f"{prefix}_docs_mxbai_by_text", [provider_text(p) for p in providers], encode_docs)
-    print(f"providers embedded in {time.time() - t0:.0f}s", flush=True)
+        t0 = time.time()
+        gig_vecs = embed_in_chunks(f"{prefix}_queries_mxbai_by_text", gig_texts, encode_queries)
+        print(f"gigs embedded in {time.time() - t0:.0f}s", flush=True)
+        t0 = time.time()
+        prov_vecs = embed_in_chunks(f"{prefix}_docs_mxbai_by_text", prov_texts, encode_docs)
+    print(f"texts embedded in {time.time() - t0:.0f}s", flush=True)
 
     # gigs are compared with tag titles embedded as passages, providers with titles embedded as queries, so the
     # two sides live in different similarity spaces and each gets its own per-tag statistics
@@ -158,6 +180,10 @@ def main():
         stats["provider"] = hubness_stats(tag_similarities(prov_vecs, tag_as_query))
         if args.hubness == "center":
             stats = {side: (mean, np.ones_like(mean)) for side, (mean, _sd) in stats.items()}
+        if args.encoder:    # unit pooled sd of the centred matrix (eval_tag_encoder.centred_unit), the same for every tag
+            pooled = {"gig": tag_similarities(gig_vecs, tag_as_passage), "provider": tag_similarities(prov_vecs, tag_as_query)}
+            stats = {side: (mean, np.full_like(mean, float((pooled[side] - mean).std())))
+                     for side, (mean, _sd) in stats.items()}
     gig_tags = dict(zip((h["hire_id"] for h in hirers),
                         top_tags(gig_vecs, tag_as_passage, tag_ids, top_m, stats["gig"])))
     prov_tags = dict(zip((p["provider_id"] for p in providers),
@@ -174,7 +200,7 @@ def main():
     if args.limit:
         print("--limit given: nothing written")
         return
-    suffix = HUBNESS_SUFFIX.get(args.hubness, "")
+    suffix = f"_hc-{args.encoder}" if args.encoder else HUBNESS_SUFFIX.get(args.hubness, "")
     extras = {side: ({"score": args.hubness, "tag_ids": tag_ids, "mean": [round(float(x), 6) for x in st[0]],
                       "sd": [round(float(x), 6) for x in st[1]]} if st else {})
               for side, st in stats.items()}

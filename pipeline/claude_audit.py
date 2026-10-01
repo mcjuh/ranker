@@ -80,6 +80,17 @@ ROUNDS = {
             "concordant_pos": ("doubly_graded", 15, lambda r: r["orig_grade"] >= 2 and r["grade"] >= 2),
         },
     },
+    4: {
+        # Does the qwen3 tagger's gain (RRF + tag_hcq over RRF + tag_hc, TAG_CHANNEL.md s13) survive a grader from another
+        # model family? The tagger's encoder and the grader are both Qwen models. Matched by gig: for each sampled gig one
+        # pair that ENTERS the top-10 (in rrf3_hcq's, not rrf3_hc's) and one that LEAVES, drawn whatever the qwen grade,
+        # so the Claude entering-minus-leaving relevance rate is the audit's version of the P@10 gain. Verdict rule, fixed
+        # before any grade was read: gain supported if the per-gig difference's bootstrap CI is above 0, contradicted if
+        # it is below 0, inconclusive otherwise (about 120 gigs detect a gap of roughly 0.13, not the expected 0.08).
+        "seed": 10, "prefix": "S", "per_page": 40, "key": "sample4_key.json", "grades": "claude_grades4.jsonl",
+        "gigs": 120, "diff": "diff_pairs_test_qwen.json", "source": "judgments_variants_cont.jsonl",
+        "strata": {"diff_in": None, "diff_out": None},
+    },
 }
 
 
@@ -103,7 +114,45 @@ def _round3_pools(original: list[dict]) -> dict[str, list[dict]]:
             "doubly_graded": [with_orig(k, r) for k, r in repro.items() if k in orig]}
 
 
+def draw_matched(rnd: int) -> list[dict]:
+    """Round 4: per sampled gig, one entering and one leaving pair of the diff file, graded by the continuous prompt."""
+    cfg = ROUNDS[rnd]
+    rng = random.Random(cfg["seed"])
+    graded = {}
+    for r in _records(cfg["source"]):
+        if r["status"] == "ok":
+            graded[(r["hire_id"], r["provider_id"])] = r
+    diff = json.loads((AUDIT / cfg["diff"]).read_text(encoding="utf-8"))
+    used = set()
+    for earlier in range(1, rnd):
+        key_path = AUDIT / ROUNDS[earlier]["key"]
+        if key_path.exists():
+            used |= {(k["hire_id"], k["provider_id"]) for k in json.loads(key_path.read_text(encoding="utf-8"))}
+    side = {}
+    for name, pairs in (("diff_in", diff["entering"]), ("diff_out", diff["leaving"])):
+        for h, p in pairs:
+            if (h, p) in graded and (h, p) not in used:
+                side.setdefault(name, {}).setdefault(h, []).append(graded[(h, p)])
+    gigs = sorted(set(side["diff_in"]) & set(side["diff_out"]))
+    rng.shuffle(gigs)
+    if len(gigs) < cfg["gigs"]:
+        raise SystemExit(f"only {len(gigs)} gigs with both an entering and a leaving pair, need {cfg['gigs']}")
+    chosen = []
+    for h in gigs[: cfg["gigs"]]:
+        for name in ("diff_in", "diff_out"):
+            r = rng.choice(side[name][h])
+            chosen.append({"hire_id": r["hire_id"], "provider_id": r["provider_id"], "stratum": name,
+                           "qwen_grade": r["grade"], "qwen_score": r.get("score"), "qwen_probs": r.get("probs"),
+                           "qwen_prompt": r["prompt_version"], "orig_grade": None})
+    rng.shuffle(chosen)
+    for i, item in enumerate(chosen, start=1):
+        item["item"] = f"{cfg['prefix']}{i:03d}"
+    return chosen
+
+
 def draw_sample(rnd: int) -> list[dict]:
+    if rnd == 4:
+        return draw_matched(rnd)
     cfg = ROUNDS[rnd]
     rng = random.Random(cfg["seed"])
     original = _records("judgments.jsonl")
@@ -235,6 +284,34 @@ def score_round3(rows: list) -> None:
           f"swapped pairs per gig) is not reliably detectable; a wide interval is not evidence of no gap.")
 
 
+def score_round4(rows: list) -> None:
+    """Per-gig entering minus leaving, for Claude (>= 2) and for the qwen continuous grader (band grade >= 2, i.e. score
+    >= 0.5) on the very same pairs. Verdict rule: see ROUNDS[4]."""
+    import numpy as np
+
+    by_gig = {}
+    for r, g in rows:
+        by_gig.setdefault(r["hire_id"], {})[r["stratum"]] = (int(g >= 2), int(r["qwen_grade"] >= 2))
+    gigs = sorted(by_gig)
+    claude = np.array([by_gig[h]["diff_in"][0] - by_gig[h]["diff_out"][0] for h in gigs], dtype=float)
+    qwen = np.array([by_gig[h]["diff_in"][1] - by_gig[h]["diff_out"][1] for h in gigs], dtype=float)
+    rng = np.random.default_rng(10)
+    idx = rng.integers(0, len(gigs), size=(5000, len(gigs)))
+    ci = lambda x: (float(x.mean()), *np.percentile(x[idx].mean(axis=1), [2.5, 97.5]))
+    print(f"\nROUND 4 ({len(gigs)} gigs, one entering and one leaving pair each; per-gig difference in the >= 2 rate)")
+    for label, x in (("Claude", claude), ("qwen continuous", qwen), ("Claude minus qwen", claude - qwen)):
+        m, lo, hi = ci(x)
+        print(f"  {label:<18} {m:+.3f} [{lo:+.3f}, {hi:+.3f}]")
+    for name in ("diff_in", "diff_out"):
+        k = [(c, q) for h in gigs for s, (c, q) in [(name, by_gig[h][name])]]
+        print(f"  {name:<9} Claude >= 2 {_fmt_ci(sum(c for c, _ in k), len(k))}   qwen >= 0.5 {_fmt_ci(sum(q for _, q in k), len(k))}")
+    m, lo, hi = ci(claude)
+    verdict = ("GAIN SUPPORTED by a grader from another family" if lo > 0 else
+               "GAIN CONTRADICTED: Claude finds the entering pairs less relevant" if hi < 0 else
+               "INCONCLUSIVE: the interval includes 0 (underpowered for a gap of about 0.08)")
+    print(f"  verdict (rule fixed in ROUNDS[4]): {verdict}")
+
+
 def cmd_score(args):
     cfg = ROUNDS[args.round]
     key = {k["item"]: k for k in json.loads((AUDIT / cfg["key"]).read_text(encoding="utf-8"))}
@@ -305,6 +382,8 @@ def cmd_score(args):
             pass
     if args.round == 3:
         score_round3(rows)
+    if args.round == 4:
+        score_round4(rows)
 
 
 def _serious_mismatch(h: dict, p: dict) -> list[str]:

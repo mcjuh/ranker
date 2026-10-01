@@ -92,15 +92,18 @@ def pool_pairs(lists: dict[str, dict[int, list[int]]], gigs: list[int]) -> dict[
     return pools
 
 
-def metrics_per_gig(lists: dict[int, list[int]], gt: dict, gigs: list[int]) -> dict[str, np.ndarray]:
+def metrics_per_gig(lists: dict[int, list[int]], gt: dict, gigs: list[int], gain: dict | None = None) -> dict[str, np.ndarray]:
+    """P, R, MRR against `gt` (relevant = value >= evaluate.RELEVANCE_THRESHOLD); NDCG against `gain` when given
+    (e.g. the continuous grader's 100 x score), else against `gt`."""
     out = {m: [] for m in METRICS}
     for q in gigs:
         ids, row = lists.get(q, [])[:TOP], gt.get(str(q), {})
+        grow = row if gain is None else gain.get(str(q), {})
         for k in KS:
             out[f"P@{k}"].append(precision_at_k(ids, row, k))
             r = recall_at_k(ids, row, k)
             out[f"R@{k}"].append(np.nan if r is None else r)
-            out[f"NDCG@{k}"].append(ndcg_at_k(ids, row, k))
+            out[f"NDCG@{k}"].append(ndcg_at_k(ids, grow, k))
         out["MRR@10"].append(reciprocal_rank(ids, row))
     return {m: np.array(v, dtype=float) for m, v in out.items()}
 
@@ -111,6 +114,15 @@ def grades_from_records(records: list[dict]) -> dict[str, dict[str, int]]:
         if r.get("status") == "ok":
             grades.setdefault(r["hire_id"], {})[r["provider_id"]] = r["grade"]
     return grades
+
+
+def prompt_version(records: list[dict]) -> str:
+    """The one grader (`prompt_version`) behind a set of ok records; raises if two graders are mixed, which is what
+    made the extended labels misleading. Records written before the field existed count as the reconstruction."""
+    versions = {r.get("prompt_version", "rubric_0_3.v2-repro") for r in records if r.get("status") == "ok"}
+    if len(versions) > 1:
+        raise ValueError(f"records from more than one grader: {sorted(versions)}")
+    return versions.pop() if versions else "rubric_0_3.v2-repro"
 
 
 def read_records(path: Path) -> list[dict]:
@@ -162,7 +174,9 @@ def main():
         return
 
     t0 = time.time()
-    grades = grades_from_records(read_records(regrade_file))
+    records = read_records(regrade_file)
+    grader = prompt_version(records)
+    grades = grades_from_records(records)
     missing = [(h, p) for h, ps in pools.items() for p in ps if str(p) not in grades.get(h, {})]
     if missing:
         raise SystemExit(f"{len(missing)} pairs in the pool have no reproduction grade yet; run labeller.py pairs first")
@@ -170,7 +184,7 @@ def main():
     idx = ds.rng_for(args.seed, "samegrader/boot").integers(0, len(gigs), size=(args.n_boot, len(gigs)))
     per = {name: metrics_per_gig(lst, gt, gigs) for name, lst in lists.items()}
     n_pos = sum(1 for q in gigs if gt.get(str(q)))
-    print(f"{len(gigs)} test gigs, {n_pos} with a relevant pair among the graded; one grader (rubric_0_3.v2-repro)")
+    print(f"{len(gigs)} test gigs, {n_pos} with a relevant pair among the graded; one grader ({grader})")
     print(f"{'list':8}" + "".join(f"{m:>9}" for m in METRICS))
     means = {}
     for name, ms in per.items():
@@ -187,7 +201,7 @@ def main():
             diffs[label][m] = [mean, lo, hi]
             cells.append(f"{m} {mean:+.4f}{'*' if lo > 0 or hi < 0 else ' '}")
         print(f"  {label:16}" + "  ".join(cells))
-    out = {"n_test_gigs": len(gigs), "n_with_relevant": n_pos, "grader": "rubric_0_3.v2-repro", "means": means,
+    out = {"n_test_gigs": len(gigs), "n_with_relevant": n_pos, "grader": grader, "means": means,
            "paired_differences": diffs, "pairs_graded": sum(len(v) for v in pools.values()),
            "seconds": round(time.time() - t0, 1)}
     path = BASE / "results_tag" / "samegrader.json"

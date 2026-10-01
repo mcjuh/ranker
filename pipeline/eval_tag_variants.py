@@ -46,9 +46,18 @@ BASE = Path(__file__).parent
 TOP = sg.TOP
 SEED_FILES = ("judgments_regrade.jsonl", "judgments_tag.jsonl", "calibration.jsonl")
 OUT_FILE = "judgments_variants.jsonl"
+# --prompt: which grader's records are read, seeded from and written. Grades of different graders are never mixed, so
+# each prompt has its own seed files and output (labeller.py gives its _cont files the same suffix).
+PROMPTS = {
+    "repro": {"version": "rubric_0_3.v2-repro", "seed": SEED_FILES, "out": OUT_FILE, "suffix": ""},
+    "cont": {"version": "rubric_0_1.v2-cont", "seed": ("judgments_audit_cont.jsonl", "calibration_cont.jsonl"),
+             "out": "judgments_variants_cont.jsonl", "suffix": "_cont"},
+}
 # name -> TagChannel keyword arguments
-TAG_CHANNELS = {"tag": {}, "tag_hc": {"variant": "hc"}, "tag_hcw": {"variant": "hc", "scorer": "wcos"}}
-FUSED = {"rrf3": "tag", "rrf3_hc": "tag_hc", "rrf3_hcw": "tag_hcw"}
+QWEN_VARIANT = "hc-qwen3-0.6b"       # tag_corpus.py --encoder qwen3-0.6b: the same centred tagger, a different encoder
+TAG_CHANNELS = {"tag": {}, "tag_hc": {"variant": "hc"}, "tag_hcw": {"variant": "hc", "scorer": "wcos"},
+                "tag_hcq": {"variant": QWEN_VARIANT}, "tag_hcqw": {"variant": QWEN_VARIANT, "scorer": "wcos"}}
+FUSED = {"rrf3": "tag", "rrf3_hc": "tag_hc", "rrf3_hcw": "tag_hcw", "rrf3_hcq": "tag_hcq", "rrf3_hcqw": "tag_hcqw"}
 COMPARISONS = (
     ("rrf3 - rrf2", "rrf3", "rrf2"),
     ("rrf3_hc - rrf2", "rrf3_hc", "rrf2"),
@@ -58,10 +67,23 @@ COMPARISONS = (
     ("tag_hc - tag", "tag_hc", "tag"),
     ("tag_hcw - tag", "tag_hcw", "tag"),
     ("tag_hcw - dense", "tag_hcw", "dense"),
+    ("rrf3_hcq - rrf2", "rrf3_hcq", "rrf2"),
+    ("rrf3_hcqw - rrf2", "rrf3_hcqw", "rrf2"),
+    ("rrf3_hcq - rrf3_hc", "rrf3_hcq", "rrf3_hc"),
+    ("rrf3_hcqw - rrf3_hcw", "rrf3_hcqw", "rrf3_hcw"),
+    ("tag_hcq - tag_hc", "tag_hcq", "tag_hc"),
+    ("tag_hcqw - tag_hcw", "tag_hcqw", "tag_hcw"),
+    ("tag_hcqw - dense", "tag_hcqw", "dense"),
     ("fused2 - rrf2", "fused2", "rrf2"),
     ("fused3_hc - fused2", "fused3_hc", "fused2"),
     ("fused3_hc - rrf3_hc", "fused3_hc", "rrf3_hc"),
 )
+# --lists: which compared lists enter the pool (every pair in them must be graded, so fewer lists = fewer calls). "qwen"
+# is the encoder comparison: the baseline, the current mxbai tagger (bm25 and weighted scorers) and the qwen3 tagger,
+# without the raw-cosine channel.
+LIST_SETS = {"all": None,
+             "qwen": ("bm25", "dense", "rrf2", "tag_hc", "tag_hcw", "rrf3_hc", "rrf3_hcw",
+                      "tag_hcq", "tag_hcqw", "rrf3_hcq", "rrf3_hcqw")}
 STAGE2_BASELINE_CSV = "candidates_top50_regen.csv"
 STAGE2_TAG_CSV = "candidates_top50_tag_hc.csv"
 
@@ -70,33 +92,70 @@ STAGE2_TAG_CSV = "candidates_top50_tag_hc.csv"
 # pipeline/audit/RESULTS.md found that the reproduction over-credits: min_p keeps pairs whose own
 # P(grade >= 2) is high (the audit's confirmation rate rises with it), no_mismatch drops pairs the rubric itself
 # forbids from scoring >= 2 (a serious term mismatch). A sweep, not one post-hoc cut-off.
+#
+# The continuous prompt (--prompt cont, rubric_0_1.v2-cont) records a decoded score and no `probs`, so the p* cuts do
+# not exist for it; its sweep is by score instead (TAG_CHANNEL.md s13 convention): the headline is score >= 0.5 (its
+# `grade` is the anchor band, and grade >= 2 is exactly score >= 0.5), s60 / s70 are the stricter cut-offs (0.7 a
+# conservative lower bound), "graded" keeps the headline's binary P / R / MRR but takes NDCG on gain = 100 x score
+# instead of the 0/33/67/100 bands. The key "repro" always means the grader's own grade >= 2.
 RELEVANCE = {
     "repro": {},
     "p60": {"min_p": 0.6},
     "p80": {"min_p": 0.8},
     "term": {"no_mismatch": True},
     "p80+term": {"min_p": 0.8, "no_mismatch": True},
+    "s60": {"min_score": 0.6},
+    "s70": {"min_score": 0.7},
+    "s60+term": {"min_score": 0.6, "no_mismatch": True},
+    "graded": {"graded": True},
+}
+PROMPT_RELEVANCE = {
+    "repro": ("repro", "p60", "p80", "term", "p80+term"),
+    "cont": ("repro", "s60", "s70", "term", "s60+term", "graded"),
 }
 DEMOTED_SCORE = sg.SCORE[1]
 
 
-def truth_from_records(records: list[dict], min_p: float = 0.0, flagged=None) -> dict[str, dict[str, int]]:
+def truth_from_records(records: list[dict], min_p: float = 0.0, flagged=None, min_score: float = 0.0) -> dict[str, dict[str, int]]:
     """{hire_id: {provider_id: score}} on the 0/33/67/100 scale, grade 0 left out. With the defaults it equals the
     published ground truth. A grade >= 2 is demoted to grade 1 if P(grade >= 2) < `min_p` (P is the sum of the last
-    two entries of the record's `probs`) or if `flagged(hire_id, provider_id)` says the pair has a serious term
-    mismatch. Later records win, as in eval_tag_samegrader.grades_from_records."""
+    two entries of the record's `probs`), if the record's continuous `score` is below `min_score`, or if
+    `flagged(hire_id, provider_id)` says the pair has a serious term mismatch. Later records win, as in
+    eval_tag_samegrader.grades_from_records. A cut-off whose field the record lacks (`probs` for min_p on the
+    continuous prompt, `score` for min_score on the 0-3 prompts) raises instead of silently keeping the pair."""
     out: dict[str, dict[str, int]] = {}
     for r in records:
         if r.get("status") != "ok":
             continue
         grade = r["grade"]
         if grade >= 2:
-            low_confidence = min_p > 0 and sum(r["probs"][2:]) < min_p
+            if min_p > 0 and not r.get("probs"):
+                raise ValueError("min_p needs the grade distribution (`probs`); the continuous prompt records none, use min_score")
+            if min_score > 0 and r.get("score") is None:
+                raise ValueError("min_score needs the continuous `score`; use min_p for the 0-3 prompts")
+            low_confidence = (min_p > 0 and sum(r["probs"][2:]) < min_p) or (min_score > 0 and r["score"] < min_score)
             if low_confidence or (flagged is not None and flagged(r["hire_id"], r["provider_id"])):
                 grade = 1
         row = out.setdefault(r["hire_id"], {})
         if grade > 0:
             row[r["provider_id"]] = sg.SCORE[grade]
+        else:
+            row.pop(r["provider_id"], None)
+    return out
+
+
+def gains_from_records(records: list[dict]) -> dict[str, dict[str, float]]:
+    """{hire_id: {provider_id: 100 x score}} for the graded-NDCG check on the continuous prompt, score 0 left out;
+    later records win."""
+    out: dict[str, dict[str, float]] = {}
+    for r in records:
+        if r.get("status") != "ok":
+            continue
+        if r.get("score") is None:
+            raise ValueError("graded NDCG needs the continuous `score` (--prompt cont)")
+        row = out.setdefault(r["hire_id"], {})
+        if r["score"] > 0:
+            row[r["provider_id"]] = 100.0 * r["score"]
         else:
             row.pop(r["provider_id"], None)
     return out
@@ -172,12 +231,13 @@ def compared_lists(data_dir: Path, gigs: list[int], top: int = TOP) -> dict[str,
     return out
 
 
-def seed_grades(data_dir: Path, wanted: set[tuple[str, str]], out_file: Path) -> tuple[int, int]:
-    """Append to `out_file` the reproduction grades that already exist for wanted pairs. Returns (seeded, have)."""
+def seed_grades(data_dir: Path, wanted: set[tuple[str, str]], out_file: Path, seed_files=SEED_FILES) -> tuple[int, int]:
+    """Append to `out_file` the grades of `seed_files` (one grader's) that already exist for wanted pairs.
+    Returns (seeded, have)."""
     have = {(r["hire_id"], r["provider_id"]) for r in sg.read_records(out_file) if r.get("status") == "ok"}
     before, seeded = len(have), 0
     with out_file.open("a", encoding="utf-8") as fh:
-        for source in SEED_FILES:
+        for source in seed_files:
             for r in sg.read_records(data_dir / source):
                 key = (r["hire_id"], r["provider_id"])
                 if r.get("status") == "ok" and key in wanted and key not in have:
@@ -187,13 +247,14 @@ def seed_grades(data_dir: Path, wanted: set[tuple[str, str]], out_file: Path) ->
     return seeded, before
 
 
-def evaluate_lists(lists: dict, gt: dict, gigs: list[int], idx: np.ndarray, split: str, relevance: str) -> dict:
-    """Per-list means and the paired differences of COMPARISONS (95% bootstrap CI over gigs) for one ground truth;
-    prints both. `idx` holds the bootstrap resamples of gig positions."""
-    per = {name: sg.metrics_per_gig(lst, gt, gigs) for name, lst in lists.items()}
+def evaluate_lists(lists: dict, gt: dict, gigs: list[int], idx: np.ndarray, split: str, relevance: str,
+                   grader: str = PROMPTS["repro"]["version"], gain: dict | None = None) -> dict:
+    """Per-list means and the paired differences of COMPARISONS (95% bootstrap CI over gigs) for one ground truth
+    (NDCG on `gain` instead when given); prints both. `idx` holds the bootstrap resamples of gig positions."""
+    per = {name: sg.metrics_per_gig(lst, gt, gigs, gain) for name, lst in lists.items()}
     n_pos = sum(1 for q in gigs if gt.get(str(q)))
     print(f"\n[{relevance}] {split}: {len(gigs)} gigs, {n_pos} with a relevant pair among the graded; one grader "
-          f"(rubric_0_3.v2-repro)")
+          f"({grader})")
     print(f"{'list':9}" + "".join(f"{m:>9}" for m in sg.METRICS))
     means = {}
     for name, ms in per.items():
@@ -221,37 +282,59 @@ def main():
     ap.add_argument("--data-dir", default="data_sat")
     ap.add_argument("--seed", type=int, default=ds.SEED)
     ap.add_argument("--n-boot", type=int, default=2000)
+    ap.add_argument("--prompt", choices=list(PROMPTS), default="repro",
+                    help="which grader's grades to read, seed and write (default repro, the reconstruction; cont = "
+                         "the continuous 0-1 prompt, headline score >= 0.5). Never mixed: judgments_variants_cont.jsonl "
+                         "is separate and the results go to variants_<split>_cont.json")
     ap.add_argument("--relevance", nargs="+", choices=[*RELEVANCE, "all"], default=["repro"],
                     help="eval: also score under stricter definitions of relevant (see RELEVANCE); 'repro', the "
-                         "published one, is always run first. 'all' = every definition")
+                         "headline (the grader's own grade >= 2), is always run first. 'all' = every definition "
+                         "that exists for the --prompt (p* need the 0-3 prompts' probs, s* / graded the continuous scores)")
     ap.add_argument("--diff", nargs=2, metavar=("WITH", "WITHOUT"), default=["rrf3_hc", "rrf2"],
                     help="diff: the two compared lists; writes the pairs entering (in WITH's top-10 only) and "
                          "leaving (in WITHOUT's only) to audit/diff_pairs_<split>.json")
+    ap.add_argument("--missing-as", choices=["error", "irrelevant", "relevant"], default="error",
+                    help="eval: pairs the grader could not score (it answered in prose; deterministic at temperature 0). "
+                         "Default: refuse. irrelevant / relevant fill them with the worst / best grade as a bound, and "
+                         "say so; run both to see whether the conclusion depends on them")
+    ap.add_argument("--lists", choices=list(LIST_SETS), default="all",
+                    help="which compared lists enter the pool and the comparison (see LIST_SETS); a smaller set means "
+                         "fewer pairs to grade")
     ap.add_argument("--stage2", action="store_true",
                     help="also compare the shipped Stage-2 ranker without / with the hc tag features (see above)")
     ap.add_argument("--folds", type=int, default=5, help="--stage2: GroupKFold folds, as eval_tag_downstream.py")
     args = ap.parse_args()
+    prompt = PROMPTS[args.prompt]
     if "all" in args.relevance:
-        args.relevance = list(RELEVANCE)
+        args.relevance = list(PROMPT_RELEVANCE[args.prompt])
+    unavailable = [r for r in args.relevance if r not in PROMPT_RELEVANCE[args.prompt]]
+    if unavailable:
+        raise SystemExit(f"--relevance {' '.join(unavailable)} does not exist for --prompt {args.prompt} "
+                         f"(available: {' '.join(PROMPT_RELEVANCE[args.prompt])})")
 
     data_dir = BASE / args.data_dir
     gigs = split_gigs(data_dir, args.seed, args.split)
     lists = compared_lists(data_dir, gigs)
     if args.stage2:
         lists.update(stage2_lists(data_dir, gigs, args.folds, args.seed))
-    stem = f"{args.split}_stage2" if args.stage2 else args.split
+    if LIST_SETS[args.lists]:
+        lists = {name: lists[name] for name in LIST_SETS[args.lists] if name in lists}
+    stem = (f"{args.split}_stage2" if args.stage2 else args.split) + ("" if args.lists == "all" else f"_{args.lists}")
     pools = sg.pool_pairs(lists, gigs)
     pool_file = data_dir / f"judging_pools_variants_{stem}.json"
-    out_file = data_dir / OUT_FILE
+    out_file = data_dir / prompt["out"]
 
     if args.mode == "pool":
         pool_file.write_text(json.dumps(pools, indent=1), encoding="utf-8")
         wanted = {(h, str(p)) for h, ps in pools.items() for p in ps}
-        seeded, before = seed_grades(data_dir, wanted, out_file)
+        seeded, before = seed_grades(data_dir, wanted, out_file, prompt["seed"])
         have = {(r["hire_id"], r["provider_id"]) for r in sg.read_records(out_file) if r.get("status") == "ok"}
         print(f"{args.split}: {len(gigs)} gigs, {len(wanted)} pairs in the compared top-{TOP}s; {seeded} seeded from "
-              f"earlier reproduction grades ({before} already in {OUT_FILE}), {len(wanted - have)} still to grade "
-              f"-> {pool_file.name}")
+              f"earlier {prompt['version']} grades ({before} already in {prompt['out']}), {len(wanted - have)} still "
+              f"to grade -> {pool_file.name}")
+        if args.prompt != "repro":
+            print(f"  grade the rest with: labeller.py pairs --prompt {args.prompt} --data-dir pipeline/{args.data_dir} "
+                  f"--pools {pool_file.name} --out {prompt['out']}")
         for name, per_q in lists.items():
             print(f"  {name:9} mean list length {np.mean([len(per_q.get(q, [])) for q in gigs]):.2f}")
         return
@@ -273,15 +356,26 @@ def main():
         return
 
     t0 = time.time()
-    grades = sg.grades_from_records(sg.read_records(out_file))
+    all_records = sg.read_records(out_file)
+    grades = sg.grades_from_records(all_records)
     missing = [(h, p) for h, ps in pools.items() for p in ps if str(p) not in grades.get(h, {})]
+    if missing and args.missing_as == "error":
+        raise SystemExit(f"{len(missing)} pairs in the {args.split} pool have no {prompt['version']} grade yet; run "
+                         f"`eval_tag_variants.py pool --split {args.split}` and labeller.py pairs first, or pass "
+                         f"--missing-as irrelevant|relevant if the grader cannot score them")
     if missing:
-        raise SystemExit(f"{len(missing)} pairs in the {args.split} pool have no reproduction grade yet; run "
-                         f"`eval_tag_variants.py pool --split {args.split}` and labeller.py pairs first")
+        fill = {"irrelevant": (0, 0.0), "relevant": (3, 1.0)}[args.missing_as]
+        print(f"WARNING: {len(missing)} ungradable pairs filled as {args.missing_as}: {missing}")
+        all_records = all_records + [{"hire_id": h, "provider_id": str(p), "status": "ok", "grade": fill[0],
+                                      "score": fill[1], "probs": None if prompt["version"].endswith("cont") else [0, 0, 0, 1],
+                                      "prompt_version": prompt["version"]} for h, p in missing]
     # only this evaluation's pool: NDCG and R are normalised by the graded pairs of a gig, so grades for other pools
     # (the file grows with every --stage2 or dev run) must not leak in and shift the published numbers
     in_pool = {(h, str(p)) for h, ps in pools.items() for p in ps}
-    records = [r for r in sg.read_records(out_file) if (r["hire_id"], str(r["provider_id"])) in in_pool]
+    records = [r for r in all_records if (r["hire_id"], str(r["provider_id"])) in in_pool]
+    if sg.prompt_version(records) != prompt["version"]:
+        raise SystemExit(f"{out_file.name} holds {sg.prompt_version(records)} grades, not {prompt['version']} "
+                         f"(--prompt {args.prompt})")
     wanted =["repro"] + [r for r in args.relevance if r != "repro"]          # repro is the published definition
     flagged = mismatch_checker(data_dir) if any(RELEVANCE[r].get("no_mismatch") for r in wanted) else None
     # one bootstrap draw for every definition, so differences are paired across definitions as well as across lists
@@ -289,14 +383,17 @@ def main():
     by_relevance = {}
     for rel in wanted:
         cfg = RELEVANCE[rel]
-        gt = truth_from_records(records, cfg.get("min_p", 0.0), flagged if cfg.get("no_mismatch") else None)
-        by_relevance[rel] = evaluate_lists(lists, gt, gigs, idx, args.split, rel)
+        gt = truth_from_records(records, cfg.get("min_p", 0.0), flagged if cfg.get("no_mismatch") else None,
+                                cfg.get("min_score", 0.0))
+        gain = gains_from_records(records) if cfg.get("graded") else None
+        by_relevance[rel] = evaluate_lists(lists, gt, gigs, idx, args.split, rel, prompt["version"], gain)
     means, diffs, n_pos = (by_relevance["repro"][k] for k in ("means", "paired_differences", "n_with_relevant"))
-    out = {"split": args.split, "n_gigs": len(gigs), "n_with_relevant": n_pos, "grader": "rubric_0_3.v2-repro",
+    out = {"split": args.split, "n_gigs": len(gigs), "n_with_relevant": n_pos, "grader": prompt["version"],
            "means": means, "paired_differences": diffs, "pairs_graded": sum(len(v) for v in pools.values()),
+           "ungradable_pairs": {"filled_as": args.missing_as if missing else None, "pairs": [list(m) for m in missing]},
            "relevance": {rel: v for rel, v in by_relevance.items() if rel != "repro"},
            "seconds": round(time.time() - t0, 1)}
-    path = BASE / "results_tag" / f"variants_{stem}.json"
+    path = BASE / "results_tag" / f"variants_{stem}{prompt['suffix']}{'_missing_' + args.missing_as if missing else ''}.json"
     path.write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(f"\nwrote {path}")
 
