@@ -33,7 +33,7 @@ Results — measured negative on real data), so it is absent from the serving pa
 | `pipeline/RERANK_README.md` | Runbook: exact commands, VRAM guidance, pitfalls, worked query examples |
 | `pipeline/evaluate.py` | P@K / R@K / NDCG@K / MRR (linear gain, relevance bar = score ≥ 40 ⇔ grade ≥ 2) |
 | `pipeline/retrieval_*.py` | Stage-1 retrievers (BM25, dense, RRF) |
-| `pipeline/TAG_CHANNEL.md`, `pipeline/tag_channel.py`, `pipeline/retrieval_tagbm25.py`, `pipeline/eval_tag_channel.py`, `pipeline/labeller.py` | Experimental tag-ID BM25 recall channel (`--tag-channel`, default off): design, numbers, calibration and the keep/drop verdict (not adopted) |
+| `pipeline/TAG_CHANNEL.md`, `pipeline/tag_channel.py`, `pipeline/retrieval_tagbm25.py`, `pipeline/eval_tag_channel.py`, `pipeline/eval_tag_variants.py`, `pipeline/labeller.py`, `pipeline/claude_audit.py` | Experimental tag-ID recall channel (`--tag-channel`, default off): design, numbers, calibration and the keep/drop verdict (not adopted as default; sections 11 and 12 cover a hubness-corrected variant whose small RRF gain survives, shrunk, an independent audit) |
 | `pipeline/features_data_sat/`, `pipeline/results_data_sat/*`, `pipeline/models_data_sat/` | Built feature tables, result lists and trained model for `data_sat` |
 | `pipeline/data/`, `pipeline/results/`, `pipeline/features/`, `pipeline/models/` | Archived synthetic-data baseline — kept for reference only, not covered below; see git history |
 

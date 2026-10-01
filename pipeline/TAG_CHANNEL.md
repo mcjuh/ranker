@@ -13,6 +13,8 @@ The one comparison with a single grader and fully judged lists (section 5) finds
 Every comparison that looked better for the channel mixed two graders (section 4c) and is explained by the
 reproduced grader being more lenient than the original.
 
+**Follow-up (sections 11 and 12):** the channel's tagger had a hubness problem. With hubness-corrected tags (`--hubness center`) the same one-grader, fully judged comparison gives a significant RRF gain (NDCG@10 +0.021, P@10 +0.026). Section 12 re-checks that against the independent Claude audit (`pipeline/audit/RESULTS.md`): the gain keeps its sign but shrinks to about +0.010 to +0.015 P@10 once the reproduced grader's over-credit is calibrated away, and in the shipped Stage-2 ranker only NDCG@10 moves (+0.012 to +0.013). The default stays off.
+
 ## 1. What was built
 
 A third recall channel: BM25 over **taxonomy tag IDs** (the SkillsFuture taxonomy in the GreyGigz schema,
@@ -252,15 +254,158 @@ In the 3-way pool, 35 relevant pairs fall outside the top-50 (original labels), 
   labels are incomplete beyond the original pool (see the judged share printed by the script).
 - Everything is seeded (seed 7) and reproducible: `eval_tag_channel.py roles|tagger|sat [--extra-grades]`,
   `eval_tag_downstream.py --extra-grades`, `eval_tag_samegrader.py pool|eval`. Tagging embeddings are cached under
-  `pipeline/cache/` (git-ignored); regenerate the tag candidate CSV with `features.py --data-dir data_sat
-  --tag-channel` (it is not committed).
+  `pipeline/cache/` (git-ignored); regenerate the raw tag candidate CSV with `features.py --data-dir data_sat
+  --tag-channel` (it is not committed). The two CSVs the Stage-2 comparison of section 12 needs (`candidates_top50_regen.csv`,
+  `candidates_top50_tag_hc.csv`) are committed, because a rebuild on another day gives different values.
 - The baseline and tag candidate files must come from the same day and cache: `avail_immediacy` uses
   `date.today()`, and dense cosines differ by up to 1.5e-3 between embedding runs. The downstream and same-grader
   results use a baseline regenerated alongside the tag file (`--baseline-csv`), not the committed CSV.
 - `features.py` reads JSON with the platform default encoding, which fails on Windows (cp1252); run with
   `PYTHONUTF8=1`. It also keeps its own embedding cache (`cache_data_sat/`), separate from the one
-  `build_judging_pools_sat.py` fills, so the first run re-embeds everything (hours on CPU) unless seeded.
+  `build_judging_pools_sat.py` fills, so the first run re-embeds everything (hours on CPU) unless seeded. [^hw]
 - Corrections to the initial brief: 9 track names are shared by 22 category IDs (234 distinct names over 247 IDs);
   the 2/4/6 level mapping applies only to the 346 CCS rows, while the 43,612 TSC rows keep native levels 1-6;
   category 80's track name is truncated in the export (234 of 366 characters).
 - The README's "23,873 pairs" is the old v1 figure; the current count is 22,289.
+
+## 11. Follow-up: hubness-corrected tags (`tag_corpus.py --hubness center`)
+
+**Why the channel was weak: tag hubness.** The tagger picks the 30 tags with the highest raw cosine, so generic tag
+titles near the centre of a domain win for almost every text. Measured on `data_sat`: the correlation between a
+tag's mean cosine and how often it is picked is 0.57 (providers) and 0.60 (gigs); 50 tags fill 35.5% of all
+provider slots; "Personal Finance Advisory" is on 813 of 2,165 providers (auditors, valuers and credit specialists
+alike) and 547 provider-side tags are never picked. Raw cosine also spans only about 0.10 from rank 1 to rank 30
+(0.68 to 0.59), and the channel keeps neither that gap nor the tag's strength. The tag-channel false positives
+that dense does not share are mostly same-domain, different-task pairs (a "map the record-to-report process" gig
+matched with a valuation specialist on "Financial Reporting" tags), not cross-industry ones: the share of false
+positives in a clearly different industry is 0.57 for tag, 0.53 for dense, 0.62 for BM25. A hard industry gate
+would cost good providers: relevance is 0.446 for the same industry, 0.326 for a different one, 0.426 for
+cross-industry.
+
+**Fix.** Subtract each tag's mean cosine over the corpus before taking the top tags (gig and provider sides have
+their own means, since the two directions use different embedding spaces). This is written to new
+`tags_*_hc.json` files; the raw files and every earlier result are untouched. Provider top-50 slot share falls to
+14.7% (max tag frequency 813 to 282, tags used 1,541 to 2,029); gig side 16.4% to 10.1%. Two scorers are
+available: BM25 over the corrected top-30 (`variant="hc"`, compared as `tag_hc`) and cosine of the weighted tags
+`relu(score - 0.05)` over the top-100 (`scorer="wcos"`, `tag_hcw`). Dividing by the tag's sd as well (z-score, `--hubness z`)
+was tried and works about as well, but adds off-topic picks on the gig side (top-10 tags whose raw cosine rank is
+above 200: 7.4% for z against 1.3% centred; provider side 2.7% against 2.5%), so centring is the default.
+
+**Result, one grader, fully judged top-10, 271 test gigs** (`eval_tag_variants.py eval --split test`,
+`results_tag/variants_test.json`; 8,938 pairs graded by `rubric_0_3.v2-repro`, 1,585 of them new; paired 95% CI over
+gigs, `*` = excludes 0):
+
+| List | P@5 | P@10 | NDCG@5 | NDCG@10 | MRR@10 |
+|---|---|---|---|---|---|
+| refined BM25 | 0.448 | 0.389 | 0.624 | 0.613 | 0.712 |
+| dense | 0.527 | 0.479 | 0.702 | 0.712 | 0.765 |
+| tag (current) | 0.416 | 0.379 | 0.595 | 0.605 | 0.657 |
+| tag_hc (centred, BM25) | 0.438 | 0.393 | 0.627 | 0.633 | 0.657 |
+| tag_hcw (centred, weighted cosine) | 0.456 | 0.408 | 0.651 | 0.657 | 0.681 |
+| RRF(bm25, dense) | 0.540 | 0.481 | 0.723 | 0.724 | 0.787 |
+| RRF + tag (current) | 0.540 | 0.491 | 0.724 | 0.733 | 0.771 |
+| **RRF + tag_hc** | 0.551 | 0.506 | 0.733 | 0.745 | 0.797 |
+| **RRF + tag_hcw** | 0.555 | 0.503 | 0.734 | 0.744 | 0.781 |
+
+- RRF + tag_hc minus RRF(bm25, dense): NDCG@10 **+0.021\*** [+0.009, +0.034], P@10 **+0.026\*** [+0.010, +0.040],
+  MRR@10 +0.010 (CI includes 0). RRF + tag_hcw: NDCG@10 **+0.020\*** [+0.007, +0.033], P@10 **+0.022\***.
+- Against the current channel in the same RRF: tag_hc NDCG@10 +0.012\* [+0.001, +0.022], P@10 +0.015\*. The current
+  channel's own gain here is +0.009 (CI includes 0), the same as section 5.
+- Alone: tag_hcw minus tag NDCG@10 +0.052\* [+0.031, +0.074]; it is still 0.055 below dense (\*).
+- Absolute NDCG and R are normalised by the graded pool, which is the union of every compared top-10, so they shift
+  slightly when lists are added (dense NDCG@10 is 0.717 in section 5 and 0.712 here, with identical lists and
+  grades). Only paired differences within one run mean anything.
+
+**What this does and does not establish.**
+- The Stage-1 gate is met. Stage 2 (the shipped ranker with `features.py --tag-channel --tag-variant hc`) was run
+  afterwards and is in section 12; the flag stays off by default.
+- **Selection on the test gigs.** About 20 tag scorers (centring vs z-score, truncation, tau, soft kernels) were
+  compared on a fixed pool built from the test gigs' top-10s before the two finalists were graded, and "hc"
+  versus "z" was decided there. Only the finalists were graded prospectively, and the realised gain (+0.021) is
+  below that proxy's (+0.026), but the test split is not untouched. The dev gigs (271) were not graded (6,498 new
+  pairs, about 1.8 h of grader time); `eval_tag_variants.py pool --split dev` builds that pool if a clean
+  confirmation is wanted.
+- Every grade still comes from the lenient reproduced grader (section 6); section 12 tests how much that matters.
+
+**Tried on the fixed pool and not built:** soft tag-tag kernels (title-embedding and role-co-occurrence
+soft-cosine: no better than plain centring), role-level re-scoring and track-mass scoring (AUC 0.57, worse than tag
+level, consistent with the track-first funnel result in section 3), softmax-weighted tags, and a per-text tag count
+set by a score threshold (worse). The tuning objective in section 4 (channel-alone R@50 on BM25 + dense pooled
+labels) rewards agreeing with those two channels, which is why every `b` tied; `run_sat` still uses it, to keep
+the published numbers reproducible, and the variants are compared with `eval_tag_variants.py` instead.
+
+**Not done from the plan:** per-gig overlap and track-mass features for the ranker; `features.py --tag-variant`
+only adds the variants and an empty (NaN) `tag_score`/`tag_rank` for providers the channel did not return, in place of the 0 sentinel
+(raw output is unchanged).
+
+Reproduce: `tag_corpus.py --data-dir data_sat --hubness center`, then `eval_tag_variants.py pool --split test`,
+`labeller.py pairs --pools judging_pools_variants_test.json --out judgments_variants.jsonl` (it resumes; only the
+1,585 new pairs are sent), then `eval_tag_variants.py eval --split test`.
+
+## 12. Re-validation against the Claude audit
+
+`pipeline/audit/RESULTS.md` found that the reproduced grader (`rubric_0_3.v2-repro`) over-credits, and every number in
+section 11 rests on it. This section asks how much of the hubness gain survives, using the same 271 test gigs, the
+same fully judged top-10s and no new qwen grades except the 30 pairs missing from the Stage-2 pool. `eval_tag_variants.py
+eval --relevance all` repeats every comparison under stricter definitions of relevant (grade >= 2 is kept only if the
+grader's own P(>= 2) is at least 0.6 / 0.8, and/or the pair has no serious term mismatch; a demoted pair counts as
+grade 1). The `repro` rows reproduce section 11 exactly. `*` = 95% CI over gigs excludes 0.
+
+**Stage 1, RRF with the corrected channel minus RRF(bm25, dense):**
+
+| Relevance | NDCG@10 | P@10 | MRR@10 |
+|---|---|---|---|
+| repro (section 11) | +0.0210* | +0.0255* | +0.0096 |
+| P(>= 2) >= 0.6 | +0.0202* | +0.0214* | +0.0085 |
+| P(>= 2) >= 0.8 | +0.0172* | +0.0018 | -0.0003 |
+| no serious term mismatch | +0.0196* | +0.0232* | -0.0014 |
+| both of the last two | +0.0172* | +0.0018 | -0.0003 |
+
+The current (uncorrected) channel stays insignificant under every definition (NDCG@10 +0.007 to +0.010). The NDCG
+gain is robust; the P@10 gain comes from positives the grader itself is unsure of.
+
+**Stage 2 (shipped fused ranker, trained on the original grades), with the corrected channel minus without:**
+NDCG@10 +0.0132 [+0.0017, +0.0250]* under `repro` and +0.0120 [+0.0004, +0.0235]* under the strictest definition
+(0.784 to 0.797 absolute); P@10 (-0.006 to +0.010), R@10 (-0.022 to +0.011) and MRR@10 (-0.001 to +0.012) are not
+significant under any definition.
+
+**A grader-free check of the mechanism** (`eval_tag_channel.py tagger --hubness center`, 400 role descriptions with gold
+tags, `results_tag/tagger_hubness_center.json`). Centring with the per-tag mean taken over the texts being tagged raises
+gold-tag precision against raw cosine by +0.032 [+0.011, +0.055] at 5 tags, +0.022 at 10, +0.011 at 20 and +0.007 at 30
+(all CIs exclude 0). With the means stored from the provider texts instead (a domain-mismatch control: role
+descriptions are cleaner than provider profiles) there is no gain (-0.001 at 5, -0.007* at 30), so the per-tag mean must
+come from the same kind of text it corrects. The raw rows reproduce section 3. CSLS (a local penalty, the mean of each
+tag's k nearest texts) was tried on the same check as the one variant section 11 had not covered: +0.035 (k = 20) and
++0.043 (k = 50) at 5 tags against +0.032 for centring, intervals overlapping, so it was not built.
+
+**Independent adjudication** (`claude_audit.py`, round 3, 195 pairs graded blind, same rubric; one rater):
+
+- *Prompt or population?* Of 40 pairs the original grader put below 2 and the reproduction put at 2 or more, Claude
+  sided with the reproduction on 22 (0.55 [0.40, 0.69]) and with the original on 18; a concordant control was
+  confirmed 15/15. Across the whole repository, 5,004 pairs were graded under both prompts: the reproduction never
+  lowers a grade and raises 34% of the original's negatives, and among the 1,624 with a serious term mismatch the
+  original gave grade >= 2 to 0.4% and the reproduction to 9.7% (the share of pairs with a mismatch is 0.385 and 0.383 in
+  the two populations, so this is the prompt, not the pairs).
+- *Does the gain rest on over-credited pairs?* Of the 140 reproduction positives that enter or leave the top-10 when the
+  corrected channel is added, Claude confirmed 44/70 of the entering and 44/70 of the leaving ones (0.63 each;
+  difference 0.000 [-0.156, +0.156]). Confirmation rises with the grader's own confidence: 16/50 below 0.6, 30/48 from 0.6 to
+  0.8 and 42/42 from 0.8 up, which is why the P(>= 2) >= 0.8 row is a conservative lower bound.
+- *Calibrated effect.* Weighting each reproduction positive by Claude's confirmation rate for its confidence bin gives a
+  P@10 gain of +0.0154 [+0.0048, +0.0262] (against +0.0255 uncalibrated). Using side-specific rates, the worst case
+  for the channel, it is +0.0095 [-0.0114, +0.0290] (82% of bootstrap draws above 0).
+
+**Reading.** The over-credit is common to both sides of the comparison, so it shrinks the gain (by roughly 40% in P@10, up to
+60% in the worst case, and less in NDCG) without reversing it; the audit does not contradict a small positive effect, but at these sample sizes
+(70 per side) it could not have detected a gap as small as the 0.08 that the Stage-1 P@10 gain implies, and the
+side-specific worst case is not distinguishable from zero. Remaining limits: one rater with no human labels; the
+test gigs were used to choose the two finalists (section 11); the dev gigs are still ungraded (6,498 pairs). The
+verdict for the shipped pipeline stands: keep `--tag-channel` off by default. If the channel is ever adopted,
+`TagChannel.rank_text(gig_vec, tag_vecs, tag_ids)` ranks a gig that is not in the tag files from its embedding (the
+stored per-tag statistics supply the correction; identical to `rank` for the BM25 variants, and for the weighted scorer
+the top-10 is identical and deeper ranks differ only by the 4-decimal rounding of the stored scores).
+
+Reproduce: `eval_tag_variants.py eval --split test [--stage2] --relevance all`, `eval_tag_variants.py diff --split test`,
+`claude_audit.py sample|show|score --round 3` and `claude_audit.py termcheck`.
+
+[^hw]: This work was run on Windows 11 with Python 3.14, on a machine that also has an NVIDIA RTX 5070 (12 GB, driver
+596.49); the pipeline itself runs on CPU and needs no GPU.
