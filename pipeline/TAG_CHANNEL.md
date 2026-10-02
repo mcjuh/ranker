@@ -1,5 +1,7 @@
 # Tag-ID BM25 recall channel: what was built, what it measured, and the verdict
 
+> The mechanism, step by step and as the code is today (variants, scorers, files, fusion), is in `TAG_CHANNEL_HOW_IT_WORKS.md`. Section 2 below describes the original raw version only.
+
 **Verdict: do not turn it on. Keep the code behind `--tag-channel` (default off).**
 
 The one comparison with a single grader and fully judged lists (section 5) finds:
