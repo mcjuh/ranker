@@ -1,5 +1,7 @@
 # How the tag channel works, exactly
 
+> **Status note:** the front-end schema now carries user-selected `search_tags`. For those records see `EXPLICIT_TAG_CHANNEL.md`; this predicted-tag channel remains as the fallback. What is active, shelved and borrowable is in `CHANNEL_STATUS_AND_ARCHIVE.md`.
+
 This describes the code as it is on branch `tag-encoder-test` (commit `465abda`). For what the channel measured and whether to
 use it, see `TAG_CHANNEL.md` (results and verdict) and `audit/SESSION_NOTES_encoder_and_grader.md` (the encoder work). This file
 is only the mechanism. Every number below was read from the code or from the files in `data_sat/`, not from memory.

@@ -1,5 +1,7 @@
 # Tag-ID BM25 recall channel: what was built, what it measured, and the verdict
 
+> **Status note:** the front-end schema now carries user-selected `search_tags`. For those records see `EXPLICIT_TAG_CHANNEL.md`; this predicted-tag channel remains as the fallback. What is active, shelved and borrowable is in `CHANNEL_STATUS_AND_ARCHIVE.md`.
+
 > The mechanism, step by step and as the code is today (variants, scorers, files, fusion), is in `TAG_CHANNEL_HOW_IT_WORKS.md`. Section 2 below describes the original raw version only.
 
 **Verdict: do not turn it on. Keep the code behind `--tag-channel` (default off).**
