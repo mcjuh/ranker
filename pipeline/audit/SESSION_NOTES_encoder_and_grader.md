@@ -307,12 +307,22 @@ In order:
      reproduce its size, only its direction; Claude is more lenient overall (36% >= 2 against 22%). Underpowered for a gap of about 0.08, as noted.
    - **Caveats:** one grader plus one rater; the audit's lower bound is close to 0; bench B on these test gigs was looked at once
      before; the qwen3 embeddings came from the GPU run (a CPU rebuild would differ by about 1e-3 in cosine); the channel's
-     gig-side hubness is 12.6% vs 10.1% (see 3 above); **Stage 2 (shipped LambdaMART ranker) has not been run with the qwen3 tags.**
+     gig-side hubness is 12.6% vs 10.1% (see 3 above); Stage 2 was run afterwards (3d).
+3d. **Stage 2 with the qwen3 tags (2026-10-02, 271 test gigs, continuous prompt, headline score >= 0.5).** `features.py` gained
+   `--tag-variant hcq|hcqw`; baseline, `hc` and `hcq` candidate CSVs were rebuilt the same day on CPU (the dense embeddings were
+   cached; `avail_immediacy` depends on today's date, so the old Oct 1 baseline differed in 2,062 rows by up to 0.017 and the
+   `_regen` / `_tag_hc` CSVs were overwritten with today's). `eval_tag_variants.py --stage2` gained `fused3_hcq` (+3 comparisons).
+   291 pairs were ungraded (289 graded, the 2 prose-answer pairs stay ungradable). Paired differences (NDCG@10 / P@10 / MRR@10;
+   `*` = CI excludes 0): ranker + mxbai tags - none +0.010 [+0.000, +0.020] / +0.002 / -0.011; **ranker + qwen3 tags - none
+   +0.043 [+0.029, +0.057]\* / +0.031 [+0.018, +0.045]\* / +0.034\***; **qwen3 - mxbai tags +0.033 [+0.021, +0.046]\* /
+   +0.029 [+0.015, +0.043]\* / +0.045\***. Absolute NDCG@10 0.771 / 0.781 / 0.814, P@10 0.363 / 0.365 / 0.394. Holds at score >= 0.7
+   (NDCG@10 +0.039 / +0.029; P@10 +0.013 / +0.014; MRR ns) and graded NDCG; same either way the 2 pairs are filled. Not audited by
+   Claude. Results: `results_tag/variants_test_stage2_qwen_cont_missing_{irrelevant,relevant}.json`.
 
 4. **Pick at most two finalists** (after 3b: one finalist, plain `qwen3-0.6b`; the head / dsm / ensemble candidates above are parked; the earlier `mxbai+mpnet` and prototype candidates are now dominated on dev).
 5. **Confirmation on the test gigs** with the continuous prompt (about 3 hours of grading), the score-threshold sweep, a Stage-2
    run (`features.py --tag-channel --tag-variant <new>` for both CSVs the same day), and a blind Claude audit of entering/leaving pairs.
-   **Done for Stage 1 on 2026-10-02 (section 3c); the Stage-2 run is still open.**
+   **Done for Stage 1 and Stage 2 on 2026-10-02 (sections 3c, 3d); no Claude audit of Stage 2.**
 6. **Write up** as TAG_CHANNEL.md section 13, with the grader caveats, and decide what to commit (the user's call).
 7. **Housekeeping:** nothing is committed; `tag_corpus.py` / `tag_channel.py` would need a small edit (new variant names and
    the `wcos` gate) only if a finalist is adopted into the pipeline.

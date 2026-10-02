@@ -58,7 +58,8 @@ CACHE_DIR = BASE / "cache"
 
 
 # --tag-variant -> TagChannel keyword arguments (see tag_channel.py)
-TAG_VARIANTS = {"raw": {}, "hc": {"variant": "hc"}, "hcw": {"variant": "hc", "scorer": "wcos"}}
+TAG_VARIANTS = {"raw": {}, "hc": {"variant": "hc"}, "hcw": {"variant": "hc", "scorer": "wcos"},
+                "hcq": {"variant": "hc-qwen3-0.6b"}, "hcqw": {"variant": "hc-qwen3-0.6b", "scorer": "wcos"}}
 
 
 def set_dataset(tag: str):
@@ -181,11 +182,12 @@ def main():
                     help="add the tag-ID BM25 channel: the pool becomes a 3-way RRF (refined BM25 + dense + tag) "
                          "and tag_score/tag_rank columns are emitted. Writes candidates_top<K>_tag.csv and "
                          "train_pairs_tag.csv, so the baseline feature files are left untouched. Off by default")
-    ap.add_argument("--tag-variant", choices=["raw", "hc", "hcw"], default="raw",
+    ap.add_argument("--tag-variant", choices=list(TAG_VARIANTS), default="raw",
                     help="with --tag-channel: raw = the original channel (raw-cosine tags, BM25; output files "
                          "unchanged); hc = hubness-corrected tags (tag_corpus.py --hubness center), BM25; hcw = the "
-                         "same tags with the weighted-cosine scorer. hc/hcw write *_tag_hc.csv / *_tag_hcw.csv, and a "
-                         "provider the channel did not return gets an empty (NaN) tag_score/tag_rank instead of 0")
+                         "same tags with the weighted-cosine scorer; hcq / hcqw = the same two with the qwen3-0.6b "
+                         "encoder (tag_corpus.py --encoder qwen3-0.6b). Non-raw variants write *_tag_<variant>.csv, and "
+                         "a provider the channel did not return gets an empty (NaN) tag_score/tag_rank instead of 0")
     args = ap.parse_args()
     if args.tag_variant != "raw" and not args.tag_channel:
         ap.error("--tag-variant needs --tag-channel")

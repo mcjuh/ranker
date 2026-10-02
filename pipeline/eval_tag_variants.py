@@ -6,7 +6,8 @@ channel the way eval_tag_samegrader.py compares the current channel with nothing
 top-10 is graded by one grader (labeller.py, rubric_0_3.v2-repro), so every list is fully judged and the numbers do
 not depend on which retriever happened to be pooled. With --stage2 the shipped Stage-2 ranker (eval_tag_downstream.py: linz + noce LambdaMART, fused 0.7 / 0.3, 5-fold by
 gig, trained on the ORIGINAL grades only, for both systems) is added: fused2 from the candidate CSV without tag features,
-fused3_hc from the hc candidate CSV with tag_score / tag_rank. Both CSVs must come from the same day and cache.
+fused3_hc / fused3_hcq from the hc / hcq candidate CSVs with tag_score / tag_rank. All CSVs must come from the same day and cache
+(avail_immediacy depends on today's date).
 
 Compared lists, per gig, all cut at 10:
     channels alone   bm25, dense, tag (raw cosine, BM25), tag_hc (centred tags, BM25), tag_hcw (centred tags, weighted cosine)
@@ -77,15 +78,20 @@ COMPARISONS = (
     ("fused2 - rrf2", "fused2", "rrf2"),
     ("fused3_hc - fused2", "fused3_hc", "fused2"),
     ("fused3_hc - rrf3_hc", "fused3_hc", "rrf3_hc"),
+    ("fused3_hcq - fused2", "fused3_hcq", "fused2"),
+    ("fused3_hcq - fused3_hc", "fused3_hcq", "fused3_hc"),
+    ("fused3_hcq - rrf3_hcq", "fused3_hcq", "rrf3_hcq"),
 )
 # --lists: which compared lists enter the pool (every pair in them must be graded, so fewer lists = fewer calls). "qwen"
 # is the encoder comparison: the baseline, the current mxbai tagger (bm25 and weighted scorers) and the qwen3 tagger,
 # without the raw-cosine channel.
 LIST_SETS = {"all": None,
              "qwen": ("bm25", "dense", "rrf2", "tag_hc", "tag_hcw", "rrf3_hc", "rrf3_hcw",
-                      "tag_hcq", "tag_hcqw", "rrf3_hcq", "rrf3_hcqw")}
+                      "tag_hcq", "tag_hcqw", "rrf3_hcq", "rrf3_hcqw",
+                      "fused2", "fused3_hc", "fused3_hcq")}   # the fused* lists exist only with --stage2
 STAGE2_BASELINE_CSV = "candidates_top50_regen.csv"
 STAGE2_TAG_CSV = "candidates_top50_tag_hc.csv"
+STAGE2_QWEN_CSV = "candidates_top50_tag_hcq.csv"
 
 # What counts as relevant. "repro" is the published definition (grade >= 2 from the reproduced labeller). The
 # others keep a grade >= 2 only if it passes the check, and demote it to grade 1 (partial) otherwise, because
@@ -187,14 +193,15 @@ def split_gigs(data_dir: Path, seed: int, split: str) -> list[int]:
 
 def stage2_lists(data_dir: Path, gigs: list[int], folds: int, seed: int, top: int = TOP) -> dict[str, dict[int, list[int]]]:
     """The shipped Stage-2 ranker (linz + noce, fused) out-of-fold, without tag features (baseline CSV) and with the
-    hc channel's tag_score / tag_rank (hc CSV), cut at `top` for `gigs`. Both train on the original grades."""
+    hc / hcq channel's tag_score / tag_rank (hc / hcq CSV), cut at `top` for `gigs`. Both train on the original grades."""
     import rerank_ltr as ltr
 
     feat_dir = BASE / f"features_{data_dir.name}"
     original = json.loads((data_dir / "llm_judgments_merged.json").read_text(encoding="utf-8"))
     out = {}
     for name, csv_name, features in (("fused2", STAGE2_BASELINE_CSV, list(ltr.DEFAULT_FEATURES)),
-                                     ("fused3_hc", STAGE2_TAG_CSV, list(ltr.DEFAULT_FEATURES) + ds.TAG_FEATURES)):
+                                     ("fused3_hc", STAGE2_TAG_CSV, list(ltr.DEFAULT_FEATURES) + ds.TAG_FEATURES),
+                                     ("fused3_hcq", STAGE2_QWEN_CSV, list(ltr.DEFAULT_FEATURES) + ds.TAG_FEATURES)):
         fused = ds.ranked_lists(feat_dir / csv_name, features, original, folds, seed)["fused"]
         out[name] = {q: fused[q][:top] for q in gigs if q in fused}
     return out

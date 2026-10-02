@@ -172,11 +172,12 @@ class EncoderVariant(unittest.TestCase):
         self.assertIsNone(tc.variant_tau(""))                         # raw cosine has no weighted scorer
 
     def test_the_qwen_list_set_names_only_lists_that_exist_and_every_comparison_resolves(self):
-        known = {"bm25", "dense", "rrf2", *ev.TAG_CHANNELS, *ev.FUSED}
+        stage2 = {"fused2", "fused3_hc", "fused3_hcq"}                # exist only with --stage2
+        known = {"bm25", "dense", "rrf2", *ev.TAG_CHANNELS, *ev.FUSED, *stage2}
         self.assertTrue(set(ev.LIST_SETS["qwen"]) <= known)
         self.assertEqual(set(ev.FUSED.values()) | {"tag"}, set(ev.TAG_CHANNELS))
         for label, a, b in ev.COMPARISONS:
-            if a.startswith(("rrf3_hcq", "tag_hcq")):
+            if a.startswith(("rrf3_hcq", "tag_hcq", "fused3_hcq")):
                 self.assertIn(a, ev.LIST_SETS["qwen"], label)
                 self.assertIn(b, ev.LIST_SETS["qwen"], label)
 

@@ -407,5 +407,100 @@ the top-10 is identical and deeper ranks differ only by the 4-decimal rounding o
 Reproduce: `eval_tag_variants.py eval --split test [--stage2] --relevance all`, `eval_tag_variants.py diff --split test`,
 `claude_audit.py sample|show|score --round 3` and `claude_audit.py termcheck`.
 
+## 13. A different encoder for the tagger: qwen3-0.6b
+
+Section 11 fixed the tagger's *correction* (per-tag centring); this section changes its *encoder*. The question was whether
+the text-versus-tag-title matmul improves with another embedding model. The change tested is deliberately the smallest one:
+the same tagger, the same per-tag centring, the same BM25 over the top-30 tag IDs, with `Qwen3-Embedding-0.6B` in place of
+`mxbai-embed-large`. Nothing else is part of the claim: a supervised residual head, dual-softmax / CSLS hubness
+corrections, encoder ensembles and tag prototypes were also tried, but they were tuned on the same dev gigs (about 30
+candidates in all), are harder to explain, and are parked (details in `pipeline/audit/SESSION_NOTES_encoder_and_grader.md`).
+
+**Wiring.** `tag_corpus.py --encoder qwen3-0.6b` writes `data_sat/tags_*_hc-qwen3-0.6b.json` (centred, scaled to unit pooled
+sd, so the weighted scorer's tau is 1.0 as before); `TagChannel(variant="hc-qwen3-0.6b")` ranks exactly like the bench
+(same nonzero providers; scores equal up to a per-gig constant); `features.py --tag-variant hcq|hcqw` selects it for Stage 2.
+The qwen3 embeddings were computed on a GPU; a CPU rebuild differs by about 1e-3 in cosine, so the two should not be mixed
+inside one comparison.
+
+**Evidence, in the order it was gathered.**
+
+1. *Encoder bench on real gigs* (`eval_tag_encoder.py`, bench B: a fixed pool of originally graded pairs, AUC and NDCG
+   within the pool). Dev half: AUC +0.065, NDCG@10 +0.038 over mxbai; test half, checked once: AUC +0.058 [+0.031, +0.085],
+   NDCG@10 +0.037 (CIs exclude 0). It beats the next-best single encoder, all-mpnet-base-v2 (+0.030 AUC on test).
+2. *Graded confirmation in the fused ranking* (271 test gigs; one grader, the continuous prompt `rubric_0_1.v2-cont`;
+   relevant = score >= 0.5; all 9,806 pairs in the compared top-10s regraded with that one prompt). RRF(bm25, dense, tag),
+   paired over gigs:
+
+   | Comparison | NDCG@10 | P@10 | MRR@10 |
+   |---|---|---|---|
+   | RRF + mxbai tag - RRF | +0.019* | +0.012* | +0.008 |
+   | RRF + qwen3 tag - RRF | +0.058* | +0.035* | +0.088* |
+   | **RRF + qwen3 tag - RRF + mxbai tag** | **+0.039 [+0.027, +0.052]*** | **+0.023 [+0.011, +0.034]*** | +0.080 [+0.043, +0.120]* |
+
+   The result holds at relevant = score >= 0.6 / 0.7 (NDCG@10 +0.038 / +0.035), with graded NDCG (gain = 100 x score, +0.037),
+   with the weighted scorer (+0.039), and however the 2 pairs the grader answered in prose are filled. Absolute NDCG@10 goes
+   from 0.716 (RRF) to 0.774 (RRF + qwen3 tag), P@10 from 0.300 to 0.334. The mxbai tagger's gain over RRF reproduces under
+   the new grader (+0.019 against +0.021 in section 11), which is a sanity check on the grader. The channel alone is within
+   0.010 NDCG@10 of dense (weighted scorer; the gap was 0.056 with mxbai).
+3. *Stage 2, the shipped LambdaMART ranker* (linz + noce, fused 0.7 / 0.3, 5-fold by gig, trained on the original grades
+   only; `features.py --tag-channel --tag-variant hc|hcq`; the baseline and both tag CSVs were built on the same day, because
+   `avail_immediacy` depends on the date). Same 271 test gigs, same grader and convention; 289 further pairs were graded for it
+   (10,096 pairs in all, 2 ungradable, conclusions identical either way they are filled). Paired differences:
+
+   | Comparison | NDCG@10 | P@10 | MRR@10 |
+   |---|---|---|---|
+   | ranker with mxbai tags - without tags | +0.010 [+0.000, +0.020] | +0.002 [-0.010, +0.014] | -0.011 [-0.038, +0.017] |
+   | **ranker with qwen3 tags - without tags** | **+0.043 [+0.029, +0.057]*** | **+0.031 [+0.018, +0.045]*** | +0.034 [+0.001, +0.066]* |
+   | **ranker with qwen3 tags - with mxbai tags** | **+0.033 [+0.021, +0.046]*** | **+0.029 [+0.015, +0.043]*** | +0.045 [+0.011, +0.080]* |
+
+   Absolute NDCG@10 is 0.771 without tags, 0.781 with the mxbai tags and 0.814 with the qwen3 tags; P@10 0.363, 0.365 and 0.394.
+   The mxbai result matches section 12 (+0.012 to +0.013 NDCG@10, nothing in P@10). At relevant = score >= 0.7 the qwen3
+   gains shrink but stay positive (NDCG@10 +0.039 over no tags, +0.029 over mxbai tags; P@10 +0.013 and +0.014; MRR no longer
+   excludes 0), and graded NDCG gives +0.041 and +0.034. The qwen3 tags help the ranker on top of what it gets from RRF: the
+   ranker with qwen3 tags beats RRF with qwen3 tags by +0.048 NDCG@10. This stage was not audited by Claude; the round-4
+   audit covers the Stage-1 entering and leaving pairs only.
+4. *Blind Claude audit, round 4* (`claude_audit.py --round 4`), run because the encoder and the grader are both Qwen
+   models. 120 gigs, one entering and one leaving pair each (the pairs that move into or out of the top-10 when mxbai is
+   replaced by qwen3), drawn whatever the qwen grade, graded blind in session by Claude, with the decision rule fixed
+   before any grade was read. Claude's grade >= 2 rate is 50/120 for entering pairs against 36/120 for leaving, a per-gig
+   difference of **+0.117 [+0.008, +0.225]**: supported by the rule, but the interval only just excludes 0. On the same pairs
+   the qwen grader gives 0.22 against 0.22 (0.000 [-0.092, +0.092]). So the audit agrees with the *direction* and cannot
+   confirm the *size*; it is underpowered for a gap of about 0.08, and Claude is the more lenient grader (36% positives
+   against 22%).
+
+**Grader convention.** The earlier sections rest on the lenient 0-3 reproduction prompt, which over-credits (section 12).
+From here the headline grader is the continuous 0-1 prompt (`labeller.py --prompt cont`), checked against the blind Claude
+grades: 85% of its tag-surfaced positives are Claude-confirmed (60% for the reproduction), but it is stricter than Claude
+and misses roughly a third of what Claude confirms. Headline relevant = score >= 0.5, with 0.6 and 0.7 as sensitivities
+(0.7 a conservative bound). A comparison never mixes prompts; the scripts refuse a mixed file.
+
+**Caveats.**
+
+- One grader and, for the audit, one rater; no human labels.
+- The audit's lower bound (+0.008) is close to 0, and it did not reproduce the grader's size.
+- The encoder was chosen on the dev gigs among about 30 candidates (winner's curse), then confirmed on the test half; but
+  bench B on the test gigs was looked at once before the graded run, as a sanity check.
+- Bench B is a within-pool rerank of a pool built from BM25 and dense, so on its own it shows no fused gain; the graded run
+  in item 2 is what supports the fused claim.
+- On gold tags (role descriptions with known tags) qwen3 is slightly *worse* than mxbai on test: precision@5 -0.016,
+  role@10 -0.050. The real-gig bench and the graded run favour it; the gold-tag bench does not.
+- **Gig-side hubness is higher**: the top-50 tags take 12.6% of the gig-side slots against 10.1% for mxbai (the centred
+  figure from section 11, which the encoder bench used as its gate, 10.1% / 14.7%); the provider side is 14.4% against 14.7%. This is accepted rather than corrected: it did not hurt the fused
+  ranking, and the available corrections add the layers this section avoids.
+- Stage 2 trains on the original grades but is scored with the continuous prompt, as in section 12; it rests on the same one
+  grader, and the Claude audit did not cover it. Its qwen3 gain is larger than the mxbai tags' (+0.043 against +0.010
+  NDCG@10), which is consistent with Stage 1 but is one comparison, on the test gigs that were already used once.
+
+**Verdict.** The plain encoder swap is a real gain over the section-11 tagger, both in the fused RRF ranking and in the
+shipped Stage-2 ranker (NDCG@10 +0.033 over mxbai tags, +0.043 over no tags), and the Stage-1 direction is supported by an
+independent audit, but the size rests on one grader. Unlike the mxbai tags, which add little to the shipped ranker, the
+qwen3 tags add a clear gain there. `--tag-channel` stays off by default and nothing shipped changed; adopting it (choosing
+`--tag-variant hcq` and the matching tag files for serving) is a separate decision.
+
+Reproduce: `tag_corpus.py --encoder qwen3-0.6b`; `eval_tag_variants.py pool --split test --prompt cont`,
+`labeller.py pairs --prompt cont ... --out judgments_variants_cont.jsonl`, `eval_tag_variants.py eval --split test --prompt cont
+--relevance all --lists qwen` (add `--stage2` and the pool's `--stage2` for item 3, after `features.py --data-dir data_sat
+--top-k 50` with no flag, `--tag-channel --tag-variant hc` and `--tag-variant hcq` on the same day); `eval_tag_encoder.py` for the bench; `claude_audit.py sample|show|score --round 4`.
+
 [^hw]: This work was run on Windows 11 with Python 3.14, on a machine that also has an NVIDIA RTX 5070 (12 GB, driver
 596.49); the pipeline itself runs on CPU and needs no GPU.
