@@ -177,3 +177,26 @@ class ExplicitTagChannel:
             "industry_match": int(any(hc[c] == "Industry" for c in shared_cats)),
             "track_backoff": round(self.track_backoff(hire_id, provider_id), 6),
         }
+
+
+def run_explicit_channel(hirers: list[dict], providers: list[dict], bm25_scored: dict, dense_scored: dict,
+                         taxonomy=None, track_sim_weight: float = 0.0, category_weight: float = 0.25,
+                         fallback=None, k: int = 60, strict: bool = True):
+    """The explicit-tag stage of run_pipeline.py, free of file I/O and of the embedding imports so it can be tested.
+
+    `bm25_scored` and `dense_scored` map hire_id -> [(provider_id, score), ...] best first (what run_pipeline already
+    holds). Each hirer's explicit list is ranked with the dense cosines as the tie-break, then fused with the other two
+    channels by RRF. Returns (explicit_scored, rrf3_scored, report) where the first two map hire_id -> [(provider_id,
+    score), ...] and `report` is ExplicitTagChannel.report() plus the number of hirers whose explicit list is empty.
+    With strict=True a tag outside the taxonomy raises."""
+    from retrieval_rrf import rrf_fuse_n
+
+    channel = ExplicitTagChannel(hirers, providers, taxonomy=taxonomy, track_sim_weight=track_sim_weight,
+                                 category_weight=category_weight, fallback=fallback, strict=strict and taxonomy is not None)
+    explicit, fused = {}, {}
+    for hid in channel.hirer_ids:
+        explicit[hid] = channel.rank(hid, tiebreak=dict(dense_scored[hid]))
+        fused[hid] = rrf_fuse_n([bm25_scored[hid], dense_scored[hid], explicit[hid]], k=k)
+    report = channel.report()
+    report["hirers_with_empty_explicit_list"] = sum(1 for v in explicit.values() if not v)
+    return explicit, fused, report

@@ -136,3 +136,19 @@ def adapt_provider(raw: dict, include_how_i_work: bool = False, drop_exclusions:
         "available_from": parse_available_from(availability),
         "capacity": parse_capacity_days(availability),
     }
+
+
+def is_frontend_schema(records: list[dict]) -> bool:
+    """True when the records use the front-end field names (gig_title / about_headline), not the pipeline's."""
+    return bool(records) and any(k in records[0] for k in ("gig_title", "about_headline", "hirer_id")) \
+        and "hire_title" not in records[0] and "about_title" not in records[0]
+
+
+def adapt_records(records: list[dict], kind: str) -> list[dict]:
+    """Front-end records -> pipeline records ('hirer' or 'provider'); records already in the pipeline schema are
+    returned unchanged, so old datasets pass through."""
+    if kind not in ("hirer", "provider"):
+        raise ValueError(f"kind must be 'hirer' or 'provider', got {kind!r}")
+    if not is_frontend_schema(records):
+        return records
+    return [adapt_hirer(r) if kind == "hirer" else adapt_provider(r) for r in records]

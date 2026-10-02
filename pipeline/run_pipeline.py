@@ -17,6 +17,7 @@ import time
 from pathlib import Path
 
 from corpus import provider_text, hirer_text
+from frontend_schema import adapt_records
 from retrieval_bm25 import BM25Retriever
 from retrieval_dense import (
     encode_docs, encode_queries, rank_from_raw,
@@ -51,7 +52,7 @@ RRF_WEIGHT_COMBOS = [(1.0, 1.0), (1.0, 1.5), (0.7, 1.3), (1.5, 1.0)]  # (sparse_
 
 
 def load_json(name):
-    return json.loads((DATA_DIR / name).read_text())
+    return json.loads((DATA_DIR / name).read_text(encoding="utf-8"))
 
 
 def ranked_ids_only(scored: list[tuple[int, float]]) -> list[int]:
@@ -88,11 +89,18 @@ def main():
     ap.add_argument("--tag-channel", action="store_true",
                     help="also run the tag-ID BM25 recall channel (needs tags_*.json from tag_corpus.py) and "
                          "write tagbm25.json + rrf3_k60.json; off by default, no existing output changes")
+    ap.add_argument("--explicit-tag-channel", action="store_true",
+                    help="also run the explicit-tag channel (user-selected search_tags matched through the SkillsFuture "
+                         "taxonomy) and write explicit_tags.json, rrf3_explicit_k60.json and explicit_tags_report.json; "
+                         "off by default, no existing output changes")
+    ap.add_argument("--track-sim-weight", type=float, default=0.0,
+                    help="explicit channel: credit (0..1) for a hirer track the provider lacks, from the overlap of the "
+                         "two tracks' TSC sets; 0 = off")
     args = ap.parse_args()
     set_dataset(args.data_dir)
 
-    providers = load_json("providers.json")
-    hirers = load_json("hirers.json")
+    providers = adapt_records(load_json("providers.json"), "provider")  # front-end schema -> pipeline schema; others untouched
+    hirers = adapt_records(load_json("hirers.json"), "hirer")
     provider_ids = [p["provider_id"] for p in providers]
 
     # ---------------- BM25: baseline vs refined ----------------
@@ -190,6 +198,25 @@ def main():
             rrf3_results[str(h["hire_id"])] = ranked_ids_only(fused)
         (RESULTS_DIR / "rrf3_k60.json").write_text(json.dumps(rrf3_results, indent=2))
         print(f"  tagbm25.json and rrf3_k60.json written in {time.time() - t0:.1f}s")
+
+    # ---------------- Explicit-tag channel + 3-way RRF (opt-in) ----------------
+    if args.explicit_tag_channel:
+        from explicit_tag_channel import run_explicit_channel
+        from taxonomy_sf import load_taxonomy
+
+        print("Running explicit-tag channel + 3-way RRF (refined BM25 + dense + explicit tags)...")
+        t0 = time.time()
+        explicit, fused, report = run_explicit_channel(
+            hirers, providers, bm25_refined_scored_cache, full_dense_scored,
+            taxonomy=load_taxonomy(), track_sim_weight=args.track_sim_weight, k=60,
+        )
+        (RESULTS_DIR / "explicit_tags.json").write_text(
+            json.dumps({str(hid): ranked_ids_only(scored) for hid, scored in explicit.items()}, indent=2))
+        (RESULTS_DIR / "rrf3_explicit_k60.json").write_text(
+            json.dumps({str(hid): ranked_ids_only(scored) for hid, scored in fused.items()}, indent=2))
+        (RESULTS_DIR / "explicit_tags_report.json").write_text(json.dumps(report, indent=2))
+        print(f"  explicit_tags.json, rrf3_explicit_k60.json, explicit_tags_report.json written in {time.time() - t0:.1f}s")
+        print(f"  report: {report}")
 
     print("\nAll results written to pipeline/results/")
 

@@ -12,7 +12,7 @@ fixes the imports, and update the table below.
 | Component | Status | Why | Where to look |
 |---|---|---|---|
 | Taxonomy (`taxonomy_sf.py`, `taxonomy_sf/`) | **Active**, the ID space the back end uses | Mapping Category = Sector, Specialisation = Track, Skills = TSC; same content as `taxonomy_greygigz/` under different integer IDs | `taxonomy_sf/README.md` |
-| Explicit-tag channel (`explicit_tag_channel.py`, `frontend_schema.py`) | **Active, not yet wired into `run_pipeline.py` / `features.py`** | Users pick `search_tags` from the back-end taxonomy; no prediction needed | `EXPLICIT_TAG_CHANNEL.md` |
+| Explicit-tag channel (`explicit_tag_channel.py`, `frontend_schema.py`) | **Active; wired into `run_pipeline.py` behind `--explicit-tag-channel` (default off), not into `features.py`** | Users pick `search_tags` from the back-end taxonomy; no prediction needed | `EXPLICIT_TAG_CHANNEL.md` |
 | Predicted-tag channel (`tag_channel.py`, `tag_corpus.py`, `tag_encoders.py`) | **Fallback**, off by default | Still needed for hirers/providers with no tags and for `data_sat`, which has none | `TAG_CHANNEL.md`, `TAG_CHANNEL_HOW_IT_WORKS.md` |
 | `retrieval_tagbm25.py` (`TagBM25`) | **Shared** | Both channels score with it | `tests/test_tag_bm25.py` |
 | `retrieval_rrf.rrf_fuse_n` | **Shared** | N-way fusion for either tag channel | `tests/test_rrf_n.py` |
@@ -67,6 +67,6 @@ must have its tag files built in one space and translated deliberately.
   Function/Industry list for the 22 sectors not seen in the samples (the records carry their own group, so it is only
   needed to derive a group from a tag alone), and `job_role_profile.csv` / `tcs_descriptions.csv` (in `taxonomy_sf/tsc.zip`)
   as richer text for the predicted-tag fallback's tagger.
-- Wire the explicit channel into `run_pipeline.py` and `features.py` behind a flag, with the Stage-2 fit features
-  computed from the parsed free text (`frontend_schema.py`) or dropped.
+- Done: `run_pipeline.py` flag. Still open: `features.py` flag that adds the explicit overlap features and the Stage-2 fit
+  features computed from the parsed free text (`frontend_schema.py`) or dropped; a real-model end-to-end run.
 - Full front-end-aligned corpus and new grades before any quality claim.
