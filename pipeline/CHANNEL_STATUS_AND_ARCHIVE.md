@@ -11,6 +11,7 @@ fixes the imports, and update the table below.
 
 | Component | Status | Why | Where to look |
 |---|---|---|---|
+| Taxonomy (`taxonomy_sf.py`, `taxonomy_sf/`) | **Active**, the ID space the back end uses | Mapping Category = Sector, Specialisation = Track, Skills = TSC; same content as `taxonomy_greygigz/` under different integer IDs | `taxonomy_sf/README.md` |
 | Explicit-tag channel (`explicit_tag_channel.py`, `frontend_schema.py`) | **Active, not yet wired into `run_pipeline.py` / `features.py`** | Users pick `search_tags` from the back-end taxonomy; no prediction needed | `EXPLICIT_TAG_CHANNEL.md` |
 | Predicted-tag channel (`tag_channel.py`, `tag_corpus.py`, `tag_encoders.py`) | **Fallback**, off by default | Still needed for hirers/providers with no tags and for `data_sat`, which has none | `TAG_CHANNEL.md`, `TAG_CHANNEL_HOW_IT_WORKS.md` |
 | `retrieval_tagbm25.py` (`TagBM25`) | **Shared** | Both channels score with it | `tests/test_tag_bm25.py` |
@@ -50,9 +51,22 @@ fixes the imports, and update the table below.
   IDs: check how often the tagger's top-30 contains a user's picks, then run the same-grader protocol
   (`eval_tag_samegrader.py`).
 
+## Two ID spaces (read before touching any tag file)
+
+| Artefact | ID space |
+|---|---|
+| `taxonomy_greygigz/`, `greygigz.py`, `data_sat/tags_*.json`, `cache/tagenc/`, every result under `results_tag/` | **old** (category, speciality, tag IDs) |
+| `taxonomy_sf/`, `taxonomy_sf.py`, `ExplicitTagChannel(taxonomy=...)`, the front end and back end | **new** (sector, track, TSC IDs) |
+
+Content is identical; use `taxonomy_sf.bridge_to_greygigz()` to translate. A predicted-tag fallback for a string-ID dataset
+must have its tag files built in one space and translated deliberately.
+
 ## Open items
 
-- Mapping from the back-end taxonomy list to the 2,088 GreyGigz tag IDs (needs the back-end file).
+- Done: mapping from the back-end taxonomy to the GreyGigz tag IDs (`taxonomy_sf.bridge_to_greygigz`). Still open: the
+  Function/Industry list for the 22 sectors not seen in the samples (the records carry their own group, so it is only
+  needed to derive a group from a tag alone), and `job_role_profile.csv` / `tcs_descriptions.csv` (in `taxonomy_sf/tsc.zip`)
+  as richer text for the predicted-tag fallback's tagger.
 - Wire the explicit channel into `run_pipeline.py` and `features.py` behind a flag, with the Stage-2 fit features
   computed from the parsed free text (`frontend_schema.py`) or dropped.
 - Full front-end-aligned corpus and new grades before any quality claim.

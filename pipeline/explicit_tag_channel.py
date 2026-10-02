@@ -23,6 +23,16 @@ Scoring (two levels, because a record has only 1 to 3 tags and a hirer often sha
   nobody carries still reaches providers in the same Function or Industry, at a lower weight. The credit is added on top
   of an exact match too, so an exact match always outranks a category-only match with the same categories.
 
+- track-similarity level (optional, needs `taxonomy=`): with the SkillsFuture taxonomy a tag is a track (Specialisation =
+  Track, Category = Sector) and a track is a set of TSCs (Skills) reached through its roles. A hirer track that the provider
+  does not carry still earns credit from its best Jaccard similarity to one of the provider's tracks (similarities under
+  `min_track_sim` count as 0, because most track pairs share a few generic TSCs), averaged over the hirer's tracks. The
+  credit is `track_sim_weight` (0..1) times the smallest IDF in the provider index times that mean, so it can never exceed
+  the score of a single exact tag match: exact matches always outrank back-off. Off by default (weight 0).
+
+With `taxonomy=`, tags are resolved to track IDs: matching is by ID, unknown tags are not dropped silently (they are listed
+in `unknown_tags`, and `strict=True` raises). Without it, tags are matched as normalised strings, as before.
+
 Ties are common (binary tags, few distinct values). `tiebreak` orders them by a second per-provider signal (the dense
 cosine is the obvious one); without it ties keep provider order, which is arbitrary for RRF.
 
@@ -30,6 +40,8 @@ Hirers with no tags fall back to `fallback.rank(hire_id)` (the predicted-tag Tag
 empty list. Providers without tags are never scored here; they still reach the fusion through BM25 and dense.
 """
 import re
+
+import numpy as np
 
 from retrieval_tagbm25 import TagBM25
 
@@ -70,18 +82,57 @@ def _id(record: dict, *keys: str) -> str:
 
 class ExplicitTagChannel:
     def __init__(self, hirers: list[dict], providers: list[dict], k1: float = 1.2, b: float = 0.0,
-                 category_weight: float = 0.25, fallback=None):
-        if category_weight < 0:
-            raise ValueError("category_weight must be >= 0")
+                 category_weight: float = 0.25, fallback=None, taxonomy=None, track_sim_weight: float = 0.0,
+                 min_track_sim: float = 0.1, strict: bool = False):
+        if category_weight < 0 or not 0 <= track_sim_weight <= 1:
+            raise ValueError("need category_weight >= 0 and 0 <= track_sim_weight <= 1")
+        if track_sim_weight and taxonomy is None:
+            raise ValueError("track_sim_weight needs taxonomy=")
         self.category_weight, self.fallback = category_weight, fallback
+        self.taxonomy, self.track_sim_weight, self.min_track_sim = taxonomy, track_sim_weight, min_track_sim
         self.provider_ids = [_id(p, "provider_id") for p in providers]
         self.hirer_ids = [_id(h, "hire_id", "hirer_id") for h in hirers]
-        self._h_tags = {i: tag_keys(h) for i, h in zip(self.hirer_ids, hirers)}
-        self._p_tags = {i: tag_keys(p) for i, p in zip(self.provider_ids, providers)}
+        self.unknown_tags: dict[str, list[str]] = {}
+        self._h_tags = {i: self._keys(i, h) for i, h in zip(self.hirer_ids, hirers)}
+        self._p_tags = {i: self._keys(i, p) for i, p in zip(self.provider_ids, providers)}
+        if strict and self.unknown_tags:
+            raise ValueError(f"tags not in the taxonomy: {self.unknown_tags}")
         self._h_cats = {i: category_groups(h) for i, h in zip(self.hirer_ids, hirers)}
         self._p_cats = {i: category_groups(p) for i, p in zip(self.provider_ids, providers)}
         self.tag_index = TagBM25(self.provider_ids, [self._p_tags[i] for i in self.provider_ids], k1=k1, b=b)
         self.cat_index = TagBM25(self.provider_ids, [set(self._p_cats[i]) for i in self.provider_ids], k1=k1, b=b)
+        if taxonomy is not None:
+            ids, sim = taxonomy.similarity_matrix()
+            self._row = {t: i for i, t in enumerate(ids)}
+            self._sim = np.where(sim >= min_track_sim, sim, 0.0)
+
+    def _keys(self, rec_id: str, record: dict):
+        """Tag keys of a record: track IDs with a taxonomy (unknown tags recorded), else normalised strings."""
+        if self.taxonomy is None:
+            return tag_keys(record)
+        ids, unknown = self.taxonomy.resolve_tags(record.get("search_tags") or [])
+        if unknown:
+            self.unknown_tags[rec_id] = unknown
+        return frozenset(ids)
+
+    def report(self) -> dict:
+        """Counts a caller should look at before trusting a run."""
+        return {"hirers_without_tags": sum(1 for v in self._h_tags.values() if not v),
+                "providers_without_tags": sum(1 for v in self._p_tags.values() if not v),
+                "records_with_unknown_tags": len(self.unknown_tags),
+                "unknown_tags": sorted({t for v in self.unknown_tags.values() for t in v})}
+
+    def track_backoff(self, hire_id: str, provider_id: str) -> float:
+        """Mean over the hirer's tracks not carried by the provider of their best (thresholded) similarity to any of the
+        provider's tracks; 0 without a taxonomy or when either side has no tags."""
+        if self.taxonomy is None:
+            return 0.0
+        ht, pt = self._h_tags[hire_id], self._p_tags[provider_id]
+        if not ht or not pt:
+            return 0.0
+        cols = [self._row[t] for t in pt]
+        total = sum(float(self._sim[self._row[t], cols].max()) for t in ht if t not in pt)
+        return total / len(ht)
 
     def has_tags(self, hire_id: str) -> bool:
         return bool(self._h_tags.get(hire_id))
@@ -90,7 +141,12 @@ class ExplicitTagChannel:
         """numpy vector over `provider_ids`: exact IDF overlap + category_weight * category IDF overlap."""
         s = self.tag_index.scores(self._h_tags[hire_id])
         c = self.cat_index.scores(set(self._h_cats[hire_id]))
-        return s + self.category_weight * c
+        total = s + self.category_weight * c
+        if self.track_sim_weight:
+            unit = float(self.tag_index.idf.min()) if len(self.tag_index.idf) else 0.0
+            total = total + self.track_sim_weight * unit * np.array(
+                [self.track_backoff(hire_id, p) for p in self.provider_ids])
+        return total
 
     def rank(self, hire_id: str, tiebreak: dict | None = None, top_k: int | None = None) -> list[tuple[str, float]]:
         if not self.has_tags(hire_id):
@@ -119,4 +175,5 @@ class ExplicitTagChannel:
             "category_overlap": len(shared_cats),
             "function_match": int(any(hc[c] == "Function" for c in shared_cats)),
             "industry_match": int(any(hc[c] == "Industry" for c in shared_cats)),
+            "track_backoff": round(self.track_backoff(hire_id, provider_id), 6),
         }
