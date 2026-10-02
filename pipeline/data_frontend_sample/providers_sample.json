@@ -1,0 +1,1773 @@
+[
+  {
+    "provider_id": "P001",
+    "photo": null,
+    "name": "Rachel Lim Hui Min",
+    "title": "Forensic Accountant (CPA)",
+    "credentials": "Certified Public Accountant (CPA)",
+    "about_headline": "Forensic Accountant and CPA",
+    "about_bio": "I am a Certified Public Accountant with over ten years of experience in financial analysis, consulting, and forensic accounting. My work specialises in litigation support, investigations, and dispute advisory, covering fraud allegations, asset misuse, and post-acquisition disputes. I have advised private equity and technology clients on due diligence and complex accounting standards. I focus on delivering precise, factual insights to resolve complex financial conflicts and support informed decision-making in high-stakes environments.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Financial Forensics",
+      "Internal Audit"
+    ],
+    "search_tags": [
+      "Financial Forensics (Accountancy)",
+      "Internal Audit (Accountancy)"
+    ],
+    "availability": "Available from November 2026, up to 3 days a week; on-site in Singapore or remote.",
+    "rate": "From S$1,400 per day; fixed fees for defined reviews.",
+    "services_i_offer": [
+      {
+        "service_title": "Forensic Accounting and Dispute Advisory",
+        "service_detail": "Practical forensic analysis for Singapore SMEs and private equity investors facing disputes or investigations. Services include financial record analysis for fraud or asset misuse, post-acquisition dispute assessment, and internal control evaluation. Familiar with Singapore’s PDPA and SFRS(I) compliance in investigations. Supports clients across private equity, SaaS, and healthcare sectors."
+      }
+    ],
+    "relevant_achievements": [
+      "Delivered due diligence and post-acquisition services for a Singapore-based tax and financial advisory firm, supporting corporate and private equity investors in technology sectors.",
+      "Assessed financial misstatements and conducted detailed interviews for litigation matters."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Forensic accounting",
+        "skills": [
+          "Fraud and asset-misuse analysis",
+          "Post-acquisition dispute assessment",
+          "Internal control evaluation"
+        ]
+      },
+      {
+        "category": "Standards",
+        "skills": [
+          "SFRS(I)",
+          "PDPA"
+        ]
+      }
+    ],
+    "how_i_work": "I secure and review the financial records first, agree the questions that matter with you and your counsel, then report findings in plain language that can stand up in litigation.",
+    "links": null,
+    "localisation_changes": [
+      "a national tax and financial advisory firm -> a Singapore-based tax and financial advisory firm",
+      "small and mid-sized businesses -> Singapore SMEs"
+    ],
+    "source_row": 2196,
+    "source_file": "secretariat-intl.com__people_bryan-finnerty.md"
+  },
+  {
+    "provider_id": "P002",
+    "photo": null,
+    "name": "Marcus Teo",
+    "title": "Real Estate Tax Adviser (US Cost Segregation)",
+    "credentials": "MBA, Real Estate and Finance; B.S., Mechanical Engineering",
+    "about_headline": "Former National Head of Cost Segregation & Real Estate Tax Authority",
+    "about_bio": "I specialise in real estate tax consulting for institutional investors, private equity firms, REITs, and property owners, including Singapore-based investors holding US property. My expertise covers industrial, data centres, retail, office, healthcare, hospitality, and power generation assets. I hold an MBA in real estate and finance plus a B.S. in mechanical engineering. I managed the transition of complex tax structures to optimised positions. I deliver strategic advisory on cost segregation, look-back studies, and disposition analysis. My focus remains on precise, defensible tax positions rather than general valuation or brokerage services.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Tax"
+    ],
+    "search_tags": [
+      "Tax (Accountancy)"
+    ],
+    "availability": "Available from mid-November 2026 for short, fixed-scope engagements.",
+    "rate": "From S$2,000 per day, or a fixed fee per property study.",
+    "services_i_offer": [
+      {
+        "service_title": "Real Estate Cost Segregation and Tax Advisory",
+        "service_detail": "Strategic advisory for Singapore-based investors, REITs and property funds holding US real estate and seeking to optimise their US tax positions. Services include cost segregation analysis, look-back studies, repair regulations consulting, fixed asset scrubs, and disposition analysis. Familiar with US cost segregation rules and commercial property tax implications. Not focused on general real estate valuation or brokerage services."
+      }
+    ],
+    "relevant_achievements": [
+      "Consulted on real estate properties worth over S$135 billion.",
+      "Formerly National Head of Cost Segregation in a Big Four firm’s US tax practice.",
+      "Previously a lead mechanical engineer specialising in building automation systems."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Real estate tax",
+        "skills": [
+          "Cost segregation",
+          "Look-back studies",
+          "Repair regulations",
+          "Fixed asset reviews",
+          "Disposition analysis"
+        ]
+      },
+      {
+        "category": "Engineering",
+        "skills": [
+          "Building automation systems"
+        ]
+      }
+    ],
+    "how_i_work": "I review the asset register and acquisition documents, model the tax position property by property, and hand over a defensible study your tax filer can rely on.",
+    "links": null,
+    "localisation_changes": [
+      "kept the US cost segregation specialism and framed it for Singapore investors with US property (it has no Singapore counterpart)",
+      "property owners across Singapore -> property owners, including Singapore-based investors holding US property",
+      "$100 billion -> S$135 billion",
+      "a Singapore-based Big Four firm -> a Big Four firm's US tax practice",
+      "removed the literal '[to]' imperfection marker; data centers -> data centres",
+      "dropped 'ITC cost segregation' (unclear, US-only)"
+    ],
+    "source_row": 1220,
+    "source_file": "kroll.com__en_our-experts_bart-lazarczyk.md"
+  },
+  {
+    "provider_id": "P003",
+    "photo": null,
+    "name": "Desmond Ong Kah Wee",
+    "title": "Restructuring and Insolvency Practitioner",
+    "credentials": "Member, Turnaround Management Association; Member, INSOL Europe",
+    "about_headline": "Former Managing Director, Restructuring and Insolvency",
+    "about_bio": "I spent over 30 years in corporate restructuring and debt advisory, assisting financial institutions and private equity firms with viable business survival solutions. As a leading insolvency practitioner in the region, I have acted as receiver, liquidator, and judicial manager in over 500 corporate cases. My sectoral expertise spans property, hospitality, manufacturing, and retail. I am an active member of the Turnaround Management Association and INSOL Europe, regularly providing commentary on corporate recovery and insolvency frameworks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Restructuring and Insolvency"
+    ],
+    "search_tags": [
+      "Restructuring and Insolvency (Accountancy)"
+    ],
+    "availability": "Available from mid-November 2026 for short, fixed-scope engagements.",
+    "rate": "From S$3,000 per day; formal appointments quoted separately.",
+    "services_i_offer": [
+      {
+        "service_title": "Corporate Restructuring and Insolvency Advisory",
+        "service_detail": "Practical restructuring advice for Singapore SMEs, family businesses, and mid-sized companies facing financial distress or seeking strategic turnaround. Services include distressed debt advisory, receiver and liquidator services, and judicial management appointments to facilitate business continuity. Familiar with insolvency frameworks under the IRDA and creditor negotiations, ensuring solutions acceptable to all parties. Particular experience with property development, hospitality, and manufacturing sectors in financial distress."
+      }
+    ],
+    "relevant_achievements": [
+      "I acted as receiver, liquidator, or judicial manager in over 500 corporate cases across property, hospitality, manufacturing, and retail.",
+      "I delivered viable solutions for financial institutions and private equity clients, and I am recognised as one of the region's leading insolvency practitioners."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Insolvency appointments",
+        "skills": [
+          "Receivership",
+          "Liquidation",
+          "Judicial management"
+        ]
+      },
+      {
+        "category": "Advisory",
+        "skills": [
+          "Distressed debt",
+          "Creditor negotiations"
+        ]
+      }
+    ],
+    "how_i_work": "I start with a short cash and creditor review, set out the realistic options, and then work alongside management and creditors to carry the chosen route through.",
+    "links": null,
+    "localisation_changes": [
+      "examiner -> judicial manager (Irish examinership -> Singapore judicial management)",
+      "insolvency frameworks -> insolvency frameworks under the IRDA",
+      "SMEs -> Singapore SMEs",
+      "headline: added 'Former' (record implied current employment)"
+    ],
+    "source_row": 2002,
+    "source_file": "kroll.com__en_our-experts_declan-taite.md"
+  },
+  {
+    "provider_id": "P004",
+    "photo": null,
+    "name": "Muhammad Faizal bin Rahman",
+    "title": "Marine Engineer and Class Surveyor",
+    "credentials": "Class One Certificate of Competency (Unlimited Motor); Marine Management System Auditor; MLC Inspector",
+    "about_headline": "Marine Engineer and Class Surveyor specialising in statutory compliance and vessel operations",
+    "about_bio": "I bring 14 years of maritime experience, beginning as a 2nd Engineer on container vessels and bulk carriers. Since moving ashore in 2021, I have carried out statutory and classification surveys to ensure full compliance with SOLAS, MARPOL, and MLC regulations. As a qualified Marine Management System Auditor and MLC Inspector, I conduct ISM, ISPS, and DOC audits. I also manage offshore floating assets, overseeing power generation, HVAC systems, and coordinating complex drydocking projects for efficient asset maintenance and regulatory adherence.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Sea Transport"
+      }
+    ],
+    "specialisation": [
+      "Maritime Services",
+      "Shipping"
+    ],
+    "search_tags": [
+      "Maritime Services (Sea Transport)",
+      "Shipping (Sea Transport)"
+    ],
+    "availability": "Available immediately for 2-8 week engagements in Singapore.",
+    "rate": "From S$1,100 per day plus vessel access costs.",
+    "services_i_offer": [
+      {
+        "service_title": "Marine Survey and Compliance Auditing",
+        "service_detail": "Advisory services for Singapore shipowners, operators, and maritime SMEs requiring statutory compliance support. Services include executing annual, intermediate, and special class surveys, conducting ISM/ISPS/MLC audits, and performing machinery failure investigations. Familiar with SOLAS, MARPOL, and MLC 2006 regulations, as well as class requirements for container ships, tankers, and bulk carriers."
+      }
+    ],
+    "relevant_achievements": [
+      "Executed statutory surveys for an international classification society to verify vessel compliance with SOLAS and MARPOL.",
+      "Conducted shipboard ISM, ISPS, and MLC audits, while managing technical operations for offshore floating assets."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Regulations",
+        "skills": [
+          "SOLAS",
+          "MARPOL",
+          "MLC 2006"
+        ]
+      },
+      {
+        "category": "Audits",
+        "skills": [
+          "ISM",
+          "ISPS",
+          "DOC"
+        ]
+      },
+      {
+        "category": "Vessel systems",
+        "skills": [
+          "Power generation",
+          "HVAC",
+          "Drydocking"
+        ]
+      }
+    ],
+    "how_i_work": "I board the vessel or asset, survey against the applicable class and statutory rules, and leave you with a findings list ranked by what must close before the next inspection.",
+    "links": null,
+    "localisation_changes": [
+      "shipowners -> Singapore shipowners",
+      "'Transitioning ashore in 2021, I now execute' -> 'Since moving ashore in 2021, I have carried out' (implied current employment)"
+    ],
+    "source_row": 673,
+    "source_file": "brookesbell.com__about-us_the-team_neo-beng-kiong.md"
+  },
+  {
+    "provider_id": "P005",
+    "photo": null,
+    "name": "Patricia Goh",
+    "title": "Board Governance and Compliance Adviser",
+    "credentials": "Certified Public Accountant; member of the New York and New Jersey Societies of CPAs, AICPA and NACD",
+    "about_headline": "Former Vice President and Partner in Financial Services Banking",
+    "about_bio": "Seasoned financial services executive with extensive leadership experience in banking and securities across complex, multi-industry engagements. Previously served as Vice President and Partner at a global professional services firm, advising major institutional clients. Held senior governance roles on corporate boards, chairing Ethics and Compliance committees and serving on Risk and Audit bodies. Certified Public Accountant and member of professional bodies including the New York and New Jersey Societies of CPA, AICPA, and NACD.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Financial Services"
+      },
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Risk, Compliance and Legal",
+      "Enterprise Risk Management"
+    ],
+    "search_tags": [
+      "Risk, Compliance and Legal (Financial Services)",
+      "Enterprise Risk Management (Accountancy)"
+    ],
+    "availability": "Up to 2 days a week from December 2026; board and committee work by arrangement.",
+    "rate": "From S$3,500 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Financial Services Governance and Compliance Advisory",
+        "service_detail": "Strategic oversight guidance for Singapore-based financial institutions and family offices navigating complex regulatory environments. Services include board readiness reviews, ethics and compliance framework design, and risk governance structuring. Particular experience with MAS guidelines and PDPA requirements. Not focused on day-to-day operational accounting or audit execution."
+      }
+    ],
+    "relevant_achievements": [
+      "Served as Vice President and Partner at a global professional services firm, leading financial services and securities practices for large, complex clients.",
+      "Served on the firm’s board of directors and strategic investment committee.",
+      "Chairs the ethics and compliance committee of a major investment management firm's fund board."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Governance",
+        "skills": [
+          "Board readiness reviews",
+          "Ethics and compliance frameworks",
+          "Risk governance"
+        ]
+      },
+      {
+        "category": "Regulation",
+        "skills": [
+          "MAS guidelines",
+          "PDPA"
+        ]
+      }
+    ],
+    "how_i_work": "I work with the board and senior management over a small number of focused sessions, review charters and committee papers, and recommend changes the board can adopt at its next meeting.",
+    "links": null,
+    "localisation_changes": [
+      "the firm's US Board of Directors -> the firm's board of directors",
+      "mutual fund board -> fund board"
+    ],
+    "source_row": 2156,
+    "source_file": "thoughtworks.com__de-de_profiles_board_ami-kaplan.md"
+  },
+  {
+    "provider_id": "P006",
+    "photo": null,
+    "name": "Andrew Chua",
+    "title": "Business Transformation Adviser, Technology and Telecoms",
+    "credentials": null,
+    "about_headline": "Strategy and Transformation Leader for Technology and Telecommunications",
+    "about_bio": "I bring over 30 years of experience in large-scale operations and transformation, with 20 years dedicated to technology, media, telecommunications, and professional services. I specialise in strategic vision, organisational design, process optimisation, and transaction-related business transformation. Having led teams across Asia Pacific, I deliver tangible results for complex industry clients. My approach focuses on practical, actionable advice to drive growth and efficiency in dynamic markets.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      },
+      {
+        "group": "Function",
+        "name": "Human Resource"
+      }
+    ],
+    "specialisation": [
+      "Strategy and Governance",
+      "Learning and Organisation Development"
+    ],
+    "search_tags": [
+      "Strategy and Governance (Infocomm Technology)",
+      "Learning and Organisation Development (Human Resource)"
+    ],
+    "availability": "Available from November 2026, up to 3 days a week; on-site in Singapore or remote.",
+    "rate": "From S$2,500 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Technology and Telecoms Transformation Advisory",
+        "service_detail": "Practical strategy and operational advisory for Singaporean technology firms, telecommunications providers, and professional services SMEs facing industry disruption. Services include business model redesign for B2B growth, emerging technology integration strategies, and organisational process optimisation for efficiency. Familiar with telecommunications market dynamics and enterprise digital transformation. Not focused on legal compliance, IT implementation, or payroll administration."
+      }
+    ],
+    "relevant_achievements": [
+      "Led strategic vision and organisational design for a global professional services firm across Asia Pacific.",
+      "Delivered large-scale optimisation programmes and transaction-related business transformation for complex industry clients."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Methods",
+        "skills": [
+          "Business model redesign",
+          "Organisational design",
+          "Process optimisation"
+        ]
+      }
+    ],
+    "how_i_work": "I spend the first week with your leadership team mapping where the business is losing time or margin, then agree a short list of changes and stay on to help land them.",
+    "links": null,
+    "localisation_changes": [
+      "across the UK and Ireland -> across Asia Pacific (x2)",
+      "specialize/organizational/optimization -> Singapore spelling"
+    ],
+    "source_row": 17,
+    "source_file": "ey.com__en_gl_people_rob-atkinson.md"
+  },
+  {
+    "provider_id": "P007",
+    "photo": null,
+    "name": "Kavitha Ramasamy",
+    "title": "Forensic Accountant and Economic Damages Expert",
+    "credentials": "CPA; Certified Fraud Examiner (CFE); Certified Valuation Analyst (CVA); Master Analyst in Financial Forensics (MAFF)",
+    "about_headline": "CPA and forensic accountant specialising in economic damages and government contract disputes",
+    "about_bio": "CPA with 20 years of experience in forensic accounting, economic damages, and government contract disputes across energy, defence, and construction sectors. I specialise in quantifying lost profits, cost overruns, and intellectual property losses. I have provided expert testimony for both plaintiffs and defendants in courts, arbitration, and government contract dispute tribunals. My practice covers complex financial analyses for matters involving significant financial exposure. I hold certifications as a Certified Fraud Examiner, Certified Valuation Analyst, and Master Analyst in Financial Forensics.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Financial Forensics",
+      "Business Valuation"
+    ],
+    "search_tags": [
+      "Financial Forensics (Accountancy)",
+      "Business Valuation (Accountancy)"
+    ],
+    "availability": "Available from mid-November 2026 for short, fixed-scope engagements.",
+    "rate": "From S$2,200 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Economic Damages and Forensic Accounting Advisory",
+        "service_detail": "For Singapore SMEs and contractors facing disputes over lost profits, IP theft, or government contract costs. Services include quantifying economic damages, forensic accounting investigations, cost overrun analysis, and loss of opportunity assessments. Familiar with Singapore construction claims, IP disputes, and regulatory compliance for government engagements. Does not include legal representation or court advocacy."
+      }
+    ],
+    "relevant_achievements": [
+      "Provided expert testimony on financial and cost analyses for domestic and international disputes.",
+      "Handled nuclear power industry contract breaches and construction cost assessments."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Damages",
+        "skills": [
+          "Lost profits",
+          "Cost overrun analysis",
+          "IP loss quantification"
+        ]
+      },
+      {
+        "category": "Forums",
+        "skills": [
+          "Courts",
+          "Arbitration"
+        ]
+      }
+    ],
+    "how_i_work": "I agree the damages question with you and your lawyers, build the model from your records, and write it up as an expert report that can be tested under cross-examination.",
+    "links": null,
+    "localisation_changes": [
+      "boards of contract appeals (US) -> government contract dispute tribunals",
+      "defense -> defence",
+      "SMEs -> Singapore SMEs"
+    ],
+    "source_row": 852,
+    "source_file": "hka.com__people_patrick-jensen.md"
+  },
+  {
+    "provider_id": "P008",
+    "photo": null,
+    "name": "Jonathan Seah",
+    "title": "Fractional CFO",
+    "credentials": "B.S., Accounting; MBA, Finance",
+    "about_headline": "Former CFO with 20 years in finance, automation, and international operations",
+    "about_bio": "Former CFO with nearly 20 years in international finance and accounting, specialising in operational efficiency, automation, and investment strategy. Held executive roles at listed wireless communications operators in emerging markets. Recognised as a top 40 business leader under 40 by Treasury and Risk Magazine. Experienced in leading finance organisations and supporting unique ownership models across global markets.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Management Accounting",
+      "Enterprise Risk Management"
+    ],
+    "search_tags": [
+      "Management Accounting (Accountancy)",
+      "Enterprise Risk Management (Accountancy)"
+    ],
+    "availability": "Available from November 2026, 1-2 days a week on a retainer.",
+    "rate": "From S$8,000 per month on retainer.",
+    "services_i_offer": [
+      {
+        "service_title": "CFO and Finance Transformation Advisory",
+        "service_detail": "Practical executive advisory for Singapore SMEs and mid-sized businesses seeking to streamline finance operations and drive growth. Services include building efficient finance processes, leveraging automation for cost savings, overseeing investment strategies, and managing treasury and risk. Particular experience with public company finance leadership and cross-border operational efficiency."
+      }
+    ],
+    "relevant_achievements": [
+      "Held CFO roles at listed wireless telecommunications operators in emerging markets.",
+      "Recognised as a top 40 business leader under 40 by Treasury and Risk Magazine"
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Finance",
+        "skills": [
+          "Finance process design",
+          "Treasury and risk",
+          "Investment strategy",
+          "Finance automation"
+        ]
+      }
+    ],
+    "how_i_work": "I work as a part-time CFO alongside your finance team, fixing the close and reporting first, then moving to cash, treasury and investment decisions.",
+    "links": null,
+    "localisation_changes": [
+      "public wireless communications firms in Latin America and at JSI and NII Holdings -> listed wireless communications operators in emerging markets (also removes named companies)",
+      "headline: 'CFO with ...' -> 'Former CFO with ...'"
+    ],
+    "source_row": 1573,
+    "source_file": "westmonroe.com__our-team_dan-freiman.md"
+  },
+  {
+    "provider_id": "P009",
+    "photo": null,
+    "name": "Nur Aisyah binte Salleh",
+    "title": "Digital Forensics and eDiscovery Specialist",
+    "credentials": null,
+    "about_headline": "Digital Forensics & eDiscovery Specialist",
+    "about_bio": "Over 10 years of experience in digital forensics investigations and eDiscovery across Southeast Asia, advising clients on complex disputes, regulatory investigations, and cross-border data matters. Previously held senior roles at specialist forensic consultancies and a global financial institution, supporting internal investigations and collaborating with legal, compliance, and privacy teams. Recognised by Lexology Index for expertise in digital investigations. Delivers clear, actionable advice to legal and business stakeholders.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      },
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Cyber Security",
+      "Financial Forensics"
+    ],
+    "search_tags": [
+      "Cyber Security (Infocomm Technology)",
+      "Financial Forensics (Accountancy)"
+    ],
+    "availability": "Available immediately for 2-8 week engagements in Singapore.",
+    "rate": "From S$1,600 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Digital Forensics & eDiscovery Advisory",
+        "service_detail": "Practical advisory for Singapore SMEs, startups, and mid-sized businesses in regulated sectors facing disputes, regulatory scrutiny, or data breach investigations. Services include forensic data preservation, end-to-end eDiscovery workflow management, technology-assisted review, and defensible methodologies for cross-border data matters. Familiar with PDPA, court and regulatory requirements in Singapore, and complex multinational data landscapes. Supports post-breach response and intellectual property disputes."
+      }
+    ],
+    "relevant_achievements": [
+      "Associate Director at a specialist forensic consultancy, advising clients on complex disputes, regulatory investigations, and cross-border data matters across Southeast Asia.",
+      "Managed end-to-end eDiscovery workflows, including advanced analytics and technology-assisted review.",
+      "Supported internal investigations at a global financial institution, working with legal, compliance, and privacy teams.",
+      "Recognised by Lexology Index for expertise in digital investigations."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Forensics",
+        "skills": [
+          "Forensic data preservation",
+          "eDiscovery workflow management",
+          "Technology-assisted review",
+          "Advanced analytics"
+        ]
+      },
+      {
+        "category": "Regulation",
+        "skills": [
+          "PDPA"
+        ]
+      }
+    ],
+    "how_i_work": "I preserve the data first so nothing is lost or challenged later, then run a review workflow scaled to your matter and report in a form your lawyers can file.",
+    "links": null,
+    "localisation_changes": [
+      "SMEs -> Singapore SMEs"
+    ],
+    "source_row": 1767,
+    "source_file": "secretariat-intl.com__people_sean-lim.md"
+  },
+  {
+    "provider_id": "P010",
+    "photo": null,
+    "name": "Victor Heng",
+    "title": "Cross-Border Private Wealth Tax Adviser",
+    "credentials": "Board certified in tax law; Certified Public Accountant",
+    "about_headline": "Tax Specialist resolving complex issues for private wealth and business owners",
+    "about_bio": "I am a tax specialist with 20 years of experience helping entrepreneurs, business owners, and family offices resolve complex tax matters. I focus on personal income, estate, and gift tax planning for families with US tax exposure. My expertise spans asset management, private equity, real estate, and technology sectors. I hold board certification in tax law and CPA status, with a strong background in litigation and dispute resolution. I provide strategic advice on succession, legacy planning, and cross-border structures for Singapore-based families and business owners with US connections, protecting your wealth and facilitating smooth business transitions for clients across the region.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      },
+      {
+        "group": "Industry",
+        "name": "Financial Services"
+      }
+    ],
+    "specialisation": [
+      "Tax",
+      "Family Office"
+    ],
+    "search_tags": [
+      "Tax (Accountancy)",
+      "Family Office (Financial Services)"
+    ],
+    "availability": "Available from mid-November 2026 for short, fixed-scope engagements.",
+    "rate": "From S$3,000 per day; fixed fees for planning memos.",
+    "services_i_offer": [
+      {
+        "service_title": "Private Wealth and Succession Tax Planning",
+        "service_detail": "Strategic tax advisory for Singapore-based business owners, family offices, and high-net-worth individuals with US tax exposure. Services include US estate and gift tax planning, asset management compensation structuring, real estate tax optimisation, and succession planning. Familiar with cross-border structures for families with US connections."
+      }
+    ],
+    "relevant_achievements": [
+      "As a tax lawyer, I tried multiple cases to verdict.",
+      "I secured a complete waiver of S$1.8 million in penalties."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Tax",
+        "skills": [
+          "US estate and gift tax",
+          "Succession planning",
+          "Compensation structuring",
+          "Tax disputes"
+        ]
+      }
+    ],
+    "how_i_work": "I map the family's assets and US connections, set out the exposures in plain terms, and coordinate with your lawyers and accountants to put the plan in place.",
+    "links": null,
+    "localisation_changes": [
+      "kept the US estate/gift tax specialism and framed it for Singapore families with US exposure (Singapore has no estate or gift tax)",
+      "removed 'ensuring compliance with Singapore regulations' (did not fit the work)",
+      "removed SFRS(I) and PDPA mentions that did not fit a tax planning service"
+    ],
+    "source_row": 1891,
+    "source_file": "grantthornton.com__people_texas_dallas_borden-aaron.md"
+  },
+  {
+    "provider_id": "P011",
+    "photo": null,
+    "name": "Priya Menon",
+    "title": "Digital Transformation Adviser",
+    "credentials": "Business degree, specialisation in logistics and information technology",
+    "about_headline": "Former Chief Information Officer with 20+ years in digital transformation",
+    "about_bio": "I have over 20 years of experience in digital transformation and global business strategy. I held senior technology leadership roles at a Big Four professional services firm and a global strategy consultancy. I drove revenue growth and operational efficiency through large-scale digital initiatives. I am proficient in five languages and frequently speak at technology conferences on AI and digital innovation. I hold a business degree with a specialisation in logistics and information technology.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Strategy and Governance",
+      "Data and Artificial Intelligence"
+    ],
+    "search_tags": [
+      "Strategy and Governance (Infocomm Technology)",
+      "Data and Artificial Intelligence (Infocomm Technology)"
+    ],
+    "availability": "Available from November 2026, up to 3 days a week; on-site in Singapore or remote.",
+    "rate": "From S$2,800 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Digital Transformation and Technology Strategy Advisory",
+        "service_detail": "Practical advisory for Singapore SMEs and mid-sized organisations in technology strategy and digital transformation. Services include assessing current technology infrastructure, designing digital roadmaps, implementing AI and automation solutions, and improving operational efficiency through technology. Familiar with enterprise digital transformation frameworks and tools. Scope includes strategic planning, technology integration, and change management support."
+      }
+    ],
+    "relevant_achievements": [
+      "I served as chief information officer at a global strategy consultancy and in senior technology leadership at a Big Four professional services firm.",
+      "I led large-scale digital transformation programmes focused on revenue growth and operational efficiency, using AI and innovative technology solutions.",
+      "I held regional and international CIO roles, advising organisations on technology strategy and execution."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Technology strategy",
+        "skills": [
+          "Digital roadmaps",
+          "AI and automation",
+          "Infrastructure assessment",
+          "Change management"
+        ]
+      }
+    ],
+    "how_i_work": "I assess what you already run, agree the two or three changes that pay back fastest, and write a roadmap your team can carry on without me.",
+    "links": null,
+    "localisation_changes": [
+      "SMEs -> Singapore SMEs",
+      "headline: added 'Former'",
+      "specialization -> specialisation"
+    ],
+    "source_row": 1111,
+    "source_file": "grantthornton.com__people_new-york_nyc_kempe-michael.md"
+  },
+  {
+    "provider_id": "P012",
+    "photo": null,
+    "name": "Benjamin Koh",
+    "title": "Financial Services Transformation Consultant",
+    "credentials": null,
+    "about_headline": "Former Consulting Manager – Technology in Financial Services",
+    "about_bio": "I am a former Consulting Manager with extensive experience in technology transformation within the financial services sector. My expertise lies in organisational change, covering employee and customer adoption, training, and communications. I am skilled in target operating model (TOM) design, governance frameworks, and programme management. I have recently focused on open banking solutions for small and medium-sized enterprises. I deliver structured advisory services to help financial institutions navigate regulatory and operational shifts effectively.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Financial Services"
+      },
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Operations",
+      "Strategy and Governance"
+    ],
+    "search_tags": [
+      "Operations (Financial Services)",
+      "Strategy and Governance (Infocomm Technology)"
+    ],
+    "availability": "Available from November 2026, up to 3 days a week; on-site in Singapore or remote.",
+    "rate": "From S$1,300 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Technology Transformation and Open Banking Advisory",
+        "service_detail": "Practical transformation advisory for Singapore-based financial services firms, including SMEs and fintechs, looking to modernise operations and adopt open banking and API-based services. Services include designing target operating models (TOMs), establishing governance frameworks, and managing programme delivery. Support for stakeholder communications and user adoption strategies to ensure successful technology implementation. Familiar with open banking and financial services technology trends."
+      }
+    ],
+    "relevant_achievements": [
+      "Delivered programme management and governance support for major technology implementations at a global professional services firm.",
+      "Developed specific expertise in open banking adoption strategies for smaller financial firms."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Methods",
+        "skills": [
+          "Target operating model design",
+          "Governance frameworks",
+          "Programme management",
+          "Change and adoption management"
+        ]
+      },
+      {
+        "category": "Domain",
+        "skills": [
+          "Open banking"
+        ]
+      }
+    ],
+    "how_i_work": "I set up the governance and plan first, then run the change programme week by week with your team, with adoption tracked as closely as delivery.",
+    "links": null,
+    "localisation_changes": [
+      "'comply with open banking standards/regulations' -> 'adopt open banking and API-based services' (Singapore has no mandated open banking regime)",
+      "'I am a Consulting Manager' / 'Currently, I am focused' -> past tense (implied current employment)"
+    ],
+    "source_row": 1578,
+    "source_file": "accenture.com__author_florence_hester.md"
+  },
+  {
+    "provider_id": "P013",
+    "photo": null,
+    "name": "Charlotte Yeo",
+    "title": "Post-Merger Integration Adviser",
+    "credentials": "MBA, Harvard Business School; Masters in International Business, University of Maastricht",
+    "about_headline": "Post-Merger Integration and Business Transformation Specialist",
+    "about_bio": "Over 20 years of experience in post-merger integration and business transformation, specialising in technology and media industries. Has led integrations for global clients, focusing on operating models, organisational design, talent, and culture change. Recognised as a global topic leader in PMI for technology and in the media sector, particularly music. Holds an MBA from Harvard Business School and a Masters in International Business from the University of Maastricht.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      },
+      {
+        "group": "Function",
+        "name": "Human Resource"
+      },
+      {
+        "group": "Industry",
+        "name": "Media"
+      }
+    ],
+    "specialisation": [
+      "Mergers and Acquisitions",
+      "Learning and Organisation Development",
+      "Media Business Management"
+    ],
+    "search_tags": [
+      "Mergers and Acquisitions (Accountancy)",
+      "Learning and Organisation Development (Human Resource)",
+      "Media Business Management (Media)"
+    ],
+    "availability": "Available from November 2026, up to 3 days a week; on-site in Singapore or remote.",
+    "rate": "From S$2,600 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Post-Merger Integration and Organisational Transformation Advisory",
+        "service_detail": "Practical advisory for Singapore SMEs and mid-sized businesses in technology, media, and entertainment undergoing mergers or acquisitions. Services include designing post-merger operating models, aligning organisational structures, managing cultural integration, and implementing change management strategies. Familiar with global M&A trends and transformation frameworks. Not focused on financial modelling or due diligence support."
+      }
+    ],
+    "relevant_achievements": [
+      "Has led integrations for clients in technology and media sectors, focusing on operating model redesign, organisational structure, talent alignment, and culture change.",
+      "Recognised as a global topic leader in PMI for technology and in the media industry."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Integration",
+        "skills": [
+          "Operating model design",
+          "Organisational design",
+          "Culture integration",
+          "Change management"
+        ]
+      }
+    ],
+    "how_i_work": "I plan the first 100 days with both leadership teams, then run the integration office with you until the new structure is stable.",
+    "links": null,
+    "localisation_changes": [
+      "SMEs -> Singapore SMEs"
+    ],
+    "source_row": 718,
+    "source_file": "bcg.com__about_people_experts_lianne-pot.md"
+  },
+  {
+    "provider_id": "P014",
+    "photo": null,
+    "name": "Raymond Lau",
+    "title": "Operations and Supply Chain Consultant",
+    "credentials": null,
+    "about_headline": "Operations and Supply Chain Consultant for Industrial and Logistics Sectors",
+    "about_bio": "I specialise in operational improvement and supply chain optimisation for small to mid-sized enterprises across Southeast Asia. With over 30 years of experience, I help industrial and consumer clients drive tangible turnaround results. My approach focuses on practical advisory that reduces costs and realigns business models. I have led transformation programs for global IT and professional services firms, bringing that depth of expertise to help your organisation navigate complex operational challenges effectively.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Logistics"
+      }
+    ],
+    "specialisation": [
+      "Logistics Process Improvement and Information System",
+      "Logistics Solutioning and Programme Management"
+    ],
+    "search_tags": [
+      "Logistics Process Improvement and Information System (Logistics)",
+      "Logistics Solutioning and Programme Management (Logistics)"
+    ],
+    "availability": "Available immediately for 2-8 week engagements in Singapore.",
+    "rate": "From S$2,000 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Operational Transformation and Supply Chain Advisory",
+        "service_detail": "Practical advisory for Singapore small and mid-sized businesses in manufacturing, logistics, and retail looking to optimise operations and reduce costs. Services include supply chain restructuring, cost reduction programmes, operational turnaround, and digital service integration. Particular experience with ERP alignment and business model realignment for SMEs and family-owned enterprises."
+      }
+    ],
+    "relevant_achievements": [
+      "Led transformation programmes at Big Four professional services firms, major IT providers, and global strategy consultancies.",
+      "Helped industrial and consumer goods clients across Southeast Asia drive operational results.",
+      "Serves on the advisory board of the Georgia Institute of Technology."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Operations",
+        "skills": [
+          "Supply chain restructuring",
+          "Cost reduction",
+          "Operational turnaround"
+        ]
+      },
+      {
+        "category": "Systems",
+        "skills": [
+          "ERP alignment"
+        ]
+      }
+    ],
+    "how_i_work": "I walk the operation with your managers, quantify where cost and time are lost, and agree a short, costed improvement plan that your own team runs.",
+    "links": null,
+    "localisation_changes": [
+      "small and mid-sized businesses -> Singapore small and mid-sized businesses",
+      "programs -> programmes"
+    ],
+    "source_row": 1132,
+    "source_file": "alvarezandmarsal.com__our-people_david-riviere.md"
+  },
+  {
+    "provider_id": "P015",
+    "photo": null,
+    "name": "Sébastien Pereira",
+    "title": "Business Valuation and Damages Expert",
+    "credentials": "Member, French Society of Valuation Experts",
+    "about_headline": "Economic Damages and Business Valuation Expert",
+    "about_bio": "With 20 years of experience in economic damages and business valuation, I specialise in capital markets, banking, M&A, and shareholder disputes. I have testified as an expert witness in litigation and arbitration, including international proceedings. Bilingual in English and French, I am also a member of the French Society of Valuation Experts.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Business Valuation",
+      "Financial Forensics"
+    ],
+    "search_tags": [
+      "Business Valuation (Accountancy)",
+      "Financial Forensics (Accountancy)"
+    ],
+    "availability": "Available from mid-November 2026 for short, fixed-scope engagements.",
+    "rate": "From S$2,500 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Business Valuation and Economic Damages Advisory",
+        "service_detail": "Practical advisory for Singapore SMEs and mid-sized businesses in financial services, real estate, technology, and manufacturing sectors needing expert valuation or damages analysis. Services include business and share valuation, lost profits analysis, damages quantification, financial modelling, and preparation of expert evidence. Familiar with international arbitration procedures and financial regulations. Expertise includes post-M&A disputes, shareholder conflicts, and capital markets matters."
+      }
+    ],
+    "relevant_achievements": [
+      "Director at a global professional services firm.",
+      "Advised on nearly 40 valuation and damages matters, with dispute values approaching S$500 million.",
+      "Testified as an expert witness in litigation and international arbitration, including ICC and ICSID proceedings.",
+      "Provided financial modelling, expert evidence preparation, and review of opposing analyses."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Valuation",
+        "skills": [
+          "Business and share valuation",
+          "Lost profits analysis",
+          "Damages quantification",
+          "Financial modelling"
+        ]
+      },
+      {
+        "category": "Languages",
+        "skills": [
+          "English",
+          "French"
+        ]
+      }
+    ],
+    "how_i_work": "I agree the valuation question and evidence with your counsel early, build a transparent model, and stand behind it in the report and at hearing.",
+    "links": null,
+    "localisation_changes": [
+      "SMEs -> Singapore SMEs"
+    ],
+    "source_row": 1640,
+    "source_file": "hka.com__people_florent-myara.md"
+  },
+  {
+    "provider_id": "P016",
+    "photo": null,
+    "name": "Gavin Ng",
+    "title": "Public Sector Transformation Adviser",
+    "credentials": "MBA, Harvard Business School; BA, Economics, University of Chicago",
+    "about_headline": "Driving Smarter, Faster, More Transparent Public Sector Transformation",
+    "about_bio": "I bring over 20 years of experience transforming businesses and operations, with deep expertise in public sector and private enterprise. I’ve led strategic change initiatives at a global strategy consultancy, advising clients on cost optimisation, digital transformation, and operational excellence. My background includes investment banking and work at a Fortune 100 company, and I hold an MBA from Harvard Business School and a BA in economics from the University of Chicago. I focus on delivering sustainable, measurable improvements for public agencies in Singapore.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Strategy and Governance"
+    ],
+    "search_tags": [
+      "Strategy and Governance (Infocomm Technology)"
+    ],
+    "availability": "Available from November 2026, up to 3 days a week; on-site in Singapore or remote.",
+    "rate": "From S$2,500 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Public Sector and Government Transformation Advisory",
+        "service_detail": "Practical advisory for Singapore public agencies, statutory boards and government bodies seeking to improve efficiency, reduce costs, and implement digital transformation. Services include strategic planning for smarter spending, operational process redesign, digital service modernisation, and stakeholder engagement frameworks. Familiar with public sector governance and performance frameworks. Advises on sustainable value creation and transparency initiatives."
+      }
+    ],
+    "relevant_achievements": [
+      "Senior leadership at a global strategy consultancy.",
+      "Advised public sector clients on cost optimisation, digital transformation, and strategic change.",
+      "Delivered operational improvements and customer experience initiatives for senior executives.",
+      "Previously worked in investment banking and at a Fortune 100 company."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Methods",
+        "skills": [
+          "Process redesign",
+          "Cost optimisation",
+          "Digital service modernisation",
+          "Stakeholder engagement"
+        ]
+      }
+    ],
+    "how_i_work": "I work inside your team on one service or process at a time, measure the baseline, redesign it with the people who run it, and report the savings.",
+    "links": null,
+    "localisation_changes": [
+      "public agencies -> public agencies in Singapore; government bodies -> Singapore public agencies, statutory boards and government bodies",
+      "optimization/modernization -> Singapore spelling",
+      "taxonomy gap: SkillsFuture has no public administration or management consulting sector"
+    ],
+    "source_row": 246,
+    "source_file": "bcg.com__about_people_experts_harish-hemmige.md"
+  },
+  {
+    "provider_id": "P017",
+    "photo": null,
+    "name": "Farah Iskandar",
+    "title": "Infrastructure and Capital Programme Adviser",
+    "credentials": null,
+    "about_headline": "Infrastructure and Operations Leader specialising in capital programmes and asset-intensive environments",
+    "about_bio": "I deliver complex capital programmes and sustainable performance improvements in asset-intensive sectors. With nearly 20 years of experience, I previously led Asia Pacific advisory for a global firm and managed operations for a Singapore-based aircraft maintenance company. I specialise in strategic clarity, governance, modern operating models, and technology-driven productivity to help organisations optimise their infrastructure.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Engineering Services"
+      }
+    ],
+    "specialisation": [
+      "Project Development",
+      "Operations and Maintenance"
+    ],
+    "search_tags": [
+      "Project Development (Engineering Services)",
+      "Operations and Maintenance (Engineering Services)"
+    ],
+    "availability": "Available from mid-November 2026 for short, fixed-scope engagements.",
+    "rate": "From S$2,400 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Infrastructure and Capital Programme Advisory",
+        "service_detail": "Strategic and operational advisory for Singapore SMEs and mid-sized businesses in mining, energy, industrial, and infrastructure sectors seeking to optimise capital projects and improve efficiency. Services include capital project optimisation, operating model design, governance frameworks, and AI-enabled operational improvements. Particular experience with asset-intensive industries and transformation initiatives."
+      }
+    ],
+    "relevant_achievements": [
+      "Held advisory lead roles across Asia Pacific.",
+      "Delivered productivity programmes worth several hundred million S$ and capital project optimisation for major corporates in mining, energy, and rail.",
+      "Led operations improvement for a Singapore-based commercial aircraft maintenance firm."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Capital programmes",
+        "skills": [
+          "Capital project optimisation",
+          "Programme governance",
+          "Operating model design"
+        ]
+      }
+    ],
+    "how_i_work": "I review the capital plan and live projects with your engineering and finance leads, then focus effort on the few projects where schedule or cost can still be recovered.",
+    "links": null,
+    "localisation_changes": [
+      "a European aircraft maintenance company -> a Singapore-based aircraft maintenance company",
+      "a global commercial aircraft maintenance firm in Europe -> a Singapore-based commercial aircraft maintenance firm",
+      "multi-hundred-million-dollar -> worth several hundred million S$",
+      "SMEs -> Singapore SMEs; programs -> programmes"
+    ],
+    "source_row": 1161,
+    "source_file": "hka.com__people_tino-grabbert.md"
+  },
+  {
+    "provider_id": "P018",
+    "photo": null,
+    "name": "Arjun Nair",
+    "title": "Operational Excellence and Transformation Adviser",
+    "credentials": "MBA, XLRI; Bachelor's degree, Shri Ram College of Commerce, Delhi University",
+    "about_headline": "Former Managing Director & Partner specialising in industrial goods and operational excellence",
+    "about_bio": "Over 15 years of experience in business transformation and operational excellence, with a focus on industrial goods, building materials, logistics, and digital transformation. Has led large-scale transformations across multiple sectors including building materials, metals, chemicals, and logistics. Works with business owners, CEOs, and management teams to drive performance improvements through change management and digital/analytics capabilities. Recognised as a Distinguished Alumnus by XLRI in 2024. Holds an MBA from XLRI and a Bachelor’s degree from Shri Ram College of Commerce, Delhi University.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Logistics"
+      },
+      {
+        "group": "Function",
+        "name": "Human Resource"
+      }
+    ],
+    "specialisation": [
+      "Logistics Solutioning and Programme Management",
+      "Learning and Organisation Development"
+    ],
+    "search_tags": [
+      "Logistics Solutioning and Programme Management (Logistics)",
+      "Learning and Organisation Development (Human Resource)"
+    ],
+    "availability": "Available from November 2026, up to 3 days a week; on-site in Singapore or remote.",
+    "rate": "From S$2,800 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Business Transformation and Operational Excellence Advisory",
+        "service_detail": "Practical advisory for Singapore SMEs and mid-sized industrial businesses in building materials, logistics, and manufacturing looking to improve operations and drive growth. Services include change management implementation, digital transformation planning, operational efficiency improvements, market entry strategy, and growth acceleration for tech-enabled businesses. Familiar with end-to-end operational excellence frameworks and digital/analytics tools. Works across Southeast Asia and regional markets."
+      }
+    ],
+    "relevant_achievements": [
+      "Managing director and partner at a global strategy consultancy.",
+      "Led multiple large-scale transformations in building materials, metals, chemicals, and logistics sectors.",
+      "Advised business owners and CEOs on change management and performance improvement through digital and analytics tools.",
+      "Led the consultancy’s logistics practice in India, supporting incumbent players and growth tech companies on market entry and digital transformation."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Methods",
+        "skills": [
+          "Operational excellence",
+          "Change management",
+          "Digital and analytics tools"
+        ]
+      }
+    ],
+    "how_i_work": "I work with the owner and site managers to set two or three hard targets, then run short improvement cycles on the floor until they are met.",
+    "links": null,
+    "localisation_changes": [
+      "SMEs -> Singapore SMEs",
+      "headline: added 'Former'",
+      "kept India (regional Asian market)"
+    ],
+    "source_row": 151,
+    "source_file": "bcg.com__about_people_experts_rahul-sanghvi.md"
+  },
+  {
+    "provider_id": "P019",
+    "photo": null,
+    "name": "Helena Wong",
+    "title": "Health Insurance and Healthcare Strategy Adviser",
+    "credentials": "PhD, Health Economics; MBA",
+    "about_headline": "Former Global Managing Director & Health Insurance Strategy Leader",
+    "about_bio": "I bring 20 years of expertise in health care and insurance strategy, with a background as a Managing Director at a global consultancy. My work focused on leading payer and provider transformations across Asia Pacific. I specialise in large-scale business transformation, digital health services, and value-based care models. Holding a PhD in health economics and an MBA, I combine deep operational insights from managing outpatient clinics with data-driven approaches to optimise cost and quality in both statutory and private insurance systems.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Healthcare"
+      },
+      {
+        "group": "Industry",
+        "name": "Financial Services"
+      }
+    ],
+    "specialisation": [
+      "Operations",
+      "Product Solutioning and Management"
+    ],
+    "search_tags": [
+      "Operations (Healthcare)",
+      "Product Solutioning and Management (Financial Services)"
+    ],
+    "availability": "Available from mid-November 2026 for short, fixed-scope engagements.",
+    "rate": "From S$3,000 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Health Insurance Strategy and Digital Transformation",
+        "service_detail": "Advisory for Singapore health insurers, providers, and payers seeking to modernise operations. Services include value-based care implementation, digital health strategy, cost optimisation through data analytics, and growth planning. Familiar with regional health care systems and insurance market dynamics. Suitable for mid-to-large insurers looking to integrate digital solutions or restructure care delivery models."
+      }
+    ],
+    "relevant_achievements": [
+      "Partner at a global management consultancy.",
+      "Led payer and provider transformations across Asia Pacific, focusing on digital services and value-based care.",
+      "Managed outpatient clinics in the region"
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Healthcare",
+        "skills": [
+          "Value-based care",
+          "Digital health",
+          "Payer and provider operations"
+        ]
+      },
+      {
+        "category": "Analytics",
+        "skills": [
+          "Cost and quality analytics"
+        ]
+      }
+    ],
+    "how_i_work": "I start from your claims and cost data, agree where value-based models can work, and pilot them with one provider group before scaling.",
+    "links": null,
+    "localisation_changes": [
+      "across Europe and the Middle East -> across Asia Pacific (x2)",
+      "outpatient clinics in Central Eastern Europe -> outpatient clinics in the region",
+      "health insurers -> Singapore health insurers"
+    ],
+    "source_row": 90,
+    "source_file": "bcg.com__about_people_experts_andreas-klar.md"
+  },
+  {
+    "provider_id": "P020",
+    "photo": null,
+    "name": "Kenneth Low",
+    "title": "GenAI and Digital Transformation Adviser",
+    "credentials": "MBA, The Wharton School; BS, Aerospace Engineering",
+    "about_headline": "Former CTO and Senior Partner in Marketing, Sales & Pricing",
+    "about_bio": "Over 20 years of experience in technology leadership, entrepreneurship, and strategic consulting. I founded four internet and software companies, including ventures in medical informatics and digital freight. I led GenAI initiatives and the tech build and design unit at a global professional services firm. Specialise in B2B pricing, digital transformation, cloud migration, and business turnaround programmes. Hold an MBA from The Wharton School and a BS in Aerospace Engineering.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Data and Artificial Intelligence",
+      "Product Development",
+      "Sales and Marketing"
+    ],
+    "search_tags": [
+      "Data and Artificial Intelligence (Infocomm Technology)",
+      "Product Development (Infocomm Technology)",
+      "Sales and Marketing (Infocomm Technology)"
+    ],
+    "availability": "Available from November 2026, up to 3 days a week; on-site in Singapore or remote.",
+    "rate": "From S$2,800 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "GenAI and Digital Transformation Advisory",
+        "service_detail": "Practical advisory for tech-enabled businesses and digital product teams looking to adopt Generative AI and drive digital transformation. Services include GenAI strategy development, digital product innovation, cloud migration planning, B2B pricing strategy, and business turnaround programmes. Familiar with AI adoption frameworks, employee-centric transformation models, and digital product lifecycle management. Designed for Singapore SMEs and mid-sized tech firms seeking scalable, human-centred AI integration."
+      }
+    ],
+    "relevant_achievements": [
+      "Founded four internet and software companies over 15 years as an entrepreneur.",
+      "Served as CTO of a global professional services firm’s tech build and design unit, leading GenAI initiatives for the Marketing, Sales & Pricing practice.",
+      "Advised on digital transformation, cloud migration, and B2B pricing strategy for clients in tech, software, and industrial goods sectors."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "AI and product",
+        "skills": [
+          "GenAI strategy",
+          "Digital product innovation",
+          "Cloud migration"
+        ]
+      },
+      {
+        "category": "Commercial",
+        "skills": [
+          "B2B pricing"
+        ]
+      }
+    ],
+    "how_i_work": "I pick one workflow with a measurable payoff, build a working GenAI pilot with your team in a few weeks, and only then plan the wider rollout.",
+    "links": null,
+    "localisation_changes": [
+      "SMEs -> Singapore SMEs",
+      "headline: added 'Former'",
+      "programs -> programmes"
+    ],
+    "source_row": 754,
+    "source_file": "bcg.com__about_people_experts_matthew-kropp.md"
+  },
+  {
+    "provider_id": "P021",
+    "photo": null,
+    "name": "Shawn Quek",
+    "title": "AI and Data Strategy Adviser",
+    "credentials": null,
+    "about_headline": "Former Chief Data & AI Officer, AI Startup Founder, and Production Deployment Specialist",
+    "about_bio": "I specialise in transitioning AI from experimentation to production-grade solutions. As a former startup founder, I led a company from inception through acquisition by a global technology firm. My career spans leading AI research on model interpretability and managing the complete ad metrics data infrastructure for a major social media platform. I focus on building automated data labelling tools to accelerate model development. Combining data strategy with machine learning operations, I help teams bridge the gap between prototypes and scalable, real-world applications that deliver measurable business impact.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Data and Artificial Intelligence"
+    ],
+    "search_tags": [
+      "Data and Artificial Intelligence (Infocomm Technology)"
+    ],
+    "availability": "Available immediately for 2-8 week engagements in Singapore.",
+    "rate": "From S$2,800 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "AI Strategy and Production Implementation",
+        "service_detail": "Advisory for Singapore startups and mid-sized enterprises seeking to deploy production-ready AI systems. Services include defining AI technical strategy, designing data infrastructure for model training, implementing automated data labelling workflows, and bridging the gap between proof-of-concepts and scalable, outcome-driven applications. Familiar with model interpretability, control mechanisms, and large-scale data processing architectures for real-world business impact."
+      }
+    ],
+    "relevant_achievements": [
+      "Co-founded an AI startup acquired by a global firm.",
+      "Served as Chief Data and AI Officer and led an AI research group.",
+      "Managed 100% of ad metrics data infrastructure at a major social media platform.",
+      "Built tools to automate data labelling and accelerate model development."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "AI and ML",
+        "skills": [
+          "Model interpretability",
+          "MLOps",
+          "Automated data labelling"
+        ]
+      },
+      {
+        "category": "Data",
+        "skills": [
+          "Data infrastructure for model training"
+        ]
+      }
+    ],
+    "how_i_work": "I review the prototype and the data behind it, close the gaps that block production, and leave your engineers with a pipeline they can run themselves.",
+    "links": null,
+    "localisation_changes": [
+      "startups -> Singapore startups",
+      "labeling -> labelling"
+    ],
+    "source_row": 1447,
+    "source_file": "thoughtworks.com__en-au_profiles_leaders_shayan-mohanty.md"
+  },
+  {
+    "provider_id": "P022",
+    "photo": null,
+    "name": "Eric Toh",
+    "title": "Shipping and Logistics Digital Transformation Adviser",
+    "credentials": "MSc, Business Law and Economics",
+    "about_headline": "Global Shipping and Digital Transformation Specialist",
+    "about_bio": "I have over 20 years of experience in transportation and logistics, with a focus on shipping and digital transformation. I held leadership roles in a global strategy consultancy, including leading the global shipping team and founding the firm's digital transportation centre. I specialise in digital innovation, operational efficiency, and sustainability in maritime logistics. I hold an MSc in business law and economics.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Sea Transport"
+      },
+      {
+        "group": "Industry",
+        "name": "Logistics"
+      }
+    ],
+    "specialisation": [
+      "Shipping",
+      "Logistics Process Improvement and Information System"
+    ],
+    "search_tags": [
+      "Shipping (Sea Transport)",
+      "Logistics Process Improvement and Information System (Logistics)"
+    ],
+    "availability": "Available from November 2026, up to 3 days a week; on-site in Singapore or remote.",
+    "rate": "From S$2,600 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Digital Transformation and Operational Efficiency Advisory for Shipping and Logistics",
+        "service_detail": "Practical advisory for Singapore shipping companies, logistics providers, and port operators looking to modernise operations and improve efficiency. Services include digital workflow redesign, data integration for supply chain visibility, and strategy for decarbonisation and cost optimisation. Familiar with global shipping regulations and digital transformation frameworks. Particular experience with container logistics, energy efficiency, and digital platforms for vessel and cargo tracking."
+      }
+    ],
+    "relevant_achievements": [
+      "I founded the firm's digital transportation centre and led its global shipping team.",
+      "I pioneered digital initiatives such as a container exchange platform.",
+      "I advised on digital transformation, operational efficiency, and decarbonisation strategies for shipping clients."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Shipping",
+        "skills": [
+          "Container logistics",
+          "Vessel and cargo tracking platforms",
+          "Decarbonisation strategy"
+        ]
+      },
+      {
+        "category": "Digital",
+        "skills": [
+          "Workflow redesign",
+          "Supply chain data integration"
+        ]
+      }
+    ],
+    "how_i_work": "I map one end-to-end flow, such as booking to delivery, with your operations team, then redesign it around the data you already have before any new system is bought.",
+    "links": null,
+    "localisation_changes": [
+      "the Center for Digital in Transportation -> the firm's digital transportation centre (named unit)",
+      "the xChange container exchange platform -> a container exchange platform (named product)",
+      "shipping companies -> Singapore shipping companies"
+    ],
+    "source_row": 94,
+    "source_file": "bcg.com__about_people_experts_ulrik-sanders.md"
+  },
+  {
+    "provider_id": "P023",
+    "photo": null,
+    "name": "Michelle Fernandez",
+    "title": "Business Valuation and Damages Expert",
+    "credentials": "CPA; Chartered Business Valuator (CBV); Accredited in Business Valuation (ABV); Certified Fraud Examiner (CFE)",
+    "about_headline": "Former Managing Director & Industry Leader in Business Valuation",
+    "about_bio": "I specialise in quantifying economic damages and business valuation, bringing over 19 years of experience to complex disputes. As a CPA, CBV, ABV, and CFE certified professional, I provide clear financial insights for legal and regulatory proceedings. My work covers breach of contract, intellectual property, and shareholder conflicts across health, manufacturing, real estate, and energy sectors. Recognised by Who’s Who Legal for arbitration expert witness work, I deliver rigorous analysis for litigation and mediation. I remain committed to accurate, defensible valuation outcomes that support informed decision-making for clients navigating high-stakes commercial disagreements and regulatory challenges.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Business Valuation",
+      "Financial Forensics"
+    ],
+    "search_tags": [
+      "Business Valuation (Accountancy)",
+      "Financial Forensics (Accountancy)"
+    ],
+    "availability": "Available from mid-November 2026 for short, fixed-scope engagements.",
+    "rate": "From S$2,600 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Expert Valuation and Damages Advisory",
+        "service_detail": "Advisory for SMEs and mid-sized companies in Singapore facing commercial disputes, shareholder conflicts, or IP infringement. Services include quantifying economic losses and lost profits, business and asset valuation, preparing expert reports for litigation or mediation, and providing expert testimony. Familiar with complex financial ecosystems and regulatory frameworks relevant to cross-border disputes."
+      }
+    ],
+    "relevant_achievements": [
+      "Led a valuation practice at a global professional services firm.",
+      "Delivered a valuation for a S$480 million plastics firm regarding shareholder distributions.",
+      "Quantified losses in multiple IP disputes across energy and pharmaceutical sectors.",
+      "Recognised by Who’s Who Legal for arbitration expertise."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Valuation",
+        "skills": [
+          "Business and asset valuation",
+          "Lost profits",
+          "Economic loss quantification",
+          "Expert reports"
+        ]
+      }
+    ],
+    "how_i_work": "I scope the valuation question with you and your lawyers, explain the method before I run it, and deliver a report written to be tested in court or mediation.",
+    "links": null,
+    "localisation_changes": [
+      "C$500 million -> S$480 million"
+    ],
+    "source_row": 1579,
+    "source_file": "fticonsulting.com__experts_tara-singh.md"
+  },
+  {
+    "provider_id": "P024",
+    "photo": null,
+    "name": "Lawrence Chan",
+    "title": "Machinery and Equipment Valuer",
+    "credentials": "Accredited Senior Appraiser (ASA), Machinery and Technical Specialties",
+    "about_headline": "Machinery Valuation Specialist with 35 years' experience in independent asset assessment",
+    "about_bio": "I am a machinery and equipment valuation specialist with over 35 years of experience. I specialise in independent valuations for real and personal property across manufacturing, energy, mining, and industrial sectors. My career includes leading major valuation projects as a group leader at a global professional services firm, where I managed complex assignments for diverse clients. I also held senior roles at Big Four firms and a specialist appraisal company. I hold the Accredited Senior Appraiser (ASA) designation in Machinery and Technical Specialties.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Business Valuation"
+    ],
+    "search_tags": [
+      "Business Valuation (Accountancy)"
+    ],
+    "availability": "Available immediately for 2-8 week engagements in Singapore.",
+    "rate": "From S$1,800 per day plus site visits.",
+    "services_i_offer": [
+      {
+        "service_title": "Machinery and Equipment Valuation Advisory",
+        "service_detail": "Independent valuation services for Singapore manufacturers, industrial operators, and asset-heavy SMEs. Services include purchase price allocation, M&A support, collateral financing valuations, asset impairment analysis, and insurance claim support. Experienced in fresh start accounting, sale-leaseback structures, and lease portfolio management. Familiar with international accounting standards and valuation methodologies for specialised machinery."
+      }
+    ],
+    "relevant_achievements": [
+      "I led the machinery valuation group at a global professional services firm.",
+      "I served as a court-appointed valuation expert for an International Arbitral Tribunal and as an expert witness in litigation."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Valuation",
+        "skills": [
+          "Purchase price allocation",
+          "Collateral valuation",
+          "Impairment analysis",
+          "Sale-leaseback"
+        ]
+      }
+    ],
+    "how_i_work": "I inspect the plant on site, value each asset class against its market and replacement cost, and issue a report your auditor, bank or insurer will accept.",
+    "links": null,
+    "localisation_changes": [
+      "the US machinery valuation group -> the machinery valuation group",
+      "US litigation -> litigation",
+      "manufacturers -> Singapore manufacturers",
+      "headline: removed trailing period"
+    ],
+    "source_row": 716,
+    "source_file": "kroll.com__en_our-experts_mark-miller.md"
+  },
+  {
+    "provider_id": "P025",
+    "photo": null,
+    "name": "Joanne Tay",
+    "title": "Healthcare Operations and Workforce Consultant",
+    "credentials": "Master of Public Health, social and behavioural sciences",
+    "about_headline": "Healthcare Engagement Manager Specialising in Access Strategy and Staff Retention",
+    "about_bio": "I have spent the last seven years in healthcare consulting, advising organisations on strategic performance and operational challenges. My expertise lies in enterprise access strategies designed to improve consumer experience and initiatives that address employee burnout and turnover. With a Master of Public Health and a background in maternal and child nutrition, I deliver evidence-based solutions. I support providers in navigating complex care environments to enhance both patient outcomes and staff well-being.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Healthcare"
+      },
+      {
+        "group": "Function",
+        "name": "Human Resource"
+      }
+    ],
+    "specialisation": [
+      "Operations",
+      "Employee Experience and Relations"
+    ],
+    "search_tags": [
+      "Operations (Healthcare)",
+      "Employee Experience and Relations (Human Resource)"
+    ],
+    "availability": "Available immediately for 2-8 week engagements in Singapore.",
+    "rate": "From S$1,200 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Healthcare Access Improvement and Staff Retention Advisory",
+        "service_detail": "Practical advisory for Singapore hospitals and healthcare clinics looking to enhance patient access and reduce staff burnout. Services include assessing current access barriers and redesigning patient intake processes, implementing staff retention programmes to mitigate turnover, and developing strategies to improve overall consumer experience in clinical settings. Particular experience with evidence-based public health approaches to operational challenges in community health and specialist care."
+      }
+    ],
+    "relevant_achievements": [
+      "Redesigned access solutions for a leading cancer centre.",
+      "Helped healthcare organisations address contributors to employee burnout and turnover."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Healthcare operations",
+        "skills": [
+          "Patient access redesign",
+          "Patient intake processes",
+          "Staff retention programmes"
+        ]
+      }
+    ],
+    "how_i_work": "I shadow the front desk and clinical teams, measure where patients and staff lose time, and test small changes before recommending anything clinic-wide.",
+    "links": null,
+    "localisation_changes": [
+      "hospitals -> Singapore hospitals"
+    ],
+    "source_row": 1279,
+    "source_file": "chartis.com__about_our-people_holly-veroneau.md"
+  },
+  {
+    "provider_id": "P026",
+    "photo": null,
+    "name": "Rajesh Pillai",
+    "title": "Restructuring and Insolvency Adviser",
+    "credentials": "Registered Liquidator (Singapore); CPA and Chartered Accountant (Australia and New Zealand); Member, IPAS; Member, Australian Restructuring Insolvency and Turnaround Association",
+    "about_headline": "Turnaround Solutions for Distressed Businesses in Singapore and Southeast Asia",
+    "about_bio": "With over 20 years in insolvency and restructuring, I help businesses navigate financial distress through practical, outcome-driven solutions. I’ve served as liquidator, receiver, and judicial manager, advising boards, creditors, and investors across Southeast Asia, Australia, and the Caribbean. My focus is on restructuring plans, enforcement actions, and contentious insolvency matters. I’m a Registered Liquidator in Singapore, CPA and Chartered Accountant in Australia and New Zealand, and a member of IPAS and The Australian Restructuring Insolvency and Turnaround Association.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Restructuring and Insolvency"
+    ],
+    "search_tags": [
+      "Restructuring and Insolvency (Accountancy)"
+    ],
+    "availability": "Available from mid-November 2026 for short, fixed-scope engagements.",
+    "rate": "From S$3,000 per day; formal appointments quoted separately.",
+    "services_i_offer": [
+      {
+        "service_title": "Restructuring and Insolvency Advisory",
+        "service_detail": "Practical advisory for SMEs, family businesses, and mid-sized enterprises in Singapore and Southeast Asia facing financial distress. Services include formulating and executing restructuring plans, advising boards on obligations, managing enforcement actions against distressed companies, and navigating judicial management and schemes of arrangement. Familiar with Singapore insolvency frameworks and cross-border enforcement. Particular experience with agriculture, real estate, manufacturing, commodities, construction, and maritime sectors."
+      }
+    ],
+    "relevant_achievements": [
+      "Managing Director at a global restructuring advisory firm in Singapore.",
+      "Previously Senior Managing Director at a global professional services firm, advising on restructurings for a Singapore-headquartered oil and gas company and a listed Singaporean company.",
+      "Handled enforcement engagements with assets across multiple jurisdictions.",
+      "Led a scheme of arrangement implementation in Singapore."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Insolvency",
+        "skills": [
+          "Restructuring plans",
+          "Judicial management",
+          "Schemes of arrangement",
+          "Cross-border enforcement"
+        ]
+      }
+    ],
+    "how_i_work": "I advise the board early on its duties and options, then lead whichever process fits, whether an informal workout, a scheme or judicial management.",
+    "links": null,
+    "localisation_changes": [],
+    "source_row": 1219,
+    "source_file": "alvarezandmarsal.com__our-people_joshua-taylor.md"
+  },
+  {
+    "provider_id": "P027",
+    "photo": null,
+    "name": "Grace Ho",
+    "title": "Finance Transformation Adviser",
+    "credentials": null,
+    "about_headline": "Former Partner & Corporate Finance Strategy Leader",
+    "about_bio": "Former Managing Director with deep expertise in corporate strategy and finance function transformation. I specialise in integrating advanced analytics and AI to optimise workflows and drive measurable business value. As a trusted advisor to boards and executive teams, I have delivered transformative programmes across finance, merchandising, and product development. My focus remains on helping organisations modernise operations and align financial structures with strategic goals for sustained growth.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Management Accounting"
+    ],
+    "search_tags": [
+      "Management Accounting (Accountancy)"
+    ],
+    "availability": "Available from November 2026, up to 3 days a week; on-site in Singapore or remote.",
+    "rate": "From S$2,400 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Finance Function Transformation and Strategic Advisory",
+        "service_detail": "Practical advisory for food manufacturers, retailers, and Singapore-based SMEs looking to modernise finance operations and align them with strategic goals. Services include designing agile finance operating models, integrating AI-driven analytics for real-time decision-making, and implementing performance management frameworks that shift finance from scorekeeping to strategic partnership. Familiar with PDPA-compliant data governance and digital finance tools. Not focused on independent statutory audit or external regulatory reporting compliance."
+      }
+    ],
+    "relevant_achievements": [
+      "Led transformative programmes delivering sustained value for retail and consumer sector clients, focusing on digital transformation and advanced analytics integration."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Finance",
+        "skills": [
+          "Finance operating models",
+          "Performance management",
+          "AI-driven analytics"
+        ]
+      }
+    ],
+    "how_i_work": "I work with the CFO to redesign one finance process end to end, put the analytics in place, and use that as the template for the rest of the function.",
+    "links": null,
+    "localisation_changes": [],
+    "source_row": 604,
+    "source_file": "bcg.com__about_people_experts_laurin-henderson-menton.md"
+  },
+  {
+    "provider_id": "P028",
+    "photo": null,
+    "name": "Daniel Sim",
+    "title": "Healthcare Restructuring Adviser and Interim CFO",
+    "credentials": null,
+    "about_headline": "Former Healthcare CFO & Restructuring Advisor with 15+ Years Experience",
+    "about_bio": "With over 15 years in healthcare operations and finance, I specialise in operational and financial performance improvement. As a former Managing Director and CFO at a major multi-hospital health system, I successfully led the organisation out of judicial management. My experience spans interim executive roles for distressed healthcare companies, corporate finance, and capital raising. I am an expert in restructuring balance sheets, refining debt, and optimising revenue cycles for healthcare, pharmaceutical, and biotechnology organisations.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      },
+      {
+        "group": "Industry",
+        "name": "Healthcare"
+      }
+    ],
+    "specialisation": [
+      "Restructuring and Insolvency",
+      "Operations"
+    ],
+    "search_tags": [
+      "Restructuring and Insolvency (Accountancy)",
+      "Operations (Healthcare)"
+    ],
+    "availability": "Available immediately for 2-8 week engagements in Singapore.",
+    "rate": "From S$2,800 per day; interim CFO on monthly retainer.",
+    "services_i_offer": [
+      {
+        "service_title": "Healthcare Financial Restructuring and CFO Advisory",
+        "service_detail": "Practical restructuring advice for Singapore-based private hospitals, senior care facilities, and medical practices facing financial distress or seeking capital efficiency. Services include debt refinancing strategy, revenue cycle optimisation, and financial infrastructure redesign (billing and reporting). Particular experience with healthcare regulatory compliance and operational turnaround. Not focused on legal litigation or court representation."
+      }
+    ],
+    "relevant_achievements": [
+      "Held CFO and Managing Director roles at major multi-hospital health systems and interim executive positions for distressed medical companies.",
+      "Guided a S$2 billion health system out of judicial management in 2007.",
+      "Advised multiple home healthcare and clinical research providers on operational restructuring and capitalisation alternatives."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Restructuring",
+        "skills": [
+          "Debt refinancing",
+          "Balance sheet restructuring",
+          "Revenue cycle optimisation"
+        ]
+      }
+    ],
+    "how_i_work": "I step in as interim finance lead, stabilise cash and reporting in the first weeks, and then negotiate the refinancing or restructuring with lenders.",
+    "links": null,
+    "localisation_changes": [
+      "Chapter 11 bankruptcy -> judicial management (x2)",
+      "major US health systems -> major multi-hospital health systems",
+      "$1.5 billion -> S$2 billion",
+      "capitalization -> capitalisation"
+    ],
+    "source_row": 484,
+    "source_file": "alvarezandmarsal.com__our-people_martin-mcgahan.md"
+  },
+  {
+    "provider_id": "P029",
+    "photo": null,
+    "name": "Samuel Wee",
+    "title": "Digital Business Growth Adviser",
+    "credentials": null,
+    "about_headline": "Former Chief Revenue and Client Officer",
+    "about_bio": "Over 20 years in technology and digital business development, including as a technology and intellectual property lawyer. Joined a global professional services firm in 2004, leading growth of its business across multiple continents. Specialises in helping clients build modern digital businesses.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Strategy and Governance",
+      "Sales and Marketing"
+    ],
+    "search_tags": [
+      "Strategy and Governance (Infocomm Technology)",
+      "Sales and Marketing (Infocomm Technology)"
+    ],
+    "availability": "Available from November 2026, up to 3 days a week; on-site in Singapore or remote.",
+    "rate": "From S$2,800 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Digital Business Growth Advisory",
+        "service_detail": "Practical advisory for Singapore SMEs and mid-sized organisations seeking to grow their digital business presence. Services include strategic planning for digital transformation, client acquisition and retention strategy, and scaling digital operations. Familiar with global technology markets and digital business models. Scope: advisory support for digital growth initiatives."
+      }
+    ],
+    "relevant_achievements": [
+      "Joined a global professional services firm in 2004, leading the growth of its business across several continents.",
+      "Delivered strategic advisory for clients to envisage and build modern digital businesses."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Growth",
+        "skills": [
+          "Digital business models",
+          "Client acquisition and retention",
+          "Scaling digital operations"
+        ]
+      }
+    ],
+    "how_i_work": "I work with the founders or leadership team on a growth plan for one market or product line, then review progress monthly as it is carried out.",
+    "links": null,
+    "localisation_changes": [
+      "removed 'No certifications or registrations stated.' (x2, extraction note leak)",
+      "SMEs -> Singapore SMEs",
+      "headline: added 'Former'"
+    ],
+    "source_row": 1904,
+    "source_file": "thoughtworks.com__de-de_profiles_leaders_chris-murphy.md"
+  },
+  {
+    "provider_id": "P030",
+    "photo": null,
+    "name": "Clara Lee",
+    "title": "Real Estate Portfolio Strategy Consultant",
+    "credentials": null,
+    "about_headline": "Real Estate Strategy and Portfolio Optimisation Specialist",
+    "about_bio": "I bring over 20 years of consulting experience in commercial infrastructure and real estate. My focus is optimising portfolios and functions to unlock enterprise value. I design and implement strategies for portfolio cost reduction, workplace design, and operating models. I also handle organisational design and service delivery restructuring. Proficient in real estate technology enablement, I assist clients in rethinking real estate usage. This approach drives significant value through strategic cost reduction and operational efficiency improvements for Singapore-based businesses.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Built Environment"
+      }
+    ],
+    "specialisation": [
+      "Facilities Management"
+    ],
+    "search_tags": [
+      "Facilities Management (Built Environment)"
+    ],
+    "availability": "Available from mid-November 2026 for short, fixed-scope engagements.",
+    "rate": "From S$2,200 per day.",
+    "services_i_offer": [
+      {
+        "service_title": "Real Estate Portfolio Optimisation and Strategy Advisory",
+        "service_detail": "Practical advisory for Singapore-based businesses and SMEs looking to optimise their real estate footprint. Services include portfolio cost reduction strategies, workplace strategy design, real estate operating model development, and service delivery restructuring. Familiar with real estate technology enablement and performance measurement frameworks. Not focused on physical construction, renovation contracting, or property legal conveyancing."
+      }
+    ],
+    "relevant_achievements": [
+      "Served as Offering Leader for the infrastructure and real estate practice at a global professional services firm.",
+      "Redesigned client service models to unlock enterprise value and delivers strategic cost reduction."
+    ],
+    "technical_proficiency": [
+      {
+        "category": "Real estate",
+        "skills": [
+          "Portfolio cost reduction",
+          "Workplace strategy",
+          "Real estate operating models",
+          "Real estate technology"
+        ]
+      }
+    ],
+    "how_i_work": "I start from your lease and occupancy data, show where space and cost are not earning their keep, and agree a phased plan with your finance and facilities teams.",
+    "links": null,
+    "localisation_changes": [
+      "Optimization -> Optimisation (headline, service title)"
+    ],
+    "source_row": 7,
+    "source_file": "deloitte.com__us_en_about_people_profiles-abby-levine-fcf02ad6-html.md"
+  }
+]

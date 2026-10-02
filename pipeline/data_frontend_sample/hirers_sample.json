@@ -1,0 +1,758 @@
+[
+  {
+    "hirer_id": "H001",
+    "gig_id": "G001",
+    "gig_title": "Assess AI Workflow for Content Localization",
+    "short_gig_description": "We are a mid-sized personal care brand in Paya Lebar producing content for three regional markets. Our current manual process takes weeks per campaign and results in inconsistent quality across brands. We need a specialist to review our existing content workflow and test how AI tools can handle copy generation and asset resizing. The goal is to identify where automation can cut production time without breaking brand compliance. Deliverable: written assessment of AI integration opportunities and a prioritised implementation plan. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      },
+      {
+        "group": "Industry",
+        "name": "Retail"
+      }
+    ],
+    "specialisation": [
+      "Data and Artificial Intelligence",
+      "Brand Management"
+    ],
+    "search_tags": [
+      "Data and Artificial Intelligence (Infocomm Technology)",
+      "Brand Management (Retail)"
+    ],
+    "review_flag": null,
+    "source_row": 571,
+    "source_file": "publicissapient.com__customers_stories_cpg-bodhi-content-supply-chain.md"
+  },
+  {
+    "hirer_id": "H002",
+    "gig_id": "G002",
+    "gig_title": "Design Month-End Close Process for Impact Investor",
+    "short_gig_description": "We are a mid-sized impact investment firm in Singapore with about 35 staff, managing S$170 million in assets. We’re transitioning from external support to building our own finance function and need to set up a reliable month-end close process quickly. We want someone to design a streamlined, compliant month-end close workflow using a pre-configured ERP system, ensuring accurate reporting and audit readiness. The process must handle multi-jurisdictional requirements and integrate with our existing systems. Deliverable: documented month-end close process with roles, timelines, system steps, and compliance checks. Engagement duration: 3-5 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      },
+      {
+        "group": "Industry",
+        "name": "Financial Services"
+      }
+    ],
+    "specialisation": [
+      "Financial Accounting",
+      "Operations"
+    ],
+    "search_tags": [
+      "Financial Accounting (Accountancy)",
+      "Operations (Financial Services)"
+    ],
+    "review_flag": null,
+    "source_row": 1,
+    "source_file": "ey.com__en_gl_insights_managed-services_blue-earth-capital-built-finance-function-at-speed.md"
+  },
+  {
+    "hirer_id": "H003",
+    "gig_id": "G003",
+    "gig_title": "Set Up Month-End Close Process for New Biopharma Entity",
+    "short_gig_description": "We are a newly incorporated biopharmaceutical company in Singapore, focusing on biobanking and bioprocessing. Having just carved out from an academic partner, we need to be operational on Day One with robust financial controls to support our aggressive growth plans. We have no in-house accounting team and need an external specialist to establish our core financial processes. The scope covers designing and implementing the month-end close procedure, setting up the chart of accounts, and configuring our accounting software to handle revenue recognition for our service contracts. Deliverable: A working month-end close procedure and configured accounting system ready for the first reporting cycle. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      },
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Financial Accounting",
+      "Software and Applications"
+    ],
+    "search_tags": [
+      "Financial Accounting (Accountancy)",
+      "Software and Applications (Infocomm Technology)"
+    ],
+    "review_flag": null,
+    "source_row": 767,
+    "source_file": "rsmus.com__insights_services_managed-services_financial-outsourcing-provides-bedrock-for-future-expansion-of-g-html.md"
+  },
+  {
+    "hirer_id": "H004",
+    "gig_id": "G004",
+    "gig_title": "Design Rail Operations Cloud Migration on Azure",
+    "short_gig_description": "We are a 450-person intermediate switching terminal railway operator in Singapore. Our current railcar operations system, built on AS/400 and COBOL, is over-engineered and expensive to maintain, with data access and reporting taking far too long. We are moving to a cloud-based platform on Azure to reduce downtime and improve yard efficiency, but we need help structuring the transition. We need a specialist to design the migration strategy for this specific application, ensuring we can release all functionality at once with minimal impact on day-to-day operations. Deliverable: A technical migration plan for the Azure deployment. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      },
+      {
+        "group": "Industry",
+        "name": "Public Transport"
+      }
+    ],
+    "specialisation": [
+      "Infrastructure",
+      "Rail Operations"
+    ],
+    "search_tags": [
+      "Infrastructure (Infocomm Technology)",
+      "Rail Operations (Public Transport)"
+    ],
+    "review_flag": "Implausible setting: a 450-person 'intermediate switching terminal railway operator' (a US short-line rail concept) has no Singapore equivalent.",
+    "source_row": 273,
+    "source_file": "bdo.com__insights_digital_belt-railway-of-chicago-goes-full-steam-ahead-on-digital-transformation-with-bdo-digital.md"
+  },
+  {
+    "hirer_id": "H005",
+    "gig_id": "G005",
+    "gig_title": "Draft Data Processing Agreements for Insurance Agency",
+    "short_gig_description": "We’re a general insurance agency in Singapore with 40 staff, and our privacy team is stretched thin as we need to update our data processing agreements for new cyber regulations. We need someone to draft and review 20-30 Data Processing Agreements (DPAs) using our existing privacy templates, ensuring compliance with MAS and PDPA requirements. The specialist will work with our information security team to align the DPAs with our current data handling practices. Deliverable: completed DPAs and a brief summary of compliance checks. Engagement duration: 3-5 weeks.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Financial Services"
+      },
+      {
+        "group": "Function",
+        "name": "Legal Services"
+      }
+    ],
+    "specialisation": [
+      "Risk, Compliance and Legal",
+      "Advisory and Advocacy"
+    ],
+    "search_tags": [
+      "Risk, Compliance and Legal (Financial Services)",
+      "Advisory and Advocacy (Legal Services)"
+    ],
+    "review_flag": null,
+    "source_row": 1148,
+    "source_file": "axiomlaw.com__resources_case-studies_insurance-company-ensures-cybersecurity-compliance.md"
+  },
+  {
+    "hirer_id": "H006",
+    "gig_id": "G006",
+    "gig_title": "Implement MDR Solution for Hybrid IT Environment",
+    "short_gig_description": "We are a mid-sized asset management firm in Singapore with 25 staff, managing client portfolios and financial data. Our in-house IT team is stretched thin and lacks dedicated security expertise. We’ve tried several SIEM and EDR tools, but they generate too many false positives and don’t integrate well, leaving us with no unified view of threats. We need someone to help us implement a managed detection and response (MDR) solution that gives us centralized visibility, 24/7 monitoring, and historical log retention for up to 12 months. The solution must integrate with our hybrid environment, including on-premises systems and Microsoft 365. Deliverable: fully implemented MDR platform with unified threat visibility, integrated monitoring, and documented configuration. Engagement duration: 6-8 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Cyber Security"
+    ],
+    "search_tags": [
+      "Cyber Security (Infocomm Technology)"
+    ],
+    "review_flag": null,
+    "source_row": 880,
+    "source_file": "kroll.com__en_publications_cyber_case-studies_enhancing-security-visibility-leading-asset-management-firm.md"
+  },
+  {
+    "hirer_id": "H007",
+    "gig_id": "G007",
+    "gig_title": "Document Current Financial Close Process",
+    "short_gig_description": "We are the finance team at a mid-sized IT services firm in Singapore. We recently upgraded to SAP S/4HANA, but our month-end close is still labour-intensive because our reporting process relies on manual data entry and offline Excel manipulation. We need a specialist to map our current record-to-report workflow, identifying specific data challenges and redundant steps. Deliverable: a documented current-state process map highlighting inefficiencies. Engagement duration: 2-3 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Financial Accounting",
+      "Management Accounting"
+    ],
+    "search_tags": [
+      "Financial Accounting (Accountancy)",
+      "Management Accounting (Accountancy)"
+    ],
+    "review_flag": null,
+    "source_row": 134,
+    "source_file": "kpmg.com__us_en_how-we-work_client-stories_reporting-insights-accelerated-html.md"
+  },
+  {
+    "hirer_id": "H008",
+    "gig_id": "G008",
+    "gig_title": "Consumer Validation for Premium Cheese Subscription",
+    "short_gig_description": "We are a small dairy co-op in the West of Singapore looking to diversify our revenue away from bulk milk sales. We have a concept for a premium direct-to-consumer cheese subscription service but need to validate demand before building the brand. We need a specialist to conduct on-the-ground consumer research, develop five distinct business concepts, and test their viability. This involves creating prototype landing pages and running targeted social media campaigns to track user interaction, click-through rates, and sign-up intent across the five concepts. Deliverable: A data-led report ranking the five concepts by viability, highlighting the strongest option for market entry. Engagement duration: 3-4 weeks.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Retail"
+      },
+      {
+        "group": "Industry",
+        "name": "Food Manufacturing"
+      }
+    ],
+    "specialisation": [
+      "Marketing",
+      "Business Development"
+    ],
+    "search_tags": [
+      "Marketing (Retail)",
+      "Business Development (Food Manufacturing)"
+    ],
+    "review_flag": "Implausible setting: Singapore has almost no dairy farming, so a dairy co-op diversifying from 'bulk milk sales' doesn't fit.",
+    "source_row": 92,
+    "source_file": "ey.com__en_gl_insights_consulting_how-to-launch-a-sustainable-direct-to-consumer-business-in-no-time.md"
+  },
+  {
+    "hirer_id": "H009",
+    "gig_id": "G009",
+    "gig_title": "Develop Circular Economy Framework for E-Waste Reverse Supply Chain",
+    "short_gig_description": "We are a mid-sized electronics manufacturer in Singapore with 150 staff, producing consumer devices and managing end-of-life product returns. We need to strengthen oversight of our reverse supply chain vendors to ensure responsible e-waste handling and compliance with environmental standards. We’re looking for someone to design a circular economy framework that assesses vendor compliance, transparency, and sustainability impacts. This includes defining audit criteria, setting up a vendor scoring system, and aligning with our annual Sustainability Impact Report. Deliverable: comprehensive circular economy framework document with vendor assessment criteria and KPIs. Engagement duration: 6-8 weeks.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Environmental Services"
+      },
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Materials Recovery",
+      "Sustainability Reporting and Assurance"
+    ],
+    "search_tags": [
+      "Materials Recovery (Environmental Services)",
+      "Sustainability Reporting and Assurance (Accountancy)"
+    ],
+    "review_flag": null,
+    "source_row": 251,
+    "source_file": "erm.com__projects_circular-economy-framework-development.md"
+  },
+  {
+    "hirer_id": "H010",
+    "gig_id": "G010",
+    "gig_title": "Assess Automation Opportunities for Mobile Radiology Team",
+    "short_gig_description": "I run a mobile radiology unit at a private multi-specialty clinic in Singapore with 25 staff. Our team spends too much time manually logging patient details and entering identifiers for each scan, which slows down patient visits. I need someone to shadow our daily workflow, map the current process, and identify where automation can save time. The goal is to reduce manual tasks so we can serve more patients without adding staff. Deliverable: report with process map, automation opportunities, and estimated time savings per scan. Engagement duration: 3-4 weeks.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Healthcare"
+      },
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Operations",
+      "Software and Applications"
+    ],
+    "search_tags": [
+      "Operations (Healthcare)",
+      "Software and Applications (Infocomm Technology)"
+    ],
+    "review_flag": null,
+    "source_row": 638,
+    "source_file": "grantthornton.com__insights_case-studies_healthcare_2026_automation-ai-create-savings-opportunities-for-hospital-network.md"
+  },
+  {
+    "hirer_id": "H011",
+    "gig_id": "G011",
+    "gig_title": "Design Third-Party Risk Assessment Framework",
+    "short_gig_description": "I run a multi-site clinic network in Singapore with about 20 practitioners. Following recent industry data breaches, we need to tighten how we assess our third-party vendors, particularly those handling patient data. We currently rely on manual self-reported surveys, which is slow and opaque. We need a specialist to define a risk assessment framework that categorises vendors by risk level and specifies the data points required for due diligence. This should prepare us to implement a digital workflow later, ensuring we can identify and prioritise high-risk partners effectively. Deliverable: a written risk assessment framework with vendor segmentation criteria and required data attributes. Engagement duration: 4-5 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      },
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Enterprise Risk Management",
+      "Cyber Security"
+    ],
+    "search_tags": [
+      "Enterprise Risk Management (Accountancy)",
+      "Cyber Security (Infocomm Technology)"
+    ],
+    "review_flag": null,
+    "source_row": 119,
+    "source_file": "ey.com__en_gl_insights_consulting_healthcare-company-tackling-third-party-risk-with-tech-and-data.md"
+  },
+  {
+    "hirer_id": "H012",
+    "gig_id": "G012",
+    "gig_title": "Develop US GAAP Accounting Roadmap for Sponsorships",
+    "short_gig_description": "We are a not-for-profit event organising committee in Singapore with a small finance team. As we grow from a startup phase to a larger operation, we are entering numerous sponsorship agreements and facility leases that require significant technical judgment under US GAAP. We need a specialist to review these complex arrangements and help us form accounting conclusions. The scope includes developing accounting models, illustrative use-case scenarios, and tailored position papers, as well as creating contract review templates for future deals. Deliverable: A toolkit including the accounting models, position papers, and review templates. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Financial Accounting"
+    ],
+    "search_tags": [
+      "Financial Accounting (Accountancy)"
+    ],
+    "review_flag": "Localisation error: a Singapore not-for-profit would report under the Charities Accounting Standard / SFRS, not US GAAP.",
+    "source_row": 96,
+    "source_file": "deloitte.com__us_en_what-we-do_case-studies_team-usa-la28-accounting-services-html.md"
+  },
+  {
+    "hirer_id": "H013",
+    "gig_id": "G013",
+    "gig_title": "Design Auditable Chart of Accounts Process for Finance System",
+    "short_gig_description": "We’re a Singapore-based asset management firm with 15 staff, and our finance team spends too much time manually updating spreadsheets for monthly reporting. Our current chart of accounts is outdated and inconsistently applied across systems, making it hard to adapt reports quickly. We need someone to redesign a common chart of accounts and build a governed, auditable process to manage and distribute changes across our two core finance systems. This includes defining roles, approval workflows, and change logging. Deliverable: documented process for chart of accounts management with workflow diagram and change log template. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      },
+      {
+        "group": "Industry",
+        "name": "Financial Services"
+      }
+    ],
+    "specialisation": [
+      "Financial Accounting",
+      "Operations"
+    ],
+    "search_tags": [
+      "Financial Accounting (Accountancy)",
+      "Operations (Financial Services)"
+    ],
+    "review_flag": null,
+    "source_row": 636,
+    "source_file": "grantthornton.com__insights_case-studies_asset-management_2025_global-investment-firm-reporting-and-operations.md"
+  },
+  {
+    "hirer_id": "H014",
+    "gig_id": "G014",
+    "gig_title": "Design change activation survey for workforce transition",
+    "short_gig_description": "We are a professional services firm with 80 staff in Paya Lebar rolling out a new strategy after a leadership change. We need to understand how teams are absorbing the new ways of working before scaling communication. Please design a short, multi-language survey to assess staff sentiment, awareness, and behavior adoption. We need the questions to identify specific barriers to adoption and key success factors like leadership commitment. We will use the results to target our engagement activities. Deliverable: a validated survey instrument with a brief on analysis method. Engagement duration: 2-3 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Human Resource"
+      }
+    ],
+    "specialisation": [
+      "Learning and Organisation Development",
+      "Employee Experience and Relations"
+    ],
+    "search_tags": [
+      "Learning and Organisation Development (Human Resource)",
+      "Employee Experience and Relations (Human Resource)"
+    ],
+    "review_flag": null,
+    "source_row": 21,
+    "source_file": "ey.com__en_au_insights_workforce_how-ey-built-a-better-working-world-with-its-people-at-the-center.md"
+  },
+  {
+    "hirer_id": "H015",
+    "gig_id": "G015",
+    "gig_title": "Parametric Façade Design for Event Pavilion",
+    "short_gig_description": "We are the project team for a temporary event pavilion in Singapore. We need a specialist to optimise our façade design using parametric modelling to ensure the external fins provide adequate shading for the glazing. The goal is to meet strict sustainability targets for energy reduction and improve outdoor thermal comfort for visitors during the 6-month event. We also need to ensure the design supports the full deconstruction and recycling of materials once the event ends. Deliverable: a parametric façade model with performance data and a deconstruction strategy. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Built Environment"
+      }
+    ],
+    "specialisation": [
+      "Architectural Consultancy and Design",
+      "Engineering Consultancy and Design"
+    ],
+    "search_tags": [
+      "Architectural Consultancy and Design (Built Environment)",
+      "Engineering Consultancy and Design (Built Environment)"
+    ],
+    "review_flag": null,
+    "source_row": 408,
+    "source_file": "aesg.com__portfolio-item_expo-2020-emirates-pavilion.md"
+  },
+  {
+    "hirer_id": "H016",
+    "gig_id": "G016",
+    "gig_title": "Optimize Resource Allocation for OpenShift Environment",
+    "short_gig_description": "I run the IT operations team at a mid-sized technology firm in Singapore with 35 staff, managing a hybrid cloud environment using Red Hat OpenShift. We’re seeing growing complexity in resource allocation across our development and non-production clusters, leading to overprovisioning and inefficiency. We need someone to assess our current resource usage, identify over-allocated workloads, and recommend automation tools to right-size resources. The specialist should use real-time application data and AI-driven insights to improve efficiency without changing our existing platform. Deliverable: report with resource optimization analysis and a list of recommended automated actions. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Infrastructure",
+      "Operations and Support"
+    ],
+    "search_tags": [
+      "Infrastructure (Infocomm Technology)",
+      "Operations and Support (Infocomm Technology)"
+    ],
+    "review_flag": null,
+    "source_row": 641,
+    "source_file": "ibm.com__case-studies_cio-office-turbonomic.md"
+  },
+  {
+    "hirer_id": "H017",
+    "gig_id": "G017",
+    "gig_title": "Review IT Vendor Contracts for Savings",
+    "short_gig_description": "We are a mid-sized food and beverage manufacturer in Singapore facing rising IT costs and service disruptions due to a fragmented vendor landscape. Our current outsourcing agreements lack strategic alignment, leading to downtime and high operational expenses. We need an IT outsourcing specialist to assess our current vendor contracts and performance benchmarks. The specialist should identify consolidation opportunities and recommend restructuring agreements to improve efficiency and reduce waste. Deliverable: Written gap analysis and prioritised vendor consolidation plan. Engagement duration: 3-4 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Strategy and Governance"
+    ],
+    "search_tags": [
+      "Strategy and Governance (Infocomm Technology)"
+    ],
+    "review_flag": null,
+    "source_row": 542,
+    "source_file": "westmonroe.com__client-results_optimizing-it-vendors-and-cloud-solutions-saves-250-million.md"
+  },
+  {
+    "hirer_id": "H018",
+    "gig_id": "G018",
+    "gig_title": "Asset Data Migration Plan for EAM System",
+    "short_gig_description": "We are a facilities management team overseeing five city buildings in Singapore. We are moving from a legacy system to a cloud-based enterprise asset management platform to prepare for ISO 55001 certification. Our current records are scattered and incomplete, so we need a specialist to structure the data migration. You will review our existing asset logs, define the data hierarchy for the new system, and outline a validation process to ensure accuracy before go-live. Deliverable: a written data migration plan with a defined hierarchy and verification checklist. Engagement duration: 3-4 weeks.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Built Environment"
+      },
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Facilities Management",
+      "Software and Applications"
+    ],
+    "search_tags": [
+      "Facilities Management (Built Environment)",
+      "Software and Applications (Infocomm Technology)"
+    ],
+    "review_flag": null,
+    "source_row": 1064,
+    "source_file": "ibm.com__case-studies_city-of-atlanta-deam.md"
+  },
+  {
+    "hirer_id": "H019",
+    "gig_id": "G019",
+    "gig_title": "Analyze Support Tickets for AI Automation",
+    "short_gig_description": "We’re a customer support team at a Singapore-based infrastructure software firm. We want to see where generative AI can cut our ticket resolution time. We need a specialist to analyse our recent support ticket data to map the inputs needed for resolution and identify high-volume, repeatable queries. The goal is to define a strategy for deploying retrieval augmented generation (RAG) to help agents answer common questions faster. Deliverable: a strategy report with a prioritised list of automation opportunities and a RAG implementation plan. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Data and Artificial Intelligence",
+      "Operations and Support"
+    ],
+    "search_tags": [
+      "Data and Artificial Intelligence (Infocomm Technology)",
+      "Operations and Support (Infocomm Technology)"
+    ],
+    "review_flag": null,
+    "source_row": 835,
+    "source_file": "westmonroe.com__client-results_ai-driven-strategies-yield-26-million-in-cost-savings.md"
+  },
+  {
+    "hirer_id": "H020",
+    "gig_id": "G020",
+    "gig_title": "Design OT Isolation Procedures for Critical Systems",
+    "short_gig_description": "We are a mid-sized energy utility in Singapore with 150 staff, operating a regional power distribution network. As our IT and OT systems become more integrated, we need a clear, reliable way to isolate critical operational technology systems during a cyberattack. We want someone to map our network architecture, identify key isolation points, and design step-by-step procedures for both manual and automated disconnection. Deliverable: documented isolation procedures for 10 critical processes, including decision triggers and roles. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      },
+      {
+        "group": "Industry",
+        "name": "Energy and Power"
+      }
+    ],
+    "specialisation": [
+      "Cyber Security",
+      "Electricity Transmission and Distribution"
+    ],
+    "search_tags": [
+      "Cyber Security (Infocomm Technology)",
+      "Electricity Transmission and Distribution (Energy and Power)"
+    ],
+    "review_flag": null,
+    "source_row": 938,
+    "source_file": "westmonroe.com__client-results_90-percent-faster-cyber-response-for-a-secure-grid.md"
+  },
+  {
+    "hirer_id": "H021",
+    "gig_id": "G021",
+    "gig_title": "Develop Decision Support Tool for Rail Maintenance Data",
+    "short_gig_description": "We are a regional rail operator in Singapore. Our maintenance teams currently struggle to make optimised renewal decisions because asset data is scattered across disparate sources. This inefficiency impacts service reliability. We need a specialist to build a Decision Support Tool (DST) dashboard that integrates these data sources. The tool must allow users to search, filter, and sort data easily, and include linear trend analysis functionality to predict potential faults. This supports our shift from time-based to condition-based maintenance. Deliverable: a functional dashboard prototype with integrated data views and trend analysis. Engagement duration: 6-8 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      },
+      {
+        "group": "Industry",
+        "name": "Public Transport"
+      }
+    ],
+    "specialisation": [
+      "Data and Artificial Intelligence",
+      "Rail Engineering"
+    ],
+    "search_tags": [
+      "Data and Artificial Intelligence (Infocomm Technology)",
+      "Rail Engineering (Public Transport)"
+    ],
+    "review_flag": "Implausible setting: Singapore has no small 'regional rail operator' (rail is run by two large operators under LTA).",
+    "source_row": 496,
+    "source_file": "arup.com__projects_offering-rail-better-information-services-orbis.md"
+  },
+  {
+    "hirer_id": "H022",
+    "gig_id": "G022",
+    "gig_title": "Waste Management Strategy for Residential Development",
+    "short_gig_description": "We are a Singapore-based architectural firm currently designing a 17-building residential project with integrated retail spaces. We need to finalise the waste handling and collection strategy to ensure compliance with local sustainability regulations and best practice. The scope involves developing individual waste handling strategies for each building, designing collection points and loading bays, and recommending tri-sorter chutes for improved segregation. We also require a separate strategy for retail waste transfer to utilise existing loading areas efficiently. The design must account for local equipment availability and operational feasibility. Deliverable: a comprehensive Waste Management Strategy report with waste generation calculations and design recommendations. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Environmental Services"
+      },
+      {
+        "group": "Industry",
+        "name": "Built Environment"
+      }
+    ],
+    "specialisation": [
+      "Waste Collection",
+      "Architectural Consultancy and Design"
+    ],
+    "search_tags": [
+      "Waste Collection (Environmental Services)",
+      "Architectural Consultancy and Design (Built Environment)"
+    ],
+    "review_flag": null,
+    "source_row": 748,
+    "source_file": "aesg.com__portfolio-item_qariyat-al-hidd.md"
+  },
+  {
+    "hirer_id": "H023",
+    "gig_id": "G023",
+    "gig_title": "Ecological Baseline Survey for Urban Road Project",
+    "short_gig_description": "We are a private developer preparing a major infrastructure application in Singapore. Before submitting the Environmental Impact Assessment, we need a clear baseline of the existing ecology along our corridor. We require a specialist to conduct site visits to record flora and fauna, focusing on any species of conservation concern under the National Parks Board guidelines. This data is essential to justify our proposed mitigation measures in the application. Deliverable: a detailed ecological baseline report with species counts and location data. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Environmental Services"
+      }
+    ],
+    "specialisation": [
+      "Environment, Health and Safety"
+    ],
+    "search_tags": [
+      "Environment, Health and Safety (Environmental Services)"
+    ],
+    "review_flag": "Implausible setting: public road corridors in Singapore are delivered by LTA, not private developers. Taxonomy gap: SkillsFuture has no ecology track.",
+    "source_row": 556,
+    "source_file": "erm.com__projects_case-study-hs2-ltd.md"
+  },
+  {
+    "hirer_id": "H024",
+    "gig_id": "G024",
+    "gig_title": "Automate Medical Financial Assistance Application Process",
+    "short_gig_description": "I run a revenue cycle management firm with about 40 staff in Singapore. Our clients, mainly small private hospitals, tell us that processing financial assistance applications is a bottleneck because it relies on manual paperwork and phone calls. We need to cut this administrative cost, which currently consumes too many staff hours, to aim for a 90% reduction. Please design a cloud-based workflow using .NET and Azure that allows patients to submit requests via a web portal or phone using voice recognition, bypassing manual data entry. Deliverable: Technical design document for the automated financial assistance module. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      },
+      {
+        "group": "Industry",
+        "name": "Healthcare"
+      }
+    ],
+    "specialisation": [
+      "Software and Applications",
+      "Operations"
+    ],
+    "search_tags": [
+      "Software and Applications (Infocomm Technology)",
+      "Operations (Healthcare)"
+    ],
+    "review_flag": null,
+    "source_row": 505,
+    "source_file": "bdo.com__insights_digital_hollis-cobb-creates-solutions-with-bdo-digital-to-help-transform-the-medical-industry.md"
+  },
+  {
+    "hirer_id": "H025",
+    "gig_id": "G025",
+    "gig_title": "GenAI Workflow Design for Clinical Marketing",
+    "short_gig_description": "We are a mid-sized pharmaceutical marketing team in Singapore supporting a portfolio of three therapeutic brands. Our current outsourcing model for campaign content is too slow, leading to missed launch windows and inconsistent messaging across channels. We need a specialist to map our existing content workflow and design a GenAI-assisted process for generating and localising banner ads, emails, and display assets. This should address our need to repurpose existing creative and tailor messaging for regional audiences without building a full platform. Deliverable: a workflow design document with a pilot plan for one brand’s campaign. Engagement duration: 3-4 weeks.",
+    "category": [
+      {
+        "group": "Industry",
+        "name": "Media"
+      },
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Content Production and Management",
+      "Data and Artificial Intelligence"
+    ],
+    "search_tags": [
+      "Content Production and Management (Media)",
+      "Data and Artificial Intelligence (Infocomm Technology)"
+    ],
+    "review_flag": null,
+    "source_row": 858,
+    "source_file": "publicissapient.com__work_empowering-healthcare-marketing-with-genai.md"
+  },
+  {
+    "hirer_id": "H026",
+    "gig_id": "G026",
+    "gig_title": "Sell-Side Valuation for Auto Parts Division",
+    "short_gig_description": "We are a Singapore-based automotive parts manufacturer with about 60 staff. We are planning to sell our thermal management division to a private equity firm and need an independent valuation to determine the asking price. Please review our division's financials and market position to support the negotiation with the buyer. Deliverable: a valuation report with a recommended price range. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Accountancy"
+      }
+    ],
+    "specialisation": [
+      "Business Valuation",
+      "Mergers and Acquisitions"
+    ],
+    "search_tags": [
+      "Business Valuation (Accountancy)",
+      "Mergers and Acquisitions (Accountancy)"
+    ],
+    "review_flag": null,
+    "source_row": 1174,
+    "source_file": "kroll.com__en_transactions_sell-side-advisor-arlington-industries.md"
+  },
+  {
+    "hirer_id": "H027",
+    "gig_id": "G027",
+    "gig_title": "OT Security Risk Assessment for Bank Data Centre",
+    "short_gig_description": "A bank with a data centre in Singapore is reviewing its Operational Technology (OT) security maturity. The facility relies on building automation and environmental control systems for power and cooling, but asset visibility is incomplete and legacy controls lack adequate governance. The team needs an independent specialist to assess these risks without disrupting business continuity. The work covers a structured assessment of the data centre’s OT architecture and building management systems, benchmarked against NIST 800-82 standards. It includes stakeholder interviews, policy evaluation, and passive network traffic analysis to identify exposed services or insecure communications. The specialist must work within change-freeze windows to ensure safety and uptime. Deliverable: written OT risk assessment report with architectural review and prioritised remediation actions. Engagement duration: 4-5 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      },
+      {
+        "group": "Industry",
+        "name": "Built Environment"
+      }
+    ],
+    "specialisation": [
+      "Cyber Security",
+      "Facilities Management"
+    ],
+    "search_tags": [
+      "Cyber Security (Infocomm Technology)",
+      "Facilities Management (Built Environment)"
+    ],
+    "review_flag": "Style: written in third person ('A bank ...'), unlike the client's first-person gigs; a bank is also not an SME hirer.",
+    "source_row": 936,
+    "source_file": "kroll.com__en_publications_cyber_case-studies_strengthening-critical-ot-infrastructure-security-major-bank.md"
+  },
+  {
+    "hirer_id": "H028",
+    "gig_id": "G028",
+    "gig_title": "Design Performance Reporting Dashboard for Mental Health Grants",
+    "short_gig_description": "We are a social enterprise supporting community mental health programs in Singapore, managing a portfolio of discretionary grants similar to federal behavioral health initiatives. We currently struggle to track performance metrics across grantees because our reporting system lacks user-friendly visualization. We need a specialist to review our current data collection workflow and design a conceptual dashboard structure that allows program officers to easily monitor trends and generate ad hoc reports. Deliverable: a wireframe prototype and functional specification for a grant performance monitoring dashboard. Engagement duration: 4-5 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      },
+      {
+        "group": "Industry",
+        "name": "Social Service"
+      }
+    ],
+    "specialisation": [
+      "Data and Artificial Intelligence",
+      "Care and Programme"
+    ],
+    "search_tags": [
+      "Data and Artificial Intelligence (Infocomm Technology)",
+      "Care and Programme (Social Service)"
+    ],
+    "review_flag": "Localisation leak: 'similar to federal behavioral health initiatives' is a US reference.",
+    "source_row": 1101,
+    "source_file": "mathematica.org__projects_samhsa-performance-accountability-and-reporting-system.md"
+  },
+  {
+    "hirer_id": "H029",
+    "gig_id": "G029",
+    "gig_title": "AI-Assisted Document Review for Legal Dispute",
+    "short_gig_description": "We are a Singapore-based consumer products company with 40 staff facing a complex commercial dispute over brand misuse and contractual payments. We need to review an initial dataset of about 80,000 emails and documents to support our legal defence. We require a specialist to deploy Relativity aiR for Review to perform the first-pass review, including prompt development, tuning with our legal terms, and statistically validating the AI's performance to ensure legal defensibility. This will significantly reduce the volume of documents requiring manual human review. Deliverable: validated AI review workflow and reduced document set ready for legal counsel. Engagement duration: 4-6 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Legal Services"
+      },
+      {
+        "group": "Function",
+        "name": "Infocomm Technology"
+      }
+    ],
+    "specialisation": [
+      "Advisory and Advocacy",
+      "Data and Artificial Intelligence"
+    ],
+    "search_tags": [
+      "Advisory and Advocacy (Legal Services)",
+      "Data and Artificial Intelligence (Infocomm Technology)"
+    ],
+    "review_flag": null,
+    "source_row": 389,
+    "source_file": "kroll.com__en_publications_cyber_case-studies_ai-deep-discovery-expertise-to-enhance-legal-defensibility.md"
+  },
+  {
+    "hirer_id": "H030",
+    "gig_id": "G030",
+    "gig_title": "Real Estate Lease Review for Office Expansion",
+    "short_gig_description": "I run a mid-sized technology services firm in Singapore with 40 staff. We are moving to a new office and need an external specialist to review our proposed lease agreement before we sign. We don't have in-house legal expertise for property matters, and we want to ensure the terms are fair and standard for the local market. Please check the lease for any unusual clauses, hidden fees, or onerous obligations regarding fit-outs and maintenance. Deliverable: a concise written memo highlighting key risks, ambiguous terms, and recommended negotiation points. Engagement duration: 2-3 weeks.",
+    "category": [
+      {
+        "group": "Function",
+        "name": "Legal Services"
+      }
+    ],
+    "specialisation": [
+      "Advisory and Advocacy"
+    ],
+    "search_tags": [
+      "Advisory and Advocacy (Legal Services)"
+    ],
+    "review_flag": null,
+    "source_row": 1115,
+    "source_file": "axiomlaw.com__resources_case-studies_technology-conglomerate-real-estate-support.md"
+  }
+]
