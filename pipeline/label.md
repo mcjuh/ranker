@@ -44,8 +44,9 @@ BT4103-Scrape-and-Tag/docs/{hirers,providers}_enriched.csv
 Reads `hirers_enriched.csv` (1,216 gigs) and `providers_enriched.csv` (2,193 providers).
 
 **Gigs** are kept only if they pass the same quality bar Scrape-and-Tag's `labeller/sample.py` uses:
-the grounding review kept the extraction on the first pass (no repair); the description has a
-`Deliverable:` line; the industry tag isn't `OTHER`; there are no additional notes; the title is
+the grounding review kept the extraction on the first pass (no repair); the description ends in
+an `Engagement duration:` line (the current prompt's format; `Deliverable:` is no longer always
+labelled); the industry tag isn't `OTHER`; there are no additional notes; the title is
 unique; and the description is 300–1,200 characters. `docs/extract_manifest.jsonl` has duplicate
 entries for files written by overlapping extract runs, so the import uses the latest one per file.
 The `Engagement duration: …` line is stripped from the description (its value is kept as

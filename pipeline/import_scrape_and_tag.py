@@ -13,7 +13,7 @@ every result built on it stay untouched:
 
 Filters (the same quality bar Scrape-and-Tag's labeller/sample.py uses for gigs):
   gigs       grounding review kept it on the first pass (no repair), current prompt
-             format (has a "Deliverable:" line), real industry tag (not OTHER), no
+             format (ends in an "Engagement duration:" line), real industry tag (not OTHER), no
              additional notes, unique title, 300-1200 chars once the engagement line
              is stripped.
   providers  classified PROVIDER (not UNCERTAIN) with a headline and an About
@@ -111,7 +111,7 @@ def good_hirers(rows: list[dict], manifest: dict) -> list[dict]:
         desc = ENGAGEMENT_RE.sub("", clean(r["hire_description"])).strip()
         title = clean(r["hire_title"])
         if ((m.get("review") or {}).get("decision") != "keep" or m.get("repaired")
-                or "Deliverable:" not in desc
+                or not ENGAGEMENT_RE.search(clean(r["hire_description"]))
                 or r.get("industry", "") in ("", "OTHER")
                 or clean(r["hire_description_additional_notes"])
                 or not 300 <= len(desc) <= 1200
