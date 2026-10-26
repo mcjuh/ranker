@@ -1,0 +1,335 @@
+{
+  "api_version": "1.0",
+  "request_id": "<generate per request, e.g. req_01J9Z8...>",
+  "generated_at": "<ISO-8601 with timezone, set by the service>",
+  "query": {
+    "hire_id": "G010",
+    "title": "Assess Automation Opportunities for Mobile Radiology Team",
+    "description": "I run a mobile radiology unit at a private multi-specialty clinic in Singapore with 25 staff. Our team spends too much time manually logging patient details and entering identifiers for each scan, which slows down patient visits. I need someone to shadow our daily workflow, map the current process, and identify where automation can save time. The goal is to reduce manual tasks so we can serve more patients without adding staff. Deliverable: report with process map, automation opportunities, and estimated time savings per scan. Engagement duration: 3-4 weeks.",
+    "duration_weeks": {
+      "min": null,
+      "max": null
+    },
+    "taxonomy": [
+      {
+        "category": "Healthcare",
+        "specialisations": [
+          "Operations"
+        ],
+        "search_tags": [
+          "Operations (Healthcare)"
+        ]
+      },
+      {
+        "category": "Infocomm Technology",
+        "specialisations": [
+          "Software and Applications"
+        ],
+        "search_tags": [
+          "Software and Applications (Infocomm Technology)"
+        ]
+      }
+    ]
+  },
+  "results": [
+    {
+      "rank": 1,
+      "provider_id": 25,
+      "score": 100.0,
+      "provider": {
+        "display_title": "Healthcare Engagement Manager Specialising in Access Strategy and Staff Retention",
+        "headline": "Healthcare Engagement Manager Specialising in Access Strategy and Staff Retention",
+        "bio_excerpt": "I have spent the last seven years in healthcare consulting, advising organisations on strategic performance and operational challenges. My expertise lies in enterprise access strategies designed to improve consumer experience and initiatives that address employee burnout and turn",
+        "years_experience": null,
+        "services": [
+          "Healthcare Access Improvement and Staff Retention Advisory"
+        ],
+        "taxonomy": [
+          {
+            "category": "Healthcare",
+            "specialisations": [
+              "Operations"
+            ],
+            "search_tags": [
+              "Operations (Healthcare)"
+            ]
+          },
+          {
+            "category": "Human Resource",
+            "specialisations": [
+              "Employee Experience and Relations"
+            ],
+            "search_tags": [
+              "Employee Experience and Relations (Human Resource)"
+            ]
+          }
+        ],
+        "rate": null,
+        "availability": null
+      },
+      "signals": {
+        "stage1": {
+          "bm25_rank": 1.0,
+          "bm25_score": 40.121623,
+          "dense_rank": 1.0,
+          "dense_cosine": 0.592285,
+          "rrf_rank": 1.0,
+          "rrf_score": 0.032787
+        },
+        "taxonomy_match": {
+          "tax_search_tag": 0.5,
+          "tax_specialisation": 0.5,
+          "tax_category": 0.5,
+          "tax_skill": 0.0,
+          "tax_n_shared_skills": 0.0,
+          "taxonomy_score": 0.35
+        },
+        "provider_attrs": {
+          "exp_years": 0.0
+        }
+      },
+      "explanation": {
+        "matched_search_tags": [
+          "Operations (Healthcare)"
+        ],
+        "matched_specialisations": [
+          "Operations"
+        ],
+        "matched_skills": []
+      }
+    },
+    {
+      "rank": 2,
+      "provider_id": 16,
+      "score": 80.49,
+      "provider": {
+        "display_title": "Driving Smarter, Faster, More Transparent Public Sector Transformation",
+        "headline": "Driving Smarter, Faster, More Transparent Public Sector Transformation",
+        "bio_excerpt": "I bring over 20 years of experience transforming businesses and operations, with deep expertise in public sector and private enterprise. I’ve led strategic change initiatives at a global strategy consultancy, advising clients on cost optimisation, digital transformation, and oper",
+        "years_experience": null,
+        "services": [
+          "Public Sector and Government Transformation Advisory"
+        ],
+        "taxonomy": [
+          {
+            "category": "Infocomm Technology",
+            "specialisations": [
+              "Strategy and Governance"
+            ],
+            "search_tags": [
+              "Strategy and Governance (Infocomm Technology)"
+            ]
+          }
+        ],
+        "rate": null,
+        "availability": null
+      },
+      "signals": {
+        "stage1": {
+          "bm25_rank": 4.0,
+          "bm25_score": 20.195863,
+          "dense_rank": 5.0,
+          "dense_cosine": 0.542969,
+          "rrf_rank": 2.0,
+          "rrf_score": 0.03101
+        },
+        "taxonomy_match": {
+          "tax_search_tag": 0.0,
+          "tax_specialisation": 0.0,
+          "tax_category": 0.5,
+          "tax_skill": 0.0,
+          "tax_n_shared_skills": 0.0,
+          "taxonomy_score": 0.05
+        },
+        "provider_attrs": {
+          "exp_years": 0.0
+        }
+      },
+      "explanation": {
+        "matched_search_tags": [],
+        "matched_specialisations": [],
+        "matched_skills": []
+      }
+    },
+    {
+      "rank": 3,
+      "provider_id": 6,
+      "score": 76.23,
+      "provider": {
+        "display_title": "Strategy and Transformation Leader for Technology and Telecommunications",
+        "headline": "Strategy and Transformation Leader for Technology and Telecommunications",
+        "bio_excerpt": "I bring over 30 years of experience in large-scale operations and transformation, with 20 years dedicated to technology, media, telecommunications, and professional services. I specialise in strategic vision, organisational design, process optimisation, and transaction-related bu",
+        "years_experience": null,
+        "services": [
+          "Technology and Telecoms Transformation Advisory"
+        ],
+        "taxonomy": [
+          {
+            "category": "Infocomm Technology",
+            "specialisations": [
+              "Strategy and Governance"
+            ],
+            "search_tags": [
+              "Strategy and Governance (Infocomm Technology)"
+            ]
+          },
+          {
+            "category": "Human Resource",
+            "specialisations": [
+              "Learning and Organisation Development"
+            ],
+            "search_tags": [
+              "Learning and Organisation Development (Human Resource)"
+            ]
+          }
+        ],
+        "rate": null,
+        "availability": null
+      },
+      "signals": {
+        "stage1": {
+          "bm25_rank": 8.0,
+          "bm25_score": 15.271822,
+          "dense_rank": 7.0,
+          "dense_cosine": 0.537109,
+          "rrf_rank": 6.0,
+          "rrf_score": 0.029631
+        },
+        "taxonomy_match": {
+          "tax_search_tag": 0.0,
+          "tax_specialisation": 0.0,
+          "tax_category": 0.5,
+          "tax_skill": 0.0,
+          "tax_n_shared_skills": 0.0,
+          "taxonomy_score": 0.05
+        },
+        "provider_attrs": {
+          "exp_years": 0.0
+        }
+      },
+      "explanation": {
+        "matched_search_tags": [],
+        "matched_specialisations": [],
+        "matched_skills": []
+      }
+    },
+    {
+      "rank": 4,
+      "provider_id": 11,
+      "score": 74.65,
+      "provider": {
+        "display_title": "Former Chief Information Officer with 20+ years in digital transformation",
+        "headline": "Former Chief Information Officer with 20+ years in digital transformation",
+        "bio_excerpt": "I have over 20 years of experience in digital transformation and global business strategy. I held senior technology leadership roles at a Big Four professional services firm and a global strategy consultancy. I drove revenue growth and operational efficiency through large-scale d",
+        "years_experience": null,
+        "services": [
+          "Digital Transformation and Technology Strategy Advisory"
+        ],
+        "taxonomy": [
+          {
+            "category": "Infocomm Technology",
+            "specialisations": [
+              "Data and Artificial Intelligence",
+              "Strategy and Governance"
+            ],
+            "search_tags": [
+              "Data and Artificial Intelligence (Infocomm Technology)",
+              "Strategy and Governance (Infocomm Technology)"
+            ]
+          }
+        ],
+        "rate": null,
+        "availability": null
+      },
+      "signals": {
+        "stage1": {
+          "bm25_rank": 6.0,
+          "bm25_score": 17.270548,
+          "dense_rank": 4.0,
+          "dense_cosine": 0.544922,
+          "rrf_rank": 3.0,
+          "rrf_score": 0.030777
+        },
+        "taxonomy_match": {
+          "tax_search_tag": 0.0,
+          "tax_specialisation": 0.0,
+          "tax_category": 0.5,
+          "tax_skill": 0.0,
+          "tax_n_shared_skills": 0.0,
+          "taxonomy_score": 0.05
+        },
+        "provider_attrs": {
+          "exp_years": 0.0
+        }
+      },
+      "explanation": {
+        "matched_search_tags": [],
+        "matched_specialisations": [],
+        "matched_skills": []
+      }
+    },
+    {
+      "rank": 5,
+      "provider_id": 21,
+      "score": 60.31,
+      "provider": {
+        "display_title": "Former Chief Data & AI Officer, AI Startup Founder, and Production Deployment Specialist",
+        "headline": "Former Chief Data & AI Officer, AI Startup Founder, and Production Deployment Specialist",
+        "bio_excerpt": "I specialise in transitioning AI from experimentation to production-grade solutions. As a former startup founder, I led a company from inception through acquisition by a global technology firm. My career spans leading AI research on model interpretability and managing the complet",
+        "years_experience": null,
+        "services": [
+          "AI Strategy and Production Implementation"
+        ],
+        "taxonomy": [
+          {
+            "category": "Infocomm Technology",
+            "specialisations": [
+              "Data and Artificial Intelligence"
+            ],
+            "search_tags": [
+              "Data and Artificial Intelligence (Infocomm Technology)"
+            ]
+          }
+        ],
+        "rate": null,
+        "availability": null
+      },
+      "signals": {
+        "stage1": {
+          "bm25_rank": 12.0,
+          "bm25_score": 9.474735,
+          "dense_rank": 2.0,
+          "dense_cosine": 0.554688,
+          "rrf_rank": 5.0,
+          "rrf_score": 0.030018
+        },
+        "taxonomy_match": {
+          "tax_search_tag": 0.0,
+          "tax_specialisation": 0.0,
+          "tax_category": 0.5,
+          "tax_skill": 0.0,
+          "tax_n_shared_skills": 0.0,
+          "taxonomy_score": 0.05
+        },
+        "provider_attrs": {
+          "exp_years": 0.0
+        }
+      },
+      "explanation": {
+        "matched_search_tags": [],
+        "matched_specialisations": [],
+        "matched_skills": []
+      }
+    }
+  ],
+  "meta": {
+    "pipeline": "refined BM25 || mxbai-embed-large-v1 (Matryoshka 1024) -> RRF(k=60) -> LambdaMART (taxonomy variant)",
+    "ranker_artifact": "pilot_tax.json",
+    "score_artifact": "pilot_tax_scores.json",
+    "corpus_size": 30,
+    "candidate_pool": 50,
+    "returned": 5,
+    "latency_ms": "<measured by the service>",
+    "score_scale": "0-100, higher is better; ranker output, not a probability"
+  }
+}

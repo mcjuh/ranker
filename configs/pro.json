@@ -1,0 +1,77 @@
+{
+  "tier": "pro",
+  "summary": "Same retrieval, plus two cross-encoders and a set-wise transformer that scores all 50 candidates jointly instead of one at a time. ~0.95 NDCG@10.",
+  "servable": false,
+  "blocked_on": "No serving artifact exists. listwise_ranker_v2.py produces out-of-fold ranked lists only (it never calls torch.save), and its two cross-encoder inputs are precomputed OOF CSVs (ce_scores_v5ce_bge.csv, ce_scores_v5ce_gte.csv), not a live scorer. Serving this tier needs three things: (1) fit the set-wise model on all queries and torch.save it, (2) run the cross-encoders live over the 50-candidate pool, (3) write the same response builder. Until then the 0.9508 is an offline evaluation, not a service.",
+  "stages": [
+    "retrieval (shared with lightweight: BM25 + dense -> RRF -> 50 candidates)",
+    "cross-encoder pass x2 (v5ce_bge, v5ce_gte)",
+    "set-wise transformer over the full 50-candidate set (listwise_ranker_v2.py)"
+  ],
+  "retrieval": {
+    "bm25": "refined",
+    "dense_model": "mixedbread-ai/mxbai-embed-large-v1",
+    "dense_dim": 1024,
+    "rrf_k": 60,
+    "pool_size": 50
+  },
+  "features": [
+    "bm25_score",
+    "bm25_rank",
+    "dense_cosine",
+    "dense_rank",
+    "rrf_score",
+    "rrf_rank",
+    "budget_fit",
+    "seniority_fit",
+    "avail_immediacy",
+    "tag_level",
+    "has_tags_gig",
+    "has_tags_prov",
+    "cat_any",
+    "spec_cov",
+    "skill_cov",
+    "skill_idf_cov",
+    "skill_soft"
+  ],
+  "score_features": [
+    "bm25_score",
+    "dense_cosine",
+    "rrf_score",
+    "budget_fit",
+    "seniority_fit",
+    "avail_immediacy"
+  ],
+  "sota": {
+    "ndcg@10": 0.9508,
+    "precision@5": 0.9541,
+    "mrr": 0.994,
+    "artifact": "results_data/data_set_v5_tax/listwise_struct.json",
+    "measured": "out-of-fold, GroupKFold by query, 1,106 queries"
+  },
+  "response": {
+    "top_level": [
+      "hire_id",
+      "results",
+      "meta"
+    ],
+    "result": [
+      "rank",
+      "provider_id",
+      "score",
+      "raw_margin",
+      "provider",
+      "signals"
+    ],
+    "provider": [
+      "display_title",
+      "industry",
+      "bio_excerpt"
+    ],
+    "signals": [
+      "retrieval",
+      "business_fit",
+      "taxonomy"
+    ]
+  }
+}

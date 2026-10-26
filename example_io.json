@@ -1,0 +1,418 @@
+{
+  "request": {
+    "hire_id": 1,
+    "hire_title": "FinOps Maturity Assessment for Tech Team",
+    "hire_description": "We are the IT team at a mid-sized professional services firm in Singapore with about 150 staff. As we shift more workloads to hybrid cloud, we’re struggling to track where our technology budget actually goes. We need a specialist to evaluate our current FinOps capabilities and spending visibility. You’ll review our cloud usage patterns and financial data to identify inefficiencies and gaps in our current reporting. Deliverable: a FinOps maturity assessment report with a prioritised action plan for improvement.",
+    "industry": "Infocomm Technology",
+    "taxonomy": [
+      {
+        "name": "Infocomm Technology",
+        "group": null,
+        "specialisations": [
+          {
+            "name": "Data and Artificial Intelligence",
+            "search_tag": "Data and Artificial Intelligence (Infocomm Technology)",
+            "skills": [
+              "Cloud Computing",
+              "Data Analytics",
+              "Business Performance Management"
+            ]
+          }
+        ]
+      }
+    ],
+    "top_k": 10
+  },
+  "response": {
+    "results": [
+      {
+        "rank": 1,
+        "provider_id": 2720,
+        "score": 100.0,
+        "raw_margin": 4.292988,
+        "provider": {
+          "display_title": "Cloud FinOps and Cost Governance Consultant",
+          "industry": "Infocomm Technology",
+          "bio_excerpt": "Cloud FinOps and Cost Governance Consultant specialising in cost allocation for Singapore SaaS and fintech. I am a cloud infrastructure optimisation specialist with 12 years of experience in the Asia-"
+        },
+        "signals": {
+          "retrieval": {
+            "bm25_score": 4.455356,
+            "bm25_rank": 1.0,
+            "dense_cosine": 2.359133,
+            "dense_rank": 1.0,
+            "rrf_score": 2.811146,
+            "rrf_rank": 1.0
+          },
+          "business_fit": {
+            "budget_fit": 0.0,
+            "seniority_fit": 0.0,
+            "avail_immediacy": 0.0
+          },
+          "taxonomy": {
+            "tag_level": 1.0,
+            "has_tags_gig": 1.0,
+            "has_tags_prov": 1.0,
+            "cat_any": 1.0,
+            "spec_cov": 0.0,
+            "skill_cov": 0.0,
+            "skill_idf_cov": 0.0,
+            "skill_soft": 0.6344
+          }
+        }
+      },
+      {
+        "rank": 2,
+        "provider_id": 2721,
+        "score": 80.97,
+        "raw_margin": 2.850882,
+        "provider": {
+          "display_title": "Cloud Financial Management Consultant",
+          "industry": "Infocomm Technology",
+          "bio_excerpt": "Cloud Financial Management Consultant specialising in FinOps and cost governance for Singapore technology clients. I am a specialist in Cloud Financial Management with 12 years of experience architect"
+        },
+        "signals": {
+          "retrieval": {
+            "bm25_score": 3.531112,
+            "bm25_rank": 2.0,
+            "dense_cosine": 1.864651,
+            "dense_rank": 2.0,
+            "rrf_score": 2.700349,
+            "rrf_rank": 2.0
+          },
+          "business_fit": {
+            "budget_fit": 0.0,
+            "seniority_fit": 0.0,
+            "avail_immediacy": 0.0
+          },
+          "taxonomy": {
+            "tag_level": 1.0,
+            "has_tags_gig": 1.0,
+            "has_tags_prov": 1.0,
+            "cat_any": 1.0,
+            "spec_cov": 0.0,
+            "skill_cov": 0.0,
+            "skill_idf_cov": 0.0,
+            "skill_soft": 0.6033
+          }
+        }
+      },
+      {
+        "rank": 3,
+        "provider_id": 2325,
+        "score": 61.14,
+        "raw_margin": 1.348215,
+        "provider": {
+          "display_title": "Azure Cloud Cost Optimisation Specialist",
+          "industry": "Infocomm Technology",
+          "bio_excerpt": "Azure Cloud Cost Optimisation Specialist specialising in FinOps for Singapore financial services I am a Senior Azure cloud architect with 11 years of experience and a Bachelor of Engineering in Comput"
+        },
+        "signals": {
+          "retrieval": {
+            "bm25_score": 2.490666,
+            "bm25_rank": 3.0,
+            "dense_cosine": 1.570606,
+            "dense_rank": 4.0,
+            "rrf_score": 2.54111,
+            "rrf_rank": 3.0
+          },
+          "business_fit": {
+            "budget_fit": 0.0,
+            "seniority_fit": 0.0,
+            "avail_immediacy": 0.0
+          },
+          "taxonomy": {
+            "tag_level": 1.0,
+            "has_tags_gig": 1.0,
+            "has_tags_prov": 1.0,
+            "cat_any": 1.0,
+            "spec_cov": 0.0,
+            "skill_cov": 0.0,
+            "skill_idf_cov": 0.0,
+            "skill_soft": 0.6128
+          }
+        }
+      },
+      {
+        "rank": 4,
+        "provider_id": 609,
+        "score": 37.25,
+        "raw_margin": -0.461871,
+        "provider": {
+          "display_title": "Digital and Technology Transformation Advisor",
+          "industry": "Infocomm Technology",
+          "bio_excerpt": "Digital and Technology Transformation Advisor specialising in assessing digital and AI maturity using the Build for the Future x AI assessment for Singapore-based organisations. I help Singapore-based"
+        },
+        "signals": {
+          "retrieval": {
+            "bm25_score": 0.593759,
+            "bm25_rank": 7.0,
+            "dense_cosine": 1.009312,
+            "dense_rank": 7.0,
+            "rrf_score": 2.195984,
+            "rrf_rank": 4.0
+          },
+          "business_fit": {
+            "budget_fit": 0.0,
+            "seniority_fit": 0.0,
+            "avail_immediacy": 0.0
+          },
+          "taxonomy": {
+            "tag_level": 1.0,
+            "has_tags_gig": 1.0,
+            "has_tags_prov": 1.0,
+            "cat_any": 1.0,
+            "spec_cov": 0.0,
+            "skill_cov": 0.0,
+            "skill_idf_cov": 0.0,
+            "skill_soft": 0.6095
+          }
+        }
+      },
+      {
+        "rank": 5,
+        "provider_id": 2790,
+        "score": 35.96,
+        "raw_margin": -0.55967,
+        "provider": {
+          "display_title": "Cloud Financial Governance Consultant",
+          "industry": "Accountancy",
+          "bio_excerpt": "Former Head of Cloud Financial Governance & Industry Leader in Cost Optimisation for Singapore-Based Fintech and Professional Services Firms With 12 years of experience in cloud financial governance a"
+        },
+        "signals": {
+          "retrieval": {
+            "bm25_score": -0.124641,
+            "bm25_rank": 23.0,
+            "dense_cosine": 0.52816,
+            "dense_rank": 16.0,
+            "rrf_score": 1.222864,
+            "rrf_rank": 8.0
+          },
+          "business_fit": {
+            "budget_fit": 0.0,
+            "seniority_fit": 0.0,
+            "avail_immediacy": 0.0
+          },
+          "taxonomy": {
+            "tag_level": 1.0,
+            "has_tags_gig": 1.0,
+            "has_tags_prov": 1.0,
+            "cat_any": 1.0,
+            "spec_cov": 0.0,
+            "skill_cov": 0.3333,
+            "skill_idf_cov": 0.2485,
+            "skill_soft": 0.7781
+          }
+        }
+      },
+      {
+        "rank": 6,
+        "provider_id": 2440,
+        "score": 34.44,
+        "raw_margin": -0.674356,
+        "provider": {
+          "display_title": "Cloud Financial Operations Specialist",
+          "industry": "Infocomm Technology",
+          "bio_excerpt": "Cloud financial operations specialist providing forensic cost analysis and compliance reviews for Singapore-based organisations. I am a cloud financial operations specialist with twelve years of exper"
+        },
+        "signals": {
+          "retrieval": {
+            "bm25_score": -0.263832,
+            "bm25_rank": 38.0,
+            "dense_cosine": 1.597347,
+            "dense_rank": 3.0,
+            "rrf_score": 1.405352,
+            "rrf_rank": 5.0
+          },
+          "business_fit": {
+            "budget_fit": 0.0,
+            "seniority_fit": 0.0,
+            "avail_immediacy": 0.0
+          },
+          "taxonomy": {
+            "tag_level": 1.0,
+            "has_tags_gig": 1.0,
+            "has_tags_prov": 1.0,
+            "cat_any": 1.0,
+            "spec_cov": 0.0,
+            "skill_cov": 0.0,
+            "skill_idf_cov": 0.0,
+            "skill_soft": 0.5878
+          }
+        }
+      },
+      {
+        "rank": 7,
+        "provider_id": 2441,
+        "score": 34.19,
+        "raw_margin": -0.693585,
+        "provider": {
+          "display_title": "Cloud Infrastructure Optimisation Specialist",
+          "industry": "Infocomm Technology",
+          "bio_excerpt": "Cloud infrastructure optimisation specialist with 14 years of experience managing hybrid environments across APAC, specialising in cost efficiency and compliance. Cloud infrastructure optimisation spe"
+        },
+        "signals": {
+          "retrieval": {
+            "bm25_score": 0.058854,
+            "bm25_rank": 16.0,
+            "dense_cosine": 0.44799,
+            "dense_rank": 18.0,
+            "rrf_score": 1.384676,
+            "rrf_rank": 6.0
+          },
+          "business_fit": {
+            "budget_fit": 0.0,
+            "seniority_fit": 0.0,
+            "avail_immediacy": 0.0
+          },
+          "taxonomy": {
+            "tag_level": 1.0,
+            "has_tags_gig": 1.0,
+            "has_tags_prov": 1.0,
+            "cat_any": 1.0,
+            "spec_cov": 0.0,
+            "skill_cov": 0.3333,
+            "skill_idf_cov": 0.3787,
+            "skill_soft": 0.7339
+          }
+        }
+      },
+      {
+        "rank": 8,
+        "provider_id": 2122,
+        "score": 34.07,
+        "raw_margin": -0.702461,
+        "provider": {
+          "display_title": "Cloud Infrastructure Optimisation Consultant",
+          "industry": "Infocomm Technology",
+          "bio_excerpt": "Cloud infrastructure consultant specialising in Kubernetes, OpenShift, and cost governance for Singapore organisations. I specialise in cloud infrastructure optimisation, focusing on containerised env"
+        },
+        "signals": {
+          "retrieval": {
+            "bm25_score": 0.884093,
+            "bm25_rank": 5.0,
+            "dense_cosine": 0.073776,
+            "dense_rank": 36.0,
+            "rrf_score": 1.347564,
+            "rrf_rank": 7.0
+          },
+          "business_fit": {
+            "budget_fit": 0.0,
+            "seniority_fit": 0.0,
+            "avail_immediacy": 0.0
+          },
+          "taxonomy": {
+            "tag_level": 1.0,
+            "has_tags_gig": 1.0,
+            "has_tags_prov": 1.0,
+            "cat_any": 1.0,
+            "spec_cov": 0.0,
+            "skill_cov": 0.3333,
+            "skill_idf_cov": 0.3787,
+            "skill_soft": 0.7304
+          }
+        }
+      },
+      {
+        "rank": 9,
+        "provider_id": 2482,
+        "score": 31.48,
+        "raw_margin": -0.899106,
+        "provider": {
+          "display_title": "Cloud Migration Specialist",
+          "industry": "Infocomm Technology",
+          "bio_excerpt": "Former Senior Cloud Architect & Industry Leader in Financial Services Digital Infrastructure I am a cloud architecture specialist with 12 years of experience helping financial services firms modernise"
+        },
+        "signals": {
+          "retrieval": {
+            "bm25_score": 0.147387,
+            "bm25_rank": 10.0,
+            "dense_cosine": -0.126688,
+            "dense_rank": 58.0,
+            "rrf_score": 0.710435,
+            "rrf_rank": 10.0
+          },
+          "business_fit": {
+            "budget_fit": 0.0,
+            "seniority_fit": 0.0,
+            "avail_immediacy": 0.0
+          },
+          "taxonomy": {
+            "tag_level": 1.0,
+            "has_tags_gig": 1.0,
+            "has_tags_prov": 1.0,
+            "cat_any": 1.0,
+            "spec_cov": 0.0,
+            "skill_cov": 0.3333,
+            "skill_idf_cov": 0.3787,
+            "skill_soft": 0.8096
+          }
+        }
+      },
+      {
+        "rank": 10,
+        "provider_id": 1015,
+        "score": 30.67,
+        "raw_margin": -0.96024,
+        "provider": {
+          "display_title": "Digital Transformation Research Specialist",
+          "industry": "Infocomm Technology",
+          "bio_excerpt": "Digital transformation research specialist providing strategic insights for Singapore businesses. I specialise in digital transformation research and strategic insights for Singapore businesses. My wo"
+        },
+        "signals": {
+          "retrieval": {
+            "bm25_score": -0.180829,
+            "bm25_rank": 27.0,
+            "dense_cosine": -0.300438,
+            "dense_rank": 85.0,
+            "rrf_score": -0.205034,
+            "rrf_rank": 24.0
+          },
+          "business_fit": {
+            "budget_fit": 0.0,
+            "seniority_fit": 0.0,
+            "avail_immediacy": 0.0
+          },
+          "taxonomy": {
+            "tag_level": 3.0,
+            "has_tags_gig": 1.0,
+            "has_tags_prov": 1.0,
+            "cat_any": 1.0,
+            "spec_cov": 1.0,
+            "skill_cov": 0.3333,
+            "skill_idf_cov": 0.2485,
+            "skill_soft": 0.7711
+          }
+        }
+      }
+    ],
+    "meta": {
+      "pipeline": "refined BM25 || mxbai-embed-large-v1 (1024-d) -> RRF(k=60) -> LambdaMART",
+      "normalization": "per-query zscore on SCORE_FEATURES (required at serve time)",
+      "n_features": 17,
+      "features": [
+        "bm25_score",
+        "bm25_rank",
+        "dense_cosine",
+        "dense_rank",
+        "rrf_score",
+        "rrf_rank",
+        "budget_fit",
+        "seniority_fit",
+        "avail_immediacy",
+        "tag_level",
+        "has_tags_gig",
+        "has_tags_prov",
+        "cat_any",
+        "spec_cov",
+        "skill_cov",
+        "skill_idf_cov",
+        "skill_soft"
+      ],
+      "candidate_pool": 50,
+      "returned": 10,
+      "score_scale": "0-100, higher is better; ranker score, NOT a calibrated probability",
+      "ranking_is": "serving model (all-data); committed artifact is out-of-fold"
+    }
+  }
+}

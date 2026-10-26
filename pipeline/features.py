@@ -57,11 +57,6 @@ FEAT_DIR = BASE / "features"
 CACHE_DIR = BASE / "cache"
 
 
-# --tag-variant -> TagChannel keyword arguments (see tag_channel.py)
-TAG_VARIANTS = {"raw": {}, "hc": {"variant": "hc"}, "hcw": {"variant": "hc", "scorer": "wcos"},
-                "hcq": {"variant": "hc-qwen3-0.6b"}, "hcqw": {"variant": "hc-qwen3-0.6b", "scorer": "wcos"}}
-
-
 def set_dataset(tag: str):
     """Point every module-level path at `tag`'s data + a namespaced output
     tree, so a non-default dataset (e.g. data_sat) never overwrites the
@@ -154,7 +149,7 @@ def grade_from_score(score: int) -> int:
 
 def dense_matrix(hirers, providers, model_name: str, dim, cache_tag: str):
     """Provider/query embeddings, cached to .npy so re-runs are free."""
-    CACHE_DIR.mkdir(exist_ok=True)
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
     doc_path = CACHE_DIR / f"providers_{cache_tag}.npy"
     qry_path = CACHE_DIR / f"hirers_{cache_tag}.npy"
     if doc_path.exists() and qry_path.exists():
@@ -178,22 +173,10 @@ def main():
     ap.add_argument("--label-policy", choices=["judged", "all"], default="judged")
     ap.add_argument("--data-dir", default="data",
                     help="dataset folder under pipeline/ (e.g. data_sat); outputs are namespaced accordingly")
-    ap.add_argument("--tag-channel", action="store_true",
-                    help="add the tag-ID BM25 channel: the pool becomes a 3-way RRF (refined BM25 + dense + tag) "
-                         "and tag_score/tag_rank columns are emitted. Writes candidates_top<K>_tag.csv and "
-                         "train_pairs_tag.csv, so the baseline feature files are left untouched. Off by default")
-    ap.add_argument("--tag-variant", choices=list(TAG_VARIANTS), default="raw",
-                    help="with --tag-channel: raw = the original channel (raw-cosine tags, BM25; output files "
-                         "unchanged); hc = hubness-corrected tags (tag_corpus.py --hubness center), BM25; hcw = the "
-                         "same tags with the weighted-cosine scorer; hcq / hcqw = the same two with the qwen3-0.6b "
-                         "encoder (tag_corpus.py --encoder qwen3-0.6b). Non-raw variants write *_tag_<variant>.csv, and "
-                         "a provider the channel did not return gets an empty (NaN) tag_score/tag_rank instead of 0")
     args = ap.parse_args()
-    if args.tag_variant != "raw" and not args.tag_channel:
-        ap.error("--tag-variant needs --tag-channel")
     set_dataset(args.data_dir)
 
-    FEAT_DIR.mkdir(exist_ok=True)
+    FEAT_DIR.mkdir(parents=True, exist_ok=True)
     providers = load_json("providers.json")
     hirers = load_json("hirers.json")
     # Synthetic data keeps budget/seniority fields in a separate _with_taxonomy
@@ -218,13 +201,6 @@ def main():
     doc_raw, query_raw = dense_matrix(hirers, providers, args.dense_model, args.dense_dim,
                                       cache_tag=f"{Path(args.dense_model).name}_{dim_tag}")
 
-    tag_channel = None
-    if args.tag_channel:
-        from retrieval_rrf import rrf_fuse_n
-        from tag_channel import TagChannel
-        print(f"Building tag-ID channel (variant {args.tag_variant}) ...")
-        tag_channel = TagChannel(DATA_DIR, **TAG_VARIANTS[args.tag_variant])
-
     rows = []
     skipped_out_of_pool = 0
     judged_in_pool = 0
@@ -233,13 +209,7 @@ def main():
         hid = str(h["hire_id"])
         bm25_ranked = bm25.rank(hirer_text(h), query_title=h["hire_title"])
         dense_ranked = rank_from_raw(doc_raw, query_raw[i], provider_ids, truncate_dim=args.dense_dim)
-        if tag_channel is None:
-            fused = rrf_fuse(bm25_ranked, dense_ranked, k=60)
-        else:
-            tag_ranked = tag_channel.rank(h["hire_id"])
-            fused = rrf_fuse_n([bm25_ranked, dense_ranked, tag_ranked], k=60)
-            tag_score = dict(tag_ranked)
-            tag_pos = {pid: r + 1 for r, (pid, _) in enumerate(tag_ranked)}
+        fused = rrf_fuse(bm25_ranked, dense_ranked, k=60)
 
         bm25_score = dict(bm25_ranked)
         dense_score = dict(dense_ranked)
@@ -271,7 +241,7 @@ def main():
                 label = 0          # documented trade-off: unjudged counted as negative
             else:
                 label = ""         # excluded from training
-            row = {
+            rows.append({
                 "hire_id": hid,
                 "provider_id": pid,
                 "label": label,
@@ -282,22 +252,23 @@ def main():
                 "dense_rank": dense_pos.get(pid, 0),
                 "rrf_score": round(float(rrf_score), 8),
                 "rrf_rank": rrf_pos,
+                # Schema-v2 field, populated on 86.9% of providers. This is the one
+                # new v2 field that can affect ranking: it varies within a query, so
+                # a per-query-normalised learner can split on it. `duration_weeks_*`
+                # cannot -- it is constant across a query's candidates, so it carries
+                # no within-query ordering information and is deliberately not a
+                # feature. Missing values are written as 0; note that this makes an
+                # unknown-experience provider look like the least experienced in its
+                # pool rather than being imputed.
+                "exp_years": round(float(p_tax.get("years_experience") or 0), 1),
                 "budget_fit": round(budget_fit(h_tax.get("budget_lo", 0), h_tax.get("budget_hi", 0),
                                                p_tax.get("rate_per_hour", 0)), 4),
                 "seniority_fit": round(seniority_fit(h_tax.get("seniority_needed", ""),
                                                      p_tax.get("seniority", "")), 4),
                 "avail_immediacy": round(avail_immediacy(p_tax, h_tax), 4),
-            }
-            if tag_channel is not None:
-                # raw keeps the original 0 sentinel (its files must stay reproducible); the new variants leave a
-                # provider the channel did not return empty, which rerank_ltr reads as NaN (missing), not as rank 0
-                raw = args.tag_variant == "raw"
-                row["tag_score"] = round(float(tag_score[pid]), 6) if pid in tag_score else (0.0 if raw else "")
-                row["tag_rank"] = tag_pos.get(pid, 0 if raw else "")
-            rows.append(row)
+            })
 
-    suffix = "" if tag_channel is None else "_tag" if args.tag_variant == "raw" else f"_tag_{args.tag_variant}"
-    cand_path = FEAT_DIR / f"candidates_top{args.top_k}{suffix}.csv"
+    cand_path = FEAT_DIR / f"candidates_top{args.top_k}.csv"
     cols = list(rows[0].keys())
     with cand_path.open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
@@ -305,7 +276,7 @@ def main():
         w.writerows(rows)
 
     train_rows = [r for r in rows if r["label"] != ""]
-    train_path = FEAT_DIR / f"train_pairs{suffix}.csv"
+    train_path = FEAT_DIR / "train_pairs.csv"
     with train_path.open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
@@ -320,8 +291,6 @@ def main():
     print(f"  label distribution (train)  : {dict(sorted(dist.items()))}")
     print(f"  judged pairs inside top-{args.top_k} : {judged_in_pool}")
     print(f"  grade>=2 pairs OUTSIDE top-{args.top_k} (recall loss, unfixable by re-ranking): {skipped_out_of_pool}")
-    if tag_channel is not None:
-        print(f"  tag channel ON: wrote {cand_path.name} and {train_path.name}; baseline feature files untouched")
     print("\nNext: score with the cross-encoder, then train the LTR ranker (see pipeline/RERANK_README.md)")
 
 

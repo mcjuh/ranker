@@ -6,6 +6,10 @@ pipeline/models/ce-*/
 pipeline/models/_ce_trainer_output/
 pipeline/models_data_sat/ce-*/
 pipeline/models_data_sat/_ce_trainer_output/
+pipeline/models_data/ce-*/
+pipeline/models_data/_ce_trainer_output/
+pipeline/models_data/*/ce-*/
+pipeline/models_data/*/_ce_trainer_output/
 
 # fine-tuned embedding model (~1.3 GB) + trainer scratch
 pipeline/models/mxbai-*
@@ -18,14 +22,29 @@ pipeline/cache/
 __pycache__/
 *.pyc
 .DS_Store
-.venv/
-
-# secrets: API keys for the LLM labeller. Never commit; copy .env.example to .env
-.env
-.env.*
-!.env.example
 
 # data_sat run: large regenerable Stage-1 sweep dumps + embedding cache
 # (regenerate with: python pipeline/run_pipeline.py --data-dir data_sat)
 pipeline/results_data_sat/
 pipeline/cache_data_sat/
+
+# ---------------------------------------------------------------------------
+# data_set_v5 run (current corpus)
+# ---------------------------------------------------------------------------
+
+# Stage-1 ranked lists: ~30 MB each (every one of 3,024 providers ranked for
+# every query) and fully regenerable from the corpus. The Stage-2 outputs
+# (v5_lin.json, v5_lin_scores.json) are KEPT — those are what ablation.md reads.
+pipeline/results_data/*/bm25*.json
+pipeline/results_data/*/dense_*.json
+pipeline/results_data/*/rrf_k*.json
+pipeline/results_data/*/rrf_w_*.json
+
+# embedding cache, and the 42 MB per-pair taxonomy feature dump
+pipeline/cache_data/
+pipeline/features_data/*/taxonomy_scores.csv
+
+# grading logs from the data team — bulk, no analytical value
+pipeline/data/data_set_v5/grade_*.out
+pipeline/data/data_set_v5/overnight.*
+pipeline/data/data_set_v5/pools.log

@@ -1,0 +1,77 @@
+{
+  "tier": "lightweight",
+  "summary": "BM25 + dense retrieval -> RRF -> LambdaMART over 17 features. No cross-encoder, one XGBoost model, ~0.90 NDCG@10.",
+  "servable": true,
+  "model_path": "models_data/data_set_v5_tax/v5tax_tags_xgb.json",
+  "retrieval": {
+    "bm25": "refined",
+    "dense_model": "mixedbread-ai/mxbai-embed-large-v1",
+    "dense_dim": 1024,
+    "rrf_k": 60,
+    "pool_size": 50
+  },
+  "features": [
+    "bm25_score",
+    "bm25_rank",
+    "dense_cosine",
+    "dense_rank",
+    "rrf_score",
+    "rrf_rank",
+    "budget_fit",
+    "seniority_fit",
+    "avail_immediacy",
+    "tag_level",
+    "has_tags_gig",
+    "has_tags_prov",
+    "cat_any",
+    "spec_cov",
+    "skill_cov",
+    "skill_idf_cov",
+    "skill_soft"
+  ],
+  "score_features": [
+    "bm25_score",
+    "dense_cosine",
+    "rrf_score",
+    "budget_fit",
+    "seniority_fit",
+    "avail_immediacy"
+  ],
+  "dead_features": {
+    "seniority_fit": "providers.json has no `seniority` field (0/3024), so this is constant 0.5 at train time and 0.0 at serve time. Kept in the vector because the saved model indexes features positionally.",
+    "budget_fit": "emitted as 0.0: the shipped model was trained on zeros, so live values would be out-of-distribution. Data now supports it (budget_lo/hi + rate_per_hour, both 100%); retraining on live values scored 0.8962, identical, so the zeros were kept.",
+    "avail_immediacy": "same as budget_fit: supported by the data (available_from + start_by, 100%), trained on zeros."
+  },
+  "sota": {
+    "ndcg@10": 0.8982,
+    "precision@5": 0.8991,
+    "mrr": 0.9774,
+    "artifact": "results_data/data_set_v5_tax/v5tax_tags.json",
+    "measured": "out-of-fold, GroupKFold by query, 1,106 queries"
+  },
+  "response": {
+    "top_level": [
+      "hire_id",
+      "results",
+      "meta"
+    ],
+    "result": [
+      "rank",
+      "provider_id",
+      "score",
+      "raw_margin",
+      "provider",
+      "signals"
+    ],
+    "provider": [
+      "display_title",
+      "industry",
+      "bio_excerpt"
+    ],
+    "signals": [
+      "retrieval",
+      "business_fit",
+      "taxonomy"
+    ]
+  }
+}

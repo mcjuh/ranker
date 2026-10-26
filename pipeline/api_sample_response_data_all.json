@@ -1,0 +1,326 @@
+{
+  "api_version": "1.0",
+  "request_id": "<generate per request, e.g. req_01J9Z8...>",
+  "generated_at": "<ISO-8601 with timezone, set by the service>",
+  "query": {
+    "hire_id": "H-26499bf5",
+    "title": "Responsible AI Governance Framework Review",
+    "description": "We are a mid-sized professional services firm in Singapore that has deployed several internal GenAI proof-of-concepts and pilot tools. With the rapid expansion of these capabilities, we need to ensure our current practices align with responsible AI principles and manage emerging risks effectively. We need a specialist to review our existing AI deployments, assess our current governance posture, and recommend a structured framework to ensure ethical use and compliance. Deliverable: a gap analysis report identifying current deficiencies in AI governance and a prioritised action plan to establish a firm-wide Responsible AI policy. Engagement duration: 4-5 weeks.",
+    "duration_weeks": {
+      "min": 4,
+      "max": 5
+    },
+    "taxonomy": [
+      {
+        "category": "Infocomm Technology",
+        "specialisations": [
+          "Strategy and Governance"
+        ],
+        "search_tags": [
+          "Strategy and Governance (Infocomm Technology)"
+        ]
+      }
+    ]
+  },
+  "results": [
+    {
+      "rank": 1,
+      "provider_id": 467,
+      "score": null,
+      "provider": {
+        "display_title": "Independent consultant specialising in responsible AI ethics and data governance strategies for Singapore organisations.",
+        "headline": "Independent consultant specialising in responsible AI ethics and data governance strategies for Singapore organisations.",
+        "bio_excerpt": "I hold a PhD in philosophy from Columbia University and specialise in responsible AI and data ethics. I have experience leading ethical AI programmes at major technology firms. My work focuses on assessing the societal impacts of generative AI, identifying ethical risks, and deve",
+        "years_experience": null,
+        "services": [
+          "Responsible AI and Ethics Strategy Advisory"
+        ],
+        "taxonomy": [
+          {
+            "category": "Infocomm Technology",
+            "specialisations": [
+              "Strategy and Governance"
+            ],
+            "search_tags": [
+              "Strategy and Governance (Infocomm Technology)"
+            ]
+          }
+        ],
+        "rate": null,
+        "availability": null,
+        "source_file": "bcg.com__about_people_experts_michael-brent.md"
+      },
+      "signals": {
+        "stage1": {
+          "bm25_rank": 1.0,
+          "bm25_score": 169.219807,
+          "dense_rank": 2.0,
+          "dense_cosine": 0.788086,
+          "rrf_rank": 1.0,
+          "rrf_score": 0.032522
+        },
+        "taxonomy_match": {
+          "tax_search_tag": 1.0,
+          "tax_specialisation": 1.0,
+          "tax_category": 1.0,
+          "tax_skill": 0.666667,
+          "tax_n_shared_skills": 2.0,
+          "taxonomy_score": 0.9
+        },
+        "provider_attrs": {
+          "exp_years": 0.0
+        }
+      },
+      "explanation": {
+        "matched_search_tags": [
+          "Strategy and Governance (Infocomm Technology)"
+        ],
+        "matched_specialisations": [
+          "Strategy and Governance (Infocomm Technology)"
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "provider_id": 583,
+      "score": null,
+      "provider": {
+        "display_title": "Global AI Ethics Leader and Responsible AI Strategy Advisor",
+        "headline": "Global AI Ethics Leader and Responsible AI Strategy Advisor",
+        "bio_excerpt": "I am a global leader in responsible AI, specialising in helping Singapore-based private and public sector clients navigate the complexities of generative AI and machine learning adoption. With over 25 years of experience spanning operations research, emerging technology foresight",
+        "years_experience": 25,
+        "services": [
+          "Responsible AI Strategy and Governance Development"
+        ],
+        "taxonomy": [
+          {
+            "category": "Infocomm Technology",
+            "specialisations": [
+              "Strategy and Governance"
+            ],
+            "search_tags": [
+              "Strategy and Governance (Infocomm Technology)"
+            ]
+          }
+        ],
+        "rate": null,
+        "availability": null,
+        "source_file": "bcg.com__about_people_experts_steven-mills.md"
+      },
+      "signals": {
+        "stage1": {
+          "bm25_rank": 3.0,
+          "bm25_score": 148.661704,
+          "dense_rank": 1.0,
+          "dense_cosine": 0.803223,
+          "rrf_rank": 2.0,
+          "rrf_score": 0.032266
+        },
+        "taxonomy_match": {
+          "tax_search_tag": 1.0,
+          "tax_specialisation": 1.0,
+          "tax_category": 1.0,
+          "tax_skill": 0.333333,
+          "tax_n_shared_skills": 1.0,
+          "taxonomy_score": 0.8
+        },
+        "provider_attrs": {
+          "exp_years": 25.0
+        }
+      },
+      "explanation": {
+        "matched_search_tags": [
+          "Strategy and Governance (Infocomm Technology)"
+        ],
+        "matched_specialisations": [
+          "Strategy and Governance (Infocomm Technology)"
+        ]
+      }
+    },
+    {
+      "rank": 3,
+      "provider_id": 193,
+      "score": null,
+      "provider": {
+        "display_title": "Quantitative modeling and responsible AI strategy for financial institutions in Singapore",
+        "headline": "Quantitative modeling and responsible AI strategy for financial institutions in Singapore",
+        "bio_excerpt": "I specialise in quantitative modeling and risk management for the financial sector, bringing over 15 years of experience to each engagement. Previously a Managing Director at a global professional services firm, I led the Risk and Compliance practice and a technology design unit.",
+        "years_experience": 15,
+        "services": [
+          "Responsible AI Strategy and Implementation"
+        ],
+        "taxonomy": [
+          {
+            "category": "Infocomm Technology",
+            "specialisations": [
+              "Cyber Security",
+              "Strategy and Governance"
+            ],
+            "search_tags": [
+              "Cyber Security (Infocomm Technology)",
+              "Strategy and Governance (Infocomm Technology)"
+            ]
+          }
+        ],
+        "rate": null,
+        "availability": null,
+        "source_file": "bcg.com__about_people_experts_anne-kleppe.md"
+      },
+      "signals": {
+        "stage1": {
+          "bm25_rank": 4.0,
+          "bm25_score": 134.09934,
+          "dense_rank": 3.0,
+          "dense_cosine": 0.780273,
+          "rrf_rank": 3.0,
+          "rrf_score": 0.031498
+        },
+        "taxonomy_match": {
+          "tax_search_tag": 1.0,
+          "tax_specialisation": 1.0,
+          "tax_category": 1.0,
+          "tax_skill": 0.333333,
+          "tax_n_shared_skills": 1.0,
+          "taxonomy_score": 0.8
+        },
+        "provider_attrs": {
+          "exp_years": 15.0
+        }
+      },
+      "explanation": {
+        "matched_search_tags": [
+          "Strategy and Governance (Infocomm Technology)"
+        ],
+        "matched_specialisations": [
+          "Strategy and Governance (Infocomm Technology)"
+        ]
+      }
+    },
+    {
+      "rank": 4,
+      "provider_id": 1700,
+      "score": null,
+      "provider": {
+        "display_title": "Chief AI Officer specialising in enterprise adoption and responsible AI frameworks for Singapore organisations.",
+        "headline": "Chief AI Officer specialising in enterprise adoption and responsible AI frameworks for Singapore organisations.",
+        "bio_excerpt": "I specialise in enterprise AI strategy and data transformation, helping organisations embed practical AI solutions that drive measurable business impact. With over 30 years of experience, I have held senior leadership roles at a Big Four professional services firm, a global IT se",
+        "years_experience": 30,
+        "services": [
+          "Enterprise AI Strategy and Adoption Roadmap"
+        ],
+        "taxonomy": [
+          {
+            "category": "Infocomm Technology",
+            "specialisations": [
+              "Strategy and Governance",
+              "Data and Artificial Intelligence"
+            ],
+            "search_tags": [
+              "Strategy and Governance (Infocomm Technology)",
+              "Data and Artificial Intelligence (Infocomm Technology)"
+            ]
+          }
+        ],
+        "rate": null,
+        "availability": null,
+        "source_file": "westmonroe.com__our-team_bret-greenstein.md"
+      },
+      "signals": {
+        "stage1": {
+          "bm25_rank": 6.0,
+          "bm25_score": 117.899449,
+          "dense_rank": 7.0,
+          "dense_cosine": 0.744629,
+          "rrf_rank": 4.0,
+          "rrf_score": 0.030077
+        },
+        "taxonomy_match": {
+          "tax_search_tag": 1.0,
+          "tax_specialisation": 1.0,
+          "tax_category": 1.0,
+          "tax_skill": 0.333333,
+          "tax_n_shared_skills": 1.0,
+          "taxonomy_score": 0.8
+        },
+        "provider_attrs": {
+          "exp_years": 30.0
+        }
+      },
+      "explanation": {
+        "matched_search_tags": [
+          "Strategy and Governance (Infocomm Technology)"
+        ],
+        "matched_specialisations": [
+          "Strategy and Governance (Infocomm Technology)"
+        ]
+      }
+    },
+    {
+      "rank": 5,
+      "provider_id": 291,
+      "score": null,
+      "provider": {
+        "display_title": "Data and AI advisor specialising in strategy, governance, and responsible implementation for business growth",
+        "headline": "Data and AI advisor specialising in strategy, governance, and responsible implementation for business growth",
+        "bio_excerpt": "With over 20 years of experience guiding organisations through digital transformation, I advise clients on defining data vision, implementing governance frameworks, and deploying AI solutions to drive measurable business value. My background includes leadership roles at global da",
+        "years_experience": 20,
+        "services": [
+          "Data Strategy and AI Implementation Advisory"
+        ],
+        "taxonomy": [
+          {
+            "category": "Infocomm Technology",
+            "specialisations": [
+              "Strategy and Governance"
+            ],
+            "search_tags": [
+              "Strategy and Governance (Infocomm Technology)"
+            ]
+          }
+        ],
+        "rate": null,
+        "availability": null,
+        "source_file": "bcg.com__about_people_experts_elias-baltassis.md"
+      },
+      "signals": {
+        "stage1": {
+          "bm25_rank": 5.0,
+          "bm25_score": 124.47996,
+          "dense_rank": 9.0,
+          "dense_cosine": 0.740234,
+          "rrf_rank": 5.0,
+          "rrf_score": 0.029877
+        },
+        "taxonomy_match": {
+          "tax_search_tag": 1.0,
+          "tax_specialisation": 1.0,
+          "tax_category": 1.0,
+          "tax_skill": 0.333333,
+          "tax_n_shared_skills": 1.0,
+          "taxonomy_score": 0.8
+        },
+        "provider_attrs": {
+          "exp_years": 20.0
+        }
+      },
+      "explanation": {
+        "matched_search_tags": [
+          "Strategy and Governance (Infocomm Technology)"
+        ],
+        "matched_specialisations": [
+          "Strategy and Governance (Infocomm Technology)"
+        ]
+      }
+    }
+  ],
+  "meta": {
+    "pipeline": "refined BM25 || mxbai-embed-large-v1 (Matryoshka 1024) -> RRF(k=60) -> LambdaMART (15 features, incl. 6 taxonomy match features)",
+    "ranker_artifact": "rrf_k60.json (no LambdaMART trained yet -- stage-1 ranking)",
+    "score_artifact": null,
+    "corpus_size": 3024,
+    "candidate_pool": 50,
+    "returned": 5,
+    "latency_ms": "<measured by the service>",
+    "score_scale": "0-100, higher is better; ranker output, not a probability"
+  }
+}

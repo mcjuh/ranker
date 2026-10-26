@@ -115,12 +115,16 @@ def score(args):
     rows = list(csv.DictReader(cand_path.open()))
     providers_by_id = {p["provider_id"]: p for p in load_json(DATA_DIR / "providers.json")}
     hirers_by_id = {h["hire_id"]: h for h in load_json(DATA_DIR / "hirers.json")}
-    rrf_full = load_json(RESULTS_DIR / "rrf_k60.json")
+    # The tail beyond the top-k pool only pads the list to a full permutation;
+    # nothing at K<=50 reads it. Tolerate its absence so the CE can run from
+    # candidates_top50.csv alone (the RRF dump is ~31 MB and regenerable).
+    _rrf_path = RESULTS_DIR / "rrf_k60.json"
+    rrf_full = load_json(_rrf_path) if _rrf_path.exists() else {}
     gt = load_json(DATA_DIR / "ground_truth_llm.json")
 
     device = pick_device(args.device)
     print(f"Loading cross-encoder {args.model} ...")
-    ce = CrossEncoder(args.model, num_labels=1, device=device)
+    ce = CrossEncoder(args.model, num_labels=1, device=device, max_length=args.max_length)
     if args.fp16 and device == "cuda":
         ce.model.half()
         print("  fp16 enabled")
@@ -175,7 +179,7 @@ def make_examples(rows, train_q, providers_by_id, hirers_by_id, positive_grade):
 
 def _fit_ce(args, examples, device):
     """Fresh cross-encoder fitted on `examples`; raises if the scores go non-finite."""
-    ce = CrossEncoder(args.model, num_labels=1, device=device)
+    ce = CrossEncoder(args.model, num_labels=1, device=device, max_length=args.max_length)
     if args.fp16 and device == "cuda":
         ce.model.half()
     loader = DataLoader(examples, shuffle=True, batch_size=args.batch_size)
@@ -217,7 +221,11 @@ def finetune(args):
     print(f"candidates to score: {len(cand_rows)}   training pairs: {len(rows)}")
     providers_by_id = {p["provider_id"]: p for p in load_json(DATA_DIR / "providers.json")}
     hirers_by_id = {h["hire_id"]: h for h in load_json(DATA_DIR / "hirers.json")}
-    rrf_full = load_json(RESULTS_DIR / "rrf_k60.json")
+    # The tail beyond the top-k pool only pads the list to a full permutation;
+    # nothing at K<=50 reads it. Tolerate its absence so the CE can run from
+    # candidates_top50.csv alone (the RRF dump is ~31 MB and regenerable).
+    _rrf_path = RESULTS_DIR / "rrf_k60.json"
+    rrf_full = load_json(_rrf_path) if _rrf_path.exists() else {}
     gt = load_json(DATA_DIR / "ground_truth_llm.json")
 
     queries = sorted({r["hire_id"] for r in cand_rows}, key=int)
@@ -227,7 +235,7 @@ def finetune(args):
           f"positive grade: >= {args.positive_grade}")
 
     # ---- zero-shot reference over the SAME candidate universe (no training) ----
-    base_ce = CrossEncoder(args.model, num_labels=1, device=device)
+    base_ce = CrossEncoder(args.model, num_labels=1, device=device, max_length=args.max_length)
     pairs_all, meta_all = build_pairs(cand_rows, providers_by_id, hirers_by_id)
     zs_all = np.asarray(base_ce.predict(pairs_all, batch_size=args.batch_size,
                                        show_progress_bar=False)).reshape(-1)
@@ -325,6 +333,9 @@ def main():
     ap.add_argument("--cv-folds", type=int, default=5,
                     help="per-query folds; the written ce_scores_<tag>.csv is out-of-fold")
     ap.add_argument("--positive-grade", type=int, default=3, help="grade >= this counts as a positive")
+    ap.add_argument("--max-length", type=int, default=None,
+                    help="tokenizer max length for (query, doc) pairs; None uses the model default "
+                         "(8192 for bge/gte rerankers -- always cap it for these corpora)")
     ap.add_argument("--quiet", action="store_true", help="suppress the training progress bars")
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--data-dir", default="data",
